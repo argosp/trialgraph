@@ -1,0 +1,17 @@
+version: '2'
+
+services:
+  graphql:
+    image: 'node:10.15'
+    container_name: 'fab_graphql'
+    working_dir: /usr/src/app
+    volumes:
+      - ./:/usr/src/app
+    ports:
+      - "8888:8888"
+    environment:
+      PORT: 8888
+      ROOT_URI: "http://default.coreborne.linnovate.net"
+    ports:
+      - 8888:8888
+    command: npm start
