@@ -22,6 +22,7 @@ const resolvers = {
   },
   Mutation: {
     async addUpdateDevice(_, args, context) {
+      pubsub.publish(DEVICES_UPDATED, { devicesUpdated: true });
       return await context.device.addUpdateDevice(args, context)
 
     }
