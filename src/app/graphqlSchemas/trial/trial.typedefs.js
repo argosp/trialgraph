@@ -4,7 +4,7 @@ type Trial {
   name: String
   begin: String!
   end: String!
-  devices: [Device]
+  device: Device
 }
 extend type Query {
     trials(experimentId:String!): [Trial]
@@ -17,7 +17,7 @@ extend type Mutation {
       name: String,
       begin: String,
       end: String,
-      devices: [String]
+      device: String
     ): Trial
   }
 extend type Subscription {

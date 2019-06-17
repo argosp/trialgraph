@@ -4,6 +4,7 @@ type Device {
   name: String!
   type: String
   properties: [KeyVal]
+  position: String
 }
 
 type KeyVal {
@@ -22,6 +23,7 @@ extend type Mutation {
     name: String,
     type: String,
     properties: [KeyValInput]
+    position: String,
   ): Device
 }
 

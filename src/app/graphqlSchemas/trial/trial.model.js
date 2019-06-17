@@ -5,7 +5,7 @@ class Trial {
     }
 
     async addUpdateTrial(args) {
-        const { uid, experimentId, id, name, begin, end, devices } = args
+        const { uid, experimentId, id, name, begin, end, device } = args
         const newTrial = {
             project: experimentId,
             title: name,
@@ -16,7 +16,7 @@ class Trial {
                 data: {
                     begin,
                     end,
-                    devices
+                    device
                 }
             },
         };
@@ -37,8 +37,8 @@ class Trial {
         let devices;
         for (let trial of result) {
             devices = await this.connector.getTasks(task => task.custom && task.custom.type === 'device' &&
-                trial.custom.data && trial.custom.data.devices.indexOf(task.custom.id) !== -1);
-            trial.devices = devices;
+                trial.custom.data && trial.custom.data.device === task.custom.id);
+            trial.device = devices[0];
         }
 
         return result;

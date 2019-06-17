@@ -10,7 +10,7 @@ class Device {
     }
 
     async addUpdateDevice(args, context) {
-        const { uid, id, name, type, properties } = args
+        const { uid, id, name, type, properties, position } = args
         const newDevice = {
             title: name,
             description: `device ${name}, of type ${type}`,
@@ -19,7 +19,8 @@ class Device {
                 type: "device",
                 data: {
                     type: type,
-                    properties: properties
+                    properties: properties,
+                    position
                 }
             },
         };

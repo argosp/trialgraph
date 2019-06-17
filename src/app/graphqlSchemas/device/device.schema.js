@@ -7,7 +7,8 @@ const typeResolver = {
     id: _.property('custom.id'),
     name: _.property('title'),
     type: _.property('custom.data.type'),
-    properties: _.property('custom.data.properties')
+    properties: _.property('custom.data.properties'),
+    position: _.property('custom.data.position'),
   },
   KeyVal: {
     key: _.property('key'),
