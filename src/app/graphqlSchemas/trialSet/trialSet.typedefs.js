@@ -1,38 +1,30 @@
 const typeDef = `
-type Device {
+type TrialSet {
   id: String!
-  name: String!
-  type: String
+  begin: String,
+  end: String,
+  type: String,
   properties: [KeyVal]
 }
 
-type KeyVal {
-  key: String
-  val: String
-}
-
 extend type Query {
-  devices: [Device]
+  trialSets(experimentId:String!): [TrialSet]
 }
 
 extend type Mutation {
-  addUpdateDevice(
+  addUpdateTrialSet(
     experimentId: String!,
     uid: String!,
     id: String!,
-    name: String,
+    begin: String,
+    end: String,
     type: String,
     properties: [KeyValInput]
-  ): Device
-}
-
-input KeyValInput {
-  key: String
-  val: String
+  ): TrialSet
 }
 
 extend type Subscription {
-  devicesUpdated: Boolean!
+  trialSetsUpdated: Boolean!
 }
 `
 module.exports = typeDef;

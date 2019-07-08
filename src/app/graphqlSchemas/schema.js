@@ -4,6 +4,8 @@ const rootTypeDefs = require('./root');
 const { experimentResolvers, experimentTypeDefs } = require('./experiment/experiment.schema');
 const { deviceResolvers, deviceTypeDefs } = require('./device/device.schema');
 const { trialResolvers, trialTypeDefs } = require('./trial/trial.schema');
+const { assetResolvers, assetTypeDefs } = require('./asset/asset.schema');
+const { trialSetResolvers, trialSetTypeDefs } = require('./trialSet/trialSet.schema');
 const { authResolvers, authTypeDefs } = require('./auth/auth.schema');
 const GraphQLJSON = require('graphql-type-json');
 const jsonTypeDef = `scalar JSON`
@@ -11,8 +13,8 @@ const _JSON = {JSON:GraphQLJSON}
 
 
 const executableSchema = makeExecutableSchema({
-    typeDefs: [rootTypeDefs, experimentTypeDefs, deviceTypeDefs, trialTypeDefs, authTypeDefs, jsonTypeDef],
-    resolvers: merge(experimentResolvers, deviceResolvers, trialResolvers, authResolvers, _JSON),
+    typeDefs: [rootTypeDefs, experimentTypeDefs, deviceTypeDefs, trialTypeDefs, assetTypeDefs, trialSetTypeDefs, authTypeDefs, jsonTypeDef],
+    resolvers: merge(experimentResolvers, deviceResolvers, trialResolvers, assetResolvers, trialSetResolvers, authResolvers, _JSON),
     // schemaDirectives: {
     //     requiretrial: requiretrialDirective
     // },

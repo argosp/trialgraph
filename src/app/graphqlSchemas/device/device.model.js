@@ -10,21 +10,22 @@ class Device {
     }
 
     async addUpdateDevice(args, context) {
-        const { uid, id, name, type, properties, position } = args
+        const { uid, experimentId, id, name, type, properties } = args
         const newDevice = {
             title: name,
+            project: experimentId,
             description: `device ${name}, of type ${type}`,
             custom: {
                 id: id,
                 type: "device",
                 data: {
+                    entityType: "DEVICE",
                     type: type,
-                    properties: properties,
-                    position
+                    properties: properties
                 }
             },
         };
-        const response = await this.connector.addUpdateTask(newDevice, uid, config.devicesProjectId);
+        const response = await this.connector.addUpdateTask(newDevice, uid, experimentId);
         const data = JSON.parse(response.body)
         return data;
     }

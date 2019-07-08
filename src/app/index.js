@@ -4,6 +4,8 @@ const Auth = require('./graphqlSchemas/auth/auth.model');
 const Experiment = require('./graphqlSchemas/experiment/experiment.model');
 const Device = require('./graphqlSchemas/device/device.model');
 const Trial = require('./graphqlSchemas/trial/trial.model');
+const Asset = require('./graphqlSchemas/asset/asset.model');
+const TrialSet = require('./graphqlSchemas/trialSet/trialSet.model');
 const { execute, subscribe } = require('graphql');
 const { SubscriptionServer } = require('subscriptions-transport-ws');
 const schema = require('./graphqlSchemas/schema');
@@ -21,6 +23,8 @@ module.exports = {
                     auth: new Auth({ connector: rootConnector }),
                     experiment: new Experiment({ connector: rootConnector }),
                     device: new Device({ connector: rootConnector }),
+                    asset: new Asset({ connector: rootConnector }),
+                    trialSet: new TrialSet({ connector: rootConnector }),
                     trial: new Trial({ connector: rootConnector })
                 }
             },

@@ -149,6 +149,29 @@ class RootConnector {
     }
   }
 
+  async addUpdateProject(data, uid) {
+    data.color = '0097A7'
+    try {
+      if (this.token === null || this.token === undefined) {
+        return Promise.reject(new Error('unauthorized'));
+      }
+      const url = `${config.rootUri}/api/hook?entity=project&uid=${uid}`;
+      const options = {
+        method: 'POST',
+        data: data,
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${this.token}`
+        },
+      }
+      const result = await request(url, options);
+      if (result === null || result === undefined) {
+        return [{ error: `Ooops. Something went wrong while trying to addUpdate a ${data.type}` }]
+      }
+      return result
+    }
+    catch (error) { }
+  }
 
   async addUpdateTask(data, uid, experimentId) {
     try {
