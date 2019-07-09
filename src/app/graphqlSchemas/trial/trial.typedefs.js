@@ -4,7 +4,9 @@ type Trial {
   name: String
   begin: String!
   end: String!
-  device: Device
+  device: Device,
+  trialSet: TrialSet,
+  properties: [KeyVal]
 }
 extend type Query {
     trials(experimentId:String!): [Trial]
@@ -17,6 +19,8 @@ extend type Mutation {
       name: String,
       begin: String,
       end: String,
+      trialSet: String,
+      properties: [KeyValInput],
       device: String
     ): Trial
   }

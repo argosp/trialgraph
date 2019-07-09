@@ -8,6 +8,7 @@ const typeResolver = {
     name: _.property('title'),
     type: _.property('custom.data.type'),
     properties: _.property('custom.data.properties'),
+    number: _.property('custom.data.number')
   },
   KeyVal: {
     key: _.property('key'),
@@ -16,8 +17,8 @@ const typeResolver = {
 }
 const resolvers = {
   Query: {
-    async devices(_, { }, context) {
-      return await context.device.getAllDevices();
+    async devices(_, args, context) {
+      return await context.device.getDevices(args);
     }
   },
   Mutation: {

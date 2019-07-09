@@ -3,6 +3,7 @@ type Device {
   id: String!
   name: String!
   type: String
+  number: String
   properties: [KeyVal]
 }
 
@@ -12,7 +13,7 @@ type KeyVal {
 }
 
 extend type Query {
-  devices: [Device]
+  devices(experimentId:String!): [Device]
 }
 
 extend type Mutation {
@@ -22,6 +23,7 @@ extend type Mutation {
     id: String!,
     name: String,
     type: String,
+    number: String,
     properties: [KeyValInput]
   ): Device
 }

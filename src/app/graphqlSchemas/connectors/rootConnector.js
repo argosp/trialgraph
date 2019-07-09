@@ -97,7 +97,7 @@ class RootConnector {
     if (data == null || !Array.isArray(data)) {
       return Promise.reject(error);
     }
-    const filtered = data.filter(filter);
+    const filtered = filter ? data.filter(filter) : data;
     return filtered;
   }
 

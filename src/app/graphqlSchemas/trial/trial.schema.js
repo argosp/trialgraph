@@ -7,6 +7,8 @@ const typeResolver = {
     name: _.property('title'),
     begin: _.property('custom.data.begin'),
     end: _.property('custom.data.end'),
+    trialSet: _.property('trialSet'),
+    properties: _.property('custom.data.properties'),
     device: _.property('device')
   }
 }

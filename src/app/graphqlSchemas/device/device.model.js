@@ -9,8 +9,20 @@ class Device {
         return devices != null ? devices : [];
     }
 
+    async getDevices(args) {
+        const { experimentId } = args;
+        const result = await this.connector.getTasksFromExperiment(experimentId, (task => task.custom && task.custom.type === 'device'));
+        if(typeof result === 'string')
+            result = JSON.parse(result);
+        if (result === null || result === undefined || !Array.isArray(result)) {
+            return [{ error: 'Ooops. Something went wrong and we coudnt fetch the data' }]
+        }
+
+        return result;
+    }
+
     async addUpdateDevice(args, context) {
-        const { uid, experimentId, id, name, type, properties } = args
+        const { uid, experimentId, id, name, type, properties, number } = args
         const newDevice = {
             title: name,
             project: experimentId,
@@ -21,6 +33,7 @@ class Device {
                 data: {
                     entityType: "DEVICE",
                     type: type,
+                    number: number,
                     properties: properties
                 }
             },
