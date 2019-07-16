@@ -10,8 +10,8 @@ class Device {
     }
 
     async getDevices(args) {
-        const { experimentId } = args;
-        const result = await this.connector.getTasksFromExperiment(experimentId, (task => task.custom && task.custom.type === 'device'));
+        const { experimentId, entityType = 'device' } = args;
+        const result = await this.connector.getTasksFromExperiment(experimentId, (task => task.custom && task.custom.type === entityType));
         if(typeof result === 'string')
             result = JSON.parse(result);
         if (result === null || result === undefined || !Array.isArray(result)) {
@@ -22,16 +22,16 @@ class Device {
     }
 
     async addUpdateDevice(args, context) {
-        const { uid, experimentId, id, name, type, properties, number } = args
+        const { uid, experimentId, id, name, type, properties, number, entityType } = args
         const newDevice = {
             title: name,
             project: experimentId,
-            description: `device ${name}, of type ${type}`,
+            description: `${entityType} ${name}, of type ${type}`,
             custom: {
                 id: id,
-                type: "device",
+                type: entityType,
                 data: {
-                    entityType: "DEVICE",
+                    entityType: entityType.toUpperCase(),
                     type: type,
                     number: number,
                     properties: properties
@@ -39,7 +39,7 @@ class Device {
             },
         };
         const response = await this.connector.addUpdateTask(newDevice, uid, experimentId);
-        const data = JSON.parse(response.body)
+        const data = JSON.parse(response.body);
         return data;
     }
 }

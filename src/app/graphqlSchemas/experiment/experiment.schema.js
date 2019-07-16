@@ -18,7 +18,7 @@ const resolvers = {
     async addUpdateExperiment(_, args, context) {
       pubsub.publish(EXPERIMENTS_UPDATED, { experimentsUpdated: true });
       const result = await context.experiment.addUpdateExperiment(args, context);
-      await context.experiment.addUpdateData(args, result);
+      await context.data.addUpdateData(args, result);
       return result;
     }
   },

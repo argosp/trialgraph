@@ -29,27 +29,6 @@ class Experiment {
         return data;
     }
 
-    async addUpdateData(args, experiment) {
-        const { uid, id, name, begin, end } = args;
-        const experimentId = experiment._id;
-        const newData = {
-            project: experimentId,
-            title: `${name}_data`,
-            description: `${name}. starts in ${begin}, ends in ${end}`,
-            custom: {
-                id: id,
-                type: "data",
-                data: {
-                    entityType: "DATA",
-                    begin,
-                    end
-                }
-            },
-        };
-        const response = await this.connector.addUpdateTask(newData, uid, experimentId);
-        const data = JSON.parse(response.body);
-        return data;
-    }
 }
 
 module.exports = Experiment;

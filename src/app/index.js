@@ -3,6 +3,7 @@ const RootConnector = require('./graphqlSchemas/connectors/rootConnector');
 const Auth = require('./graphqlSchemas/auth/auth.model');
 const Experiment = require('./graphqlSchemas/experiment/experiment.model');
 const Device = require('./graphqlSchemas/device/device.model');
+const Data = require('./graphqlSchemas/data/data.model');
 const Trial = require('./graphqlSchemas/trial/trial.model');
 const Asset = require('./graphqlSchemas/asset/asset.model');
 const TrialSet = require('./graphqlSchemas/trialSet/trialSet.model');
@@ -25,7 +26,8 @@ module.exports = {
                     device: new Device({ connector: rootConnector }),
                     asset: new Asset({ connector: rootConnector }),
                     trialSet: new TrialSet({ connector: rootConnector }),
-                    trial: new Trial({ connector: rootConnector })
+                    trial: new Trial({ connector: rootConnector }),
+                    data: new Data({ connector: rootConnector })
                 }
             },
             playground: {

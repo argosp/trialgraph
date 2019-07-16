@@ -13,7 +13,7 @@ type KeyVal {
 }
 
 extend type Query {
-  devices(experimentId:String!): [Device]
+  devices(experimentId:String!, entityType:String): [Device]
 }
 
 extend type Mutation {
@@ -24,7 +24,8 @@ extend type Mutation {
     name: String,
     type: String,
     number: String,
-    properties: [KeyValInput]
+    properties: [KeyValInput],
+    entityType: String
   ): Device
 }
 
@@ -34,7 +35,7 @@ input KeyValInput {
 }
 
 extend type Subscription {
-  devicesUpdated: Boolean!
+  devicesUpdated(entityType:String): Boolean!
 }
 `
 module.exports = typeDef;
