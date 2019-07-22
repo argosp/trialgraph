@@ -5,8 +5,7 @@ const trialSetTypeDefs = require('./trialSet.typedefs');
 const typeResolver = {
   TrialSet: {
     id: _.property('custom.id'),
-    begin: _.property('custom.data.begin'),
-    end: _.property('custom.data.end'),
+    name: _.property('custom.data.name'),
     type: _.property('custom.data.type'),
     properties: _.property('custom.data.properties')
   }

@@ -12,7 +12,8 @@ const typeResolver = {
   },
   KeyVal: {
     key: _.property('key'),
-    val: _.property('val')
+    val: _.property('val'),
+    type: _.property('type')
   }
 }
 const resolvers = {

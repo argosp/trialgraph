@@ -22,7 +22,7 @@ class TrialSet {
     }
 
     async addUpdateTrialSet(args, context) {
-        const { uid, experimentId, id, begin, end, properties, type } = args;
+        const { uid, experimentId, id, name, begin, end, properties, type } = args;
         const newTrialSet = {
             title: id,
             project: experimentId,
@@ -33,8 +33,7 @@ class TrialSet {
                 data: {
                     entityType: "TRIALSET",
                     type: type,
-                    begin: begin,
-                    end: end,
+                    name: name,
                     properties: properties
                 }
             },

@@ -10,6 +10,7 @@ type Device {
 type KeyVal {
   key: String
   val: String
+  type: String
 }
 
 extend type Query {
@@ -32,6 +33,7 @@ extend type Mutation {
 input KeyValInput {
   key: String
   val: String
+  type: String
 }
 
 extend type Subscription {
