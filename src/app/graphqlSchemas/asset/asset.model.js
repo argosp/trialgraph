@@ -22,7 +22,7 @@ class Asset {
     }
 
     async addUpdateAsset(args, context) {
-        const { uid, experimentId, id, name, type } = args
+        const { uid, experimentId, id, name, type, number, properties } = args
         const newAsset = {
             title: name,
             project: experimentId,
@@ -32,7 +32,9 @@ class Asset {
                 type: "asset",
                 data: {
                     entityType: "ASSET",
-                    type: type
+                    type: type,
+                    number: number,
+                    properties: properties
                 }
             },
         };

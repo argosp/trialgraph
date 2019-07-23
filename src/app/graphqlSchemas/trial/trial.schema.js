@@ -9,7 +9,8 @@ const typeResolver = {
     end: _.property('custom.data.end'),
     trialSet: _.property('trialSet'),
     properties: _.property('custom.data.properties'),
-    device: _.property('device')
+    devices: _.property('devices'),
+    assets: _.property('assets')
   }
 }
 const resolvers = {

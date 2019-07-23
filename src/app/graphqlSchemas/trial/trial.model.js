@@ -5,7 +5,7 @@ class Trial {
     }
 
     async addUpdateTrial(args) {
-        const { uid, experimentId, id, name, begin, end, device, trialSet, properties } = args
+        const { uid, experimentId, id, name, begin, end, devices, assets, trialSet, properties } = args
         const newTrial = {
             project: experimentId,
             title: name,
@@ -16,7 +16,8 @@ class Trial {
                 data: {
                     begin,
                     end,
-                    device,
+                    devices,
+                    assets,
                     trialSet,
                     properties
                 }
@@ -39,11 +40,24 @@ class Trial {
         const trials = result.filter(task => task.custom && task.custom.type === 'trial');
 
         for (let trial of trials) {
-            trial.device = result.find(task => task.custom && task.custom.type === 'device' &&
-                trial.custom.data && trial.custom.data.device === task.custom.id);
-        }
+            trial.devices = trial.custom.data.devices && trial.custom.data.devices.map(d => {
+                return({
+                    entity: result.find(task => task.custom && task.custom.type === 'device' &&
+                    trial.custom.data && d.entity === task.custom.id),
+                    properties: d.properties,
+                    type: d.type
+                });
+            });
 
-        for (let trial of trials) {
+            trial.assets = trial.custom.data.assets && trial.custom.data.assets.map(d => {
+                return({
+                    entity: result.find(task => task.custom && task.custom.type === 'asset' &&
+                    trial.custom.data && d.entity === task.custom.id),
+                    properties: d.properties,
+                    type: d.type
+                });
+            });
+
             trial.trialSet = result.find(task => task.custom && task.custom.type === 'trialSet' &&
                 trial.custom.data && trial.custom.data.trialSet === task.custom.id);
         }

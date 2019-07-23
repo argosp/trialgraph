@@ -6,7 +6,9 @@ const typeResolver = {
   Asset: {
     id: _.property('custom.id'),
     name: _.property('title'),
-    type: _.property('custom.data.type')
+    type: _.property('custom.data.type'),
+    properties: _.property('custom.data.properties'),
+    number: _.property('custom.data.number')
   }
 }
 const resolvers = {

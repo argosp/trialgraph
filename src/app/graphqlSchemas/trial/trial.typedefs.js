@@ -4,10 +4,18 @@ type Trial {
   name: String
   begin: String!
   end: String!
-  device: Device,
+  devices: [Entity],
+  assets: [Entity],
   trialSet: TrialSet,
   properties: [KeyVal]
 }
+
+type Entity {
+  entity: Device
+  properties: [KeyVal]
+  type: String
+}
+
 extend type Query {
     trials(experimentId:String!): [Trial]
 }
@@ -21,9 +29,17 @@ extend type Mutation {
       end: String,
       trialSet: String,
       properties: [KeyValInput],
-      device: String
+      devices: [EntityInput],
+      assets: [EntityInput]
     ): Trial
   }
+
+input EntityInput {
+  entity: String
+  properties: [KeyValInput]
+  type: String
+}
+
 extend type Subscription {
   trialsUpdated: Boolean!
 }
