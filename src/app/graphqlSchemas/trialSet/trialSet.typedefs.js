@@ -2,6 +2,7 @@ const typeDef = `
 type TrialSet {
   id: String!
   name: String,
+  notes: String,
   type: String,
   properties: [KeyVal]
 }
@@ -16,6 +17,7 @@ extend type Mutation {
     uid: String!,
     id: String!,
     name: String,
+    notes: String,
     type: String,
     properties: [KeyValInput]
   ): TrialSet

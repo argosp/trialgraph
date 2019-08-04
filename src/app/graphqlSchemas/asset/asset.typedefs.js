@@ -2,6 +2,7 @@ const typeDef = `
 type Asset {
   id: String!
   name: String!
+  notes: String!
   type: String
   number: String
   properties: [KeyVal]
@@ -17,6 +18,7 @@ extend type Mutation {
     uid: String!,
     id: String!,
     name: String,
+    notes: String,
     type: String,
     number: String,
     properties: [KeyValInput],

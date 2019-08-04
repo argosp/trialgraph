@@ -2,6 +2,7 @@ const typeDef = `
 type Trial {
   id: String!
   name: String
+  notes: String
   begin: String!
   end: String!
   devices: [Entity],
@@ -25,6 +26,7 @@ extend type Mutation {
       uid: String!,
       id: String!,
       name: String,
+      notes: String,
       begin: String,
       end: String,
       trialSet: String,

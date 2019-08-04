@@ -6,6 +6,7 @@ const typeResolver = {
   TrialSet: {
     id: _.property('custom.id'),
     name: _.property('custom.data.name'),
+    notes: _.property('custom.data.notes'),
     type: _.property('custom.data.type'),
     properties: _.property('custom.data.properties')
   }

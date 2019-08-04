@@ -22,7 +22,7 @@ class Device {
     }
 
     async addUpdateDevice(args, context) {
-        const { uid, experimentId, id, name, type, properties, number, entityType } = args
+        const { uid, experimentId, id, name, type, properties, number, entityType, notes } = args
         const newDevice = {
             title: name,
             project: experimentId,
@@ -34,7 +34,8 @@ class Device {
                     entityType: entityType.toUpperCase(),
                     type: type,
                     number: number,
-                    properties: properties
+                    properties: properties,
+                    notes: notes
                 }
             },
         };

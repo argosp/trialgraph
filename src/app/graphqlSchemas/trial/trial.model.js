@@ -5,7 +5,7 @@ class Trial {
     }
 
     async addUpdateTrial(args) {
-        const { uid, experimentId, id, name, begin, end, devices, assets, trialSet, properties } = args
+        const { uid, experimentId, id, name, notes, begin, end, devices, assets, trialSet, properties } = args
         const newTrial = {
             project: experimentId,
             title: name,
@@ -19,7 +19,8 @@ class Trial {
                     devices,
                     assets,
                     trialSet,
-                    properties
+                    properties,
+                    notes
                 }
             },
         };
