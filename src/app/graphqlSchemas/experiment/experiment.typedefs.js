@@ -14,6 +14,11 @@ extend type Mutation {
       begin: String,
       end: String
     ): Experiment
+
+    buildExperimentData(
+      uid: String!,
+      id: String!
+    ): Boolean
   }
 `
 module.exports = typeDef;

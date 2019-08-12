@@ -14,6 +14,7 @@ type Trial {
 type Entity {
   entity: Device
   properties: [KeyVal]
+  name: String
   type: String
 }
 
@@ -39,6 +40,7 @@ extend type Mutation {
 input EntityInput {
   entity: String
   properties: [KeyValInput]
+  name: String
   type: String
 }
 

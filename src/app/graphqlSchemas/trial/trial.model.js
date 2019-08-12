@@ -45,8 +45,9 @@ class Trial {
                 return({
                     entity: result.find(task => task.custom && task.custom.type === 'device' &&
                     trial.custom.data && d.entity === task.custom.id),
-                    properties: d.properties,
-                    type: d.type
+                    properties: d.properties || [],
+                    type: d.type,
+                    name: d.name
                 });
             });
 
@@ -54,8 +55,9 @@ class Trial {
                 return({
                     entity: result.find(task => task.custom && task.custom.type === 'asset' &&
                     trial.custom.data && d.entity === task.custom.id),
-                    properties: d.properties,
-                    type: d.type
+                    properties: d.properties || [],
+                    type: d.type,
+                    name: d.name
                 });
             });
 

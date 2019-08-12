@@ -20,6 +20,9 @@ const resolvers = {
       const result = await context.experiment.addUpdateExperiment(args, context);
       await context.data.addUpdateData(args, result);
       return result;
+    },
+    async buildExperimentData(_, args, context) {
+      return await context.experiment.buildExperimentData(args);
     }
   },
 }
