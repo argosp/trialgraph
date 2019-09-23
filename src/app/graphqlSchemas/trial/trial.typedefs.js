@@ -19,7 +19,7 @@ type Entity {
 }
 
 extend type Query {
-    trials(experimentId:String!): [Trial]
+    trials(experimentId:String!, trialSetId:String!): [Trial]
 }
 extend type Mutation {
     addUpdateTrial(
@@ -48,6 +48,6 @@ extend type Subscription {
   trialsUpdated: Boolean!
 }
 
-`
+`;
 
 module.exports = typeDef;
