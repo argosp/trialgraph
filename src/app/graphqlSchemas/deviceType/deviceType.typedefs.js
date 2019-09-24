@@ -1,10 +1,11 @@
 const typeDef = `
-type Device {
+type DeviceType {
   id: String!
   name: String!
   notes: String
   type: String
-  number: String
+  numberOfDevices: String
+  numberOfFields: String
   properties: [KeyVal]
 }
 
@@ -15,21 +16,22 @@ type KeyVal {
 }
 
 extend type Query {
-  devices(experimentId:String!, entityType:String): [Device]
+  deviceTypes(experimentId:String!, entityType:String): [DeviceType]
 }
 
 extend type Mutation {
-  addUpdateDevice(
+  addUpdateDeviceTypes(
     experimentId: String!,
     uid: String!,
     id: String!,
     name: String,
     notes: String,
     type: String,
-    number: String,
+    numberOfDevices: String,
+    numberOfFields: String,
     properties: [KeyValInput],
     entityType: String
-  ): Device
+  ): DeviceType
 }
 
 input KeyValInput {
@@ -39,7 +41,7 @@ input KeyValInput {
 }
 
 extend type Subscription {
-  devicesUpdated(entityType:String): Boolean!
+  deviceTypesUpdated(entityType:String): Boolean!
 }
-`
+`;
 module.exports = typeDef;

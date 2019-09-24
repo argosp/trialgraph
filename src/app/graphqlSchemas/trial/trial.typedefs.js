@@ -12,7 +12,7 @@ type Trial {
 }
 
 type Entity {
-  entity: Device
+  entity: DeviceType
   properties: [KeyVal]
   name: String
   type: String
