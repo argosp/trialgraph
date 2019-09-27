@@ -36,7 +36,7 @@ input KeyValInput {
 }
 
 extend type Subscription {
-  deviceTypesUpdated(type:String): Boolean!
+  deviceTypesUpdated: Boolean!
 }
 `;
 module.exports = typeDef;

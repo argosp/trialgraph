@@ -16,12 +16,11 @@ class Device {
     } = args;
 
     const newDevice = {
-      project: experimentId,
-      title: name,
       custom: {
         id,
         type: 'device',
         data: {
+          name,
           height,
           sku,
           brand,
