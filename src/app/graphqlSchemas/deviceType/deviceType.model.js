@@ -3,18 +3,18 @@ class DeviceType {
     this.connector = connector;
   }
 
-  async getAllDeviceTypes() {
+  /*  async getAllDeviceTypes() {
     const deviceTypes = await this.connector.getTasks(
       task => task.custom && task.custom.type === 'deviceType',
     );
     return deviceTypes != null ? deviceTypes : [];
-  }
+  } */
 
   async getDeviceTypes(args) {
-    const { experimentId, entityType = 'deviceType' } = args;
+    const { experimentId } = args;
     let result = await this.connector.getTasksFromExperiment(
       experimentId,
-      task => task.custom && task.custom.type === entityType,
+      task => task.custom && task.custom.type === 'deviceType',
     );
     if (typeof result === 'string') {
       result = JSON.parse(result);
@@ -34,35 +34,30 @@ class DeviceType {
       experimentId,
       id,
       name,
-      type,
       properties,
       numberOfDevices,
       numberOfFields,
-      entityType,
-      notes,
     } = args;
+
     const newDeviceType = {
-      title: name,
-      project: experimentId,
-      description: `${entityType} ${name}, of type ${type}`,
       custom: {
         id,
-        type: entityType,
+        type: 'deviceType',
         data: {
-          entityType: entityType.toUpperCase(),
-          type,
           numberOfDevices,
           numberOfFields,
           properties,
-          notes,
+          name,
         },
       },
     };
+
     const response = await this.connector.addUpdateTask(
       newDeviceType,
       uid,
       experimentId,
     );
+
     return JSON.parse(response.body);
   }
 }

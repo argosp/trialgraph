@@ -3,6 +3,7 @@ type TrialSet {
   id: String!
   name: String,
   description: String,
+  numberOfTrials: String,
   properties: [KeyVal]
 }
 
@@ -17,6 +18,7 @@ extend type Mutation {
     id: String!,
     name: String, 
     description: String,
+    numberOfTrials: String,
     properties: [KeyValInput]
   ): TrialSet
 }

@@ -22,7 +22,7 @@ class TrialSet {
   }
 
   async addUpdateTrialSet(args) {
-    const { uid, experimentId, id, name, properties, description } = args;
+    const { uid, experimentId, id, name, properties, description, numberOfTrials } = args;
 
     const newTrialSet = {
       custom: {
@@ -32,6 +32,7 @@ class TrialSet {
           name,
           description,
           properties,
+          numberOfTrials,
         },
       },
 

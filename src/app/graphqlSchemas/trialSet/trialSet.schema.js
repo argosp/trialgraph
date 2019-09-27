@@ -8,6 +8,7 @@ const typeResolver = {
     name: property('custom.data.name'),
     description: property('custom.data.description'),
     properties: property('custom.data.properties'),
+    numberOfTrials: property('custom.data.numberOfTrials'),
   },
 };
 
