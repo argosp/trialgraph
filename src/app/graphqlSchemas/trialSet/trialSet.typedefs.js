@@ -2,8 +2,7 @@ const typeDef = `
 type TrialSet {
   id: String!
   name: String,
-  notes: String,
-  type: String,
+  description: String,
   properties: [KeyVal]
 }
 
@@ -16,9 +15,8 @@ extend type Mutation {
     experimentId: String!,
     uid: String!,
     id: String!,
-    name: String,
-    notes: String,
-    type: String,
+    name: String, 
+    description: String,
     properties: [KeyValInput]
   ): TrialSet
 }
@@ -26,5 +24,5 @@ extend type Mutation {
 extend type Subscription {
   trialSetsUpdated: Boolean!
 }
-`
+`;
 module.exports = typeDef;
