@@ -14,4 +14,4 @@ services:
       ROOT_URI: "http://default.coreborne.linnovate.net"
     ports:
       - 8888:8888
-    command: npm start
+    command: npm run dev
