@@ -46,11 +46,11 @@ spec:
           envFrom:
             - configMapRef:
                 name: trialgraph-configmap
-          readinessProbe:
-            httpGet:
-              path: /graphql
-              port: 8888
-            initialDelaySeconds: 10
-            periodSeconds: 5
-            failureThreshold: 3
-            successThreshold: 1
+          # readinessProbe: uncomment when health endpoint will be ready
+          #   httpGet:
+          #     path: /graphql
+          #     port: 8888
+          #   initialDelaySeconds: 10
+          #   periodSeconds: 5
+          #   failureThreshold: 3
+          #   successThreshold: 1
