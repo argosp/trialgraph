@@ -2,15 +2,23 @@ const typeDef = `
 type DeviceType {
   id: String!
   name: String
-  numberOfDevices: String
-  numberOfFields: String
+  numberOfDevices: Int
+  numberOfFields: Int
   properties: [KeyVal]
 }
 
 type KeyVal {
   key: String
-  val: String
   type: String
+  id: String
+  label: String
+  description: String
+  prefix: String
+  suffix: String
+  required: Boolean
+  template: String
+  multipleValues: Boolean
+  trialField: Boolean
 }
 
 extend type Query {
@@ -23,16 +31,24 @@ extend type Mutation {
     uid: String!,
     id: String!,
     name: String,
-    numberOfDevices: String,
-    numberOfFields: String,
+    numberOfDevices: Int,
+    numberOfFields: Int,
     properties: [KeyValInput]
   ): DeviceType
 }
 
 input KeyValInput {
   key: String
-  val: String
   type: String
+  id: String
+  label: String
+  description: String
+  prefix: String
+  suffix: String
+  required: Boolean
+  template: String
+  multipleValues: Boolean
+  trialField: Boolean
 }
 
 extend type Subscription {

@@ -58,7 +58,7 @@ class DeviceType {
       experimentId,
     );
 
-    return JSON.parse(response.body);
+    return response.data;
   }
 }
 

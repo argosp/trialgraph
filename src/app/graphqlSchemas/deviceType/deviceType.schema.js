@@ -12,8 +12,16 @@ const typeResolver = {
   },
   KeyVal: {
     key: property('key'),
-    val: property('val'),
     type: property('type'),
+    id: property('id'),
+    label: property('label'),
+    description: property('description'),
+    prefix: property('prefix'),
+    suffix: property('suffix'),
+    required: property('required'),
+    template: property('template'),
+    multipleValues: property('multipleValues'),
+    trialField: property('trialField'),
   },
 };
 const resolvers = {
