@@ -2,6 +2,12 @@ const typeDef = `
 type Experiment {
   id: String!
   name: String
+  description: String
+  begin: String
+  end: String
+  location: String
+  status: String
+  numberOfTrials: Int
 }
 extend type Query {
   experiments: [Experiment]
@@ -11,8 +17,11 @@ extend type Mutation {
       uid: String!,
       id: String!,
       name: String,
+      description: String,
       begin: String,
-      end: String
+      end: String,
+      location: String,
+      numberOfTrials: Int
     ): Experiment
 
     buildExperimentData(
@@ -20,5 +29,5 @@ extend type Mutation {
       id: String!
     ): Boolean
   }
-`
+`;
 module.exports = typeDef;

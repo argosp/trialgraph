@@ -1,18 +1,25 @@
-const _ = require('lodash')
+const { property, merge } = require('lodash');
 const experimentTypeDefs = require('./experiment.typedefs');
 const { pubsub, EXPERIMENTS_UPDATED } = require('../../subscriptions');
 
 const typeResolver = {
-  Experiment:{
-    id: _.property('_id'),
-    name: _.property('title')
-  }
-}
+  Experiment: {
+    id: property('_id'),
+    name: property('title'),
+    description: property('description'),
+    begin: property('created'),
+    end: property('due'),
+    location: property('location'),
+    status: property('status'),
+    numberOfTrials: property('numberOfTrials'),
+  },
+};
+
 const resolvers = {
   Query: {
-    async experiments(_, args, context){
-      return await context.experiment.getAllExperiments();
-    }
+    async experiments(_, args, context) {
+      return context.experiment.getAllExperiments();
+    },
   },
   Mutation: {
     async addUpdateExperiment(_, args, context) {
@@ -22,13 +29,14 @@ const resolvers = {
       return result;
     },
     async buildExperimentData(_, args, context) {
-      return await context.experiment.buildExperimentData(args);
-    }
+      return context.experiment.buildExperimentData(args);
+    },
   },
-}
-const experimentResolvers = _.merge(resolvers, typeResolver);
+};
+
+const experimentResolvers = merge(resolvers, typeResolver);
 
 module.exports = {
-  experimentTypeDefs: experimentTypeDefs,
-  experimentResolvers: experimentResolvers
-}
+  experimentTypeDefs,
+  experimentResolvers,
+};
