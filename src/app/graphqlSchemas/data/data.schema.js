@@ -4,11 +4,11 @@ const dataTypeDefs = require('./data.typedefs');
 
 const typeResolver = {
   Data: {
-    id: property('custom.id'),
-    name: property('title'),
-    type: property('custom.data.type'),
+    id: property('id'),
     begin: property('custom.data.begin'),
     end: property('custom.data.end'),
+    location: property('custom.data.location'),
+    numberOfTrials: property('custom.data.numberOfTrials'),
   },
 };
 

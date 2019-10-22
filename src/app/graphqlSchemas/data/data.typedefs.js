@@ -1,10 +1,11 @@
 const typeDef = `
 type Data {
+  project: String!
   id: String!
-  name: String!
-  type: String,
-  begin: String,
+  begin: String
   end: String
+  location: String
+  numberOfTrials: Int!
 }
 
 extend type Query {
@@ -13,18 +14,18 @@ extend type Query {
 
 extend type Mutation {
   addUpdateData(
-    experimentId: String!,
+    project: String!,
     uid: String!,
     id: String!,
-    name: String,
-    type: String,
     begin: String,
     end: String,
+    location: String,
+    numberOfTrials: Int,
   ): Data
 }
 
 extend type Subscription {
   experimentDataUpdated: Boolean!
 }
-`
+`;
 module.exports = typeDef;

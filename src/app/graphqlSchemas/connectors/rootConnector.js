@@ -90,8 +90,8 @@ class RootConnector {
     if (data == null || !Array.isArray(data)) {
       return Promise.reject(error);
     }
-    const filtered = filter ? data.filter(filter) : data;
-    return filtered;
+
+    return filter ? data.filter(filter) : data;
   }
 
   async getTasks(filter) {
@@ -126,8 +126,8 @@ class RootConnector {
           Authorization: `Bearer ${this.token}`,
         },
       };
-      const result = await request(url, options);
-      const data = JSON.parse(result.body);
+      const result = await axios(url, options);
+      const { data } = result;
       if (data === null || data === undefined || !Array.isArray(data)) {
         return [{ error: 'Ooops. Something went wrong and we coudnt fetch the data' }];
       }
@@ -153,7 +153,7 @@ class RootConnector {
           Authorization: `Bearer ${this.token}`,
         },
       };
-      const result = await request(url, options);
+      const result = await axios(url, options);
       if (result === null || result === undefined) {
         return [{ error: `Ooops. Something went wrong while trying to addUpdate a ${data.type}` }];
       }

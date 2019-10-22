@@ -4,14 +4,10 @@ const { pubsub, EXPERIMENTS_UPDATED } = require('../../subscriptions');
 
 const typeResolver = {
   Experiment: {
-    id: property('_id'),
+    id: property('id'),
     name: property('title'),
     description: property('description'),
-    begin: property('created'),
-    end: property('due'),
-    location: property('location'),
     status: property('status'),
-    numberOfTrials: property('numberOfTrials'),
   },
 };
 
