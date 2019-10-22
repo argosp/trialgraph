@@ -105,8 +105,8 @@ class RootConnector {
           Authorization: `Bearer ${this.token}`,
         },
       };
-      const result = await request(url, options);
-      const data = JSON.parse(result.body);
+      const result = await axios(url, options);
+      const { data } = result;
       if (data === null || data === undefined || !Array.isArray(data)) {
         return [{ error: 'Ooops. Something went wrong and we coudnt fetch the data' }];
       }

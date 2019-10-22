@@ -13,12 +13,16 @@ class Experiment {
     return projects;
   }
 
+  async getAllExperimentsWithData() {
+    return this.connector.getTasks(
+      experiment => experiment.custom
+        && experiment.custom.type === 'experimentData'
+        && experiment.recycled === undefined,
+    );
+  }
+
   async addUpdateExperiment(args) {
-    const {
-      uid,
-      name,
-      description,
-    } = args;
+    const { uid, name, description } = args;
 
     const newExperiment = {
       title: name,

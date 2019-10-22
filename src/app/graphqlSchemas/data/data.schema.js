@@ -9,6 +9,7 @@ const typeResolver = {
     end: property('custom.data.end'),
     location: property('custom.data.location'),
     numberOfTrials: property('custom.data.numberOfTrials'),
+    project: property('project'),
   },
 };
 
@@ -16,6 +17,9 @@ const resolvers = {
   Query: {
     async experimentData(_, args, context) {
       return context.data.getExperimentData(args);
+    },
+    async experimentsWithData(_, args, context) {
+      return context.experiment.getAllExperimentsWithData();
     },
   },
   Mutation: {

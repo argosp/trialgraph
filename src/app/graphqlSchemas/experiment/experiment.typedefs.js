@@ -3,15 +3,13 @@ type Experiment {
   id: String!
   name: String
   description: String
-  begin: String
-  end: String
-  location: String
   status: String
-  numberOfTrials: Int
 }
+
 extend type Query {
   experiments: [Experiment]
 }
+
 extend type Mutation {
     addUpdateExperiment(
       uid: String!,
@@ -21,7 +19,7 @@ extend type Mutation {
       begin: String,
       end: String,
       location: String,
-      numberOfTrials: Int
+      numberOfTrials: Int!
     ): Experiment
 
     buildExperimentData(

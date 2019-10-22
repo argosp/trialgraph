@@ -1,6 +1,6 @@
 const typeDef = `
 type Data {
-  project: String!
+  project: Experiment
   id: String!
   begin: String
   end: String
@@ -10,6 +10,7 @@ type Data {
 
 extend type Query {
   experimentData(experimentId:String!): Data
+  experimentsWithData: [Data]
 }
 
 extend type Mutation {
@@ -20,7 +21,7 @@ extend type Mutation {
     begin: String,
     end: String,
     location: String,
-    numberOfTrials: Int,
+    numberOfTrials: Int!,
   ): Data
 }
 
