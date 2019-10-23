@@ -1,9 +1,9 @@
 const typeDef = `
 type DeviceType {
-  id: String!
+  key: String!
+  id: String
   name: String
   numberOfDevices: Int
-  numberOfFields: Int
   properties: [KeyVal]
 }
 
@@ -27,12 +27,12 @@ extend type Query {
 
 extend type Mutation {
   addUpdateDeviceTypes(
+    key: String!,
     experimentId: String!,
     uid: String!,
-    id: String!,
+    id: String,
     name: String,
     numberOfDevices: Int,
-    numberOfFields: Int,
     properties: [KeyValInput]
   ): DeviceType
 }

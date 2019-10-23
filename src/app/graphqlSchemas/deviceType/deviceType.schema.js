@@ -5,12 +5,12 @@ const deviceTypeTypeDefs = require('./deviceType.typedefs');
 const typeResolver = {
   DeviceType: {
     id: property('custom.id'),
+    key: property('custom.data.key'),
     name: property('custom.data.name'),
     properties: property('custom.data.properties'),
     numberOfDevices: property('custom.data.numberOfDevices'),
-    numberOfFields: property('custom.data.numberOfFields'),
   },
-  KeyVal: {
+/*  KeyVal: {
     key: property('key'),
     type: property('type'),
     id: property('id'),
@@ -22,7 +22,7 @@ const typeResolver = {
     template: property('template'),
     multipleValues: property('multipleValues'),
     trialField: property('trialField'),
-  },
+  }, */
 };
 const resolvers = {
   Query: {

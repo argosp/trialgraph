@@ -9,10 +9,8 @@ class Device {
       experimentId,
       id,
       name,
-      height,
-      sku,
-      brand,
-      deviceType,
+      deviceTypeKey,
+      properties,
     } = args;
 
     const newDevice = {
@@ -21,10 +19,8 @@ class Device {
         type: 'device',
         data: {
           name,
-          height,
-          sku,
-          brand,
-          deviceType,
+          deviceTypeKey,
+          properties,
         },
       },
     };
@@ -35,16 +31,16 @@ class Device {
       experimentId,
     );
 
-    return JSON.parse(response.body);
+    return response.data;
   }
 
   async getDevices(args) {
-    const { experimentId, deviceTypeId } = args;
+    const { experimentId, deviceTypeKey } = args;
     let result = await this.connector.getTasksFromExperiment(
       experimentId,
       task => task.custom
         && task.custom.data
-        && task.custom.data.deviceType === deviceTypeId,
+        && task.custom.data.deviceTypeKey === deviceTypeKey,
     );
 
     if (typeof result === 'string') {

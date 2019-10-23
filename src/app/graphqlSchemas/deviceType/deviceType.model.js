@@ -32,11 +32,11 @@ class DeviceType {
     const {
       uid,
       experimentId,
+      key,
       id,
       name,
       properties,
       numberOfDevices,
-      numberOfFields,
     } = args;
 
     const newDeviceType = {
@@ -44,8 +44,8 @@ class DeviceType {
         id,
         type: 'deviceType',
         data: {
+          key,
           numberOfDevices,
-          numberOfFields,
           properties,
           name,
         },

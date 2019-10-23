@@ -6,11 +6,23 @@ const typeResolver = {
   Device: {
     id: property('custom.id'),
     name: property('custom.data.name'),
-    height: property('custom.data.height'),
-    sku: property('custom.data.sku'),
-    brand: property('custom.data.brand'),
-    deviceType: property('deviceType'),
+    deviceTypeKey: property('deviceTypeKey'),
+    properties: property('custom.data.properties'),
   },
+/*  DeviceKeyVal: {
+    val: property('val'),
+    key: property('key'),
+    type: property('type'),
+    id: property('id'),
+    label: property('label'),
+    description: property('description'),
+    prefix: property('prefix'),
+    suffix: property('suffix'),
+    required: property('required'),
+    template: property('template'),
+    multipleValues: property('multipleValues'),
+    trialField: property('trialField'),
+  }, */
 };
 
 const resolvers = {

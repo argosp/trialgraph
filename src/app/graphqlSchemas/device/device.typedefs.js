@@ -2,14 +2,12 @@ const typeDef = `
 type Device {
   id: String!
   name: String
-  height: String
-  sku: String
-  brand: String
-  deviceType: DeviceType,
+  deviceTypeKey: String!
+  properties: [DeviceProperty]
 }
 
 extend type Query {
-    devices(experimentId:String!, deviceTypeId:String!): [Device]
+    devices(experimentId:String!, deviceTypeKey:String!): [Device]
 }
 
 extend type Mutation {
@@ -18,12 +16,20 @@ extend type Mutation {
       uid: String!,
       id: String!,
       name: String,
-      height: String,
-      sku: String,
-      brand: String,
-      deviceType: String,
+      deviceTypeKey: String!,
+      properties: [DevicePropertyInput] 
     ): Device
   }
+
+input DevicePropertyInput { 
+    val: String
+    key: String!
+}
+
+type DeviceProperty { 
+    val: String
+    key: String!
+}
 
 extend type Subscription {
   devicesUpdated: Boolean!
