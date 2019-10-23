@@ -183,6 +183,20 @@ class RootConnector {
     } catch (error) { }
   }
 
+  async getUser(uid) {
+    const url = `${config.rootUri}/api/users`;
+    const options = {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${this.token}`,
+      },
+    };
+    const result = await axios(url, options);
+
+    return result.data.find(user => user.uid === uid);
+  }
+
   async getUid(token) {
     const url = `${config.rootUri}/api/users/me`;
     const options = {
