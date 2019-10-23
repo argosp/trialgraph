@@ -1,9 +1,10 @@
 const typeDef = `
 type TrialSet {
+  key: String!
   id: String!
-  name: String,
-  description: String,
-  numberOfTrials: String,
+  name: String
+  description: String
+  numberOfTrials: Int
   properties: [KeyVal]
 }
 
@@ -13,12 +14,13 @@ extend type Query {
 
 extend type Mutation {
   addUpdateTrialSet(
+    key: String!,
     experimentId: String!,
     uid: String!,
     id: String!,
     name: String, 
     description: String,
-    numberOfTrials: String,
+    numberOfTrials: Int,
     properties: [KeyValInput]
   ): TrialSet
 }

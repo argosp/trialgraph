@@ -19,7 +19,7 @@ type Entity {
 }
 
 extend type Query {
-    trials(experimentId:String!, trialSetId:String!): [Trial]
+    trials(experimentId:String!, trialSetKey:String!): [Trial]
 }
 extend type Mutation {
     addUpdateTrial(

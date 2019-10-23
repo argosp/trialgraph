@@ -12,17 +12,32 @@ class TrialSet {
 
   async getTrialSets(args) {
     const { experimentId } = args;
-    let result = await this.connector.getTasksFromExperiment(experimentId, (task => task.custom && task.custom.type === 'trialSet'));
-    if (typeof result === 'string') { result = JSON.parse(result); }
+    let result = await this.connector.getTasksFromExperiment(
+      experimentId,
+      task => task.custom && task.custom.type === 'trialSet',
+    );
+    if (typeof result === 'string') {
+      result = JSON.parse(result);
+    }
     if (result === null || result === undefined || !Array.isArray(result)) {
-      return [{ error: 'Ooops. Something went wrong and we coudnt fetch the data' }];
+      return [
+        { error: 'Ooops. Something went wrong and we coudnt fetch the data' },
+      ];
     }
 
     return result;
   }
 
   async addUpdateTrialSet(args) {
-    const { uid, experimentId, id, name, properties, description, numberOfTrials } = args;
+    const {
+      uid,
+      experimentId,
+      id,
+      name,
+      properties,
+      description,
+      numberOfTrials,
+    } = args;
 
     const newTrialSet = {
       custom: {
@@ -35,12 +50,15 @@ class TrialSet {
           numberOfTrials,
         },
       },
-
     };
 
-    const response = await this.connector.addUpdateTask(newTrialSet, uid, experimentId);
+    const response = await this.connector.addUpdateTask(
+      newTrialSet,
+      uid,
+      experimentId,
+    );
 
-    return JSON.parse(response.body);
+    return response.data;
   }
 }
 

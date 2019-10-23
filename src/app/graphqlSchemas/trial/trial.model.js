@@ -44,12 +44,12 @@ class Trial {
   }
 
   async getTrials(args) {
-    const { experimentId, trialSetId } = args;
+    const { experimentId, trialSetKey } = args;
     let result = await this.connector.getTasksFromExperiment(
       experimentId,
       task => task.custom
         && task.custom.data
-        && task.custom.data.trialSet === trialSetId,
+        && task.custom.data.trialSetKey === trialSetKey,
     );
     if (typeof result === 'string') {
       result = JSON.parse(result);
