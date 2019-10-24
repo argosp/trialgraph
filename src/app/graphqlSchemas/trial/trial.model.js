@@ -9,38 +9,32 @@ class Trial {
       experimentId,
       id,
       name,
-      notes,
-      begin,
-      end,
-      devices,
-      assets,
-      trialSet,
+      key,
+      trialSetKey,
       properties,
+      numberOfDevices,
     } = args;
+
     const newTrial = {
-      project: experimentId,
-      title: name,
-      description: `${name}. starts in ${begin}, ends in ${end}`,
       custom: {
         id,
         type: 'trial',
         data: {
-          begin,
-          end,
-          devices,
-          assets,
-          trialSet,
+          key,
+          name,
+          trialSetKey,
+          numberOfDevices,
           properties,
-          notes,
         },
       },
     };
+
     const response = await this.connector.addUpdateTask(
       newTrial,
       uid,
       experimentId,
     );
-    return JSON.parse(response.body);
+    return response.data;
   }
 
   async getTrials(args) {
@@ -51,16 +45,18 @@ class Trial {
         && task.custom.data
         && task.custom.data.trialSetKey === trialSetKey,
     );
+
     if (typeof result === 'string') {
       result = JSON.parse(result);
     }
+
     if (result === null || result === undefined || !Array.isArray(result)) {
       return [
         { error: 'Ooops. Something went wrong and we coudnt fetch the data' },
       ];
     }
 
-    const trials = result.filter(
+    /*    const trials = result.filter(
       task => task.custom && task.custom.type === 'trial',
     );
 
@@ -97,9 +93,9 @@ class Trial {
           && trial.custom.data
           && trial.custom.data.trialSet === task.custom.id,
       );
-    }
+    } */
 
-    return trials;
+    return result;
   }
 }
 

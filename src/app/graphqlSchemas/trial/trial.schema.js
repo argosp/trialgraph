@@ -1,42 +1,40 @@
-const _ = require('lodash')
+const { property, merge } = require('lodash');
 const { pubsub, TRIALS_UPDATED } = require('../../subscriptions');
 const trialTypeDefs = require('./trial.typedefs');
+
 const typeResolver = {
   Trial: {
-    id: _.property('custom.id'),
-    name: _.property('title'),
-    begin: _.property('custom.data.begin'),
-    end: _.property('custom.data.end'),
-    trialSet: _.property('trialSet'),
-    properties: _.property('custom.data.properties'),
-    notes: _.property('custom.data.notes'),
-    devices: _.property('devices'),
-    assets: _.property('assets')
-  }
-}
+    id: property('custom.id'),
+    name: property('custom.data.name'),
+    key: property('custom.data.key'),
+    created: property('created'),
+    trialSetKey: property('custom.data.trialSetKey'),
+    numberOfDevices: property('custom.data.numberOfDevices'),
+    status: property('status'),
+    properties: property('custom.data.properties'),
+  },
+};
 const resolvers = {
   Query: {
     async trials(_, args, context) {
-      const trials = await context.trial.getTrials(args, context)
-      return trials;
-    }
+      return context.trial.getTrials(args, context);
+    },
   },
   Mutation: {
     async addUpdateTrial(_, args, context) {
       pubsub.publish(TRIALS_UPDATED, { trialsUpdated: true });
-      return await context.trial.addUpdateTrial(args, context)
-
-    }
+      return context.trial.addUpdateTrial(args, context);
+    },
   },
   Subscription: {
     trialsUpdated: {
-      subscribe: () => pubsub.asyncIterator(TRIALS_UPDATED)
-    }
-  }
-}
-const trialResolvers = _.merge(typeResolver, resolvers);
+      subscribe: () => pubsub.asyncIterator(TRIALS_UPDATED),
+    },
+  },
+};
+const trialResolvers = merge(typeResolver, resolvers);
 
 module.exports = {
-  trialTypeDefs: trialTypeDefs,
-  trialResolvers: trialResolvers
-}
+  trialTypeDefs,
+  trialResolvers,
+};

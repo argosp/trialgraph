@@ -5,6 +5,7 @@ class Device {
 
   async addUpdateDevice(args) {
     const {
+      key,
       uid,
       experimentId,
       id,
@@ -18,6 +19,7 @@ class Device {
         id,
         type: 'device',
         data: {
+          key,
           name,
           deviceTypeKey,
           properties,

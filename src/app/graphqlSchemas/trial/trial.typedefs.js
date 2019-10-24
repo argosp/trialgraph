@@ -1,14 +1,13 @@
 const typeDef = `
 type Trial {
-  id: String!
+  key: String!
+  id: String
   name: String
-  notes: String
-  begin: String!
-  end: String!
-  devices: [Entity],
-  assets: [Entity],
-  trialSet: TrialSet,
-  properties: [KeyVal]
+  trialSetKey: String!
+  created: String
+  status: String
+  numberOfDevices: Int!
+  properties: [TrialProperty]
 }
 
 type Entity {
@@ -21,21 +20,29 @@ type Entity {
 extend type Query {
     trials(experimentId:String!, trialSetKey:String!): [Trial]
 }
+
 extend type Mutation {
     addUpdateTrial(
+      key: String!,
       experimentId: String!,
       uid: String!,
-      id: String!,
+      id: String,
       name: String,
-      notes: String,
-      begin: String,
-      end: String,
-      trialSet: String,
-      properties: [KeyValInput],
-      devices: [EntityInput],
-      assets: [EntityInput]
+      trialSetKey: String!,
+      numberOfDevices: Int!,
+      properties: [TrialPropertyInput]
     ): Trial
   }
+  
+input TrialPropertyInput { 
+  val: String
+  key: String!
+}
+
+type TrialProperty { 
+  val: String
+  key: String!
+}
 
 input EntityInput {
   entity: String

@@ -32,6 +32,7 @@ class TrialSet {
     const {
       uid,
       experimentId,
+      key,
       id,
       name,
       properties,
@@ -44,6 +45,7 @@ class TrialSet {
         id,
         type: 'trialSet',
         data: {
+          key,
           name,
           description,
           properties,

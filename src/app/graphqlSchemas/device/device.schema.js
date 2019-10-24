@@ -6,7 +6,8 @@ const typeResolver = {
   Device: {
     id: property('custom.id'),
     name: property('custom.data.name'),
-    deviceTypeKey: property('deviceTypeKey'),
+    key: property('custom.data.key'),
+    deviceTypeKey: property('custom.data.deviceTypeKey'),
     properties: property('custom.data.properties'),
   },
 /*  DeviceKeyVal: {
