@@ -52,5 +52,5 @@ You can check your work by going to http://localhost:8888/graphql in your browse
 You should be able to see the graphql playground running on your docker container.
 If you want to change the default Query, you can do it in the example.js file in ./graph/src/app/example.js 
 
-T1
+T2
 
