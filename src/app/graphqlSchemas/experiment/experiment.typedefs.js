@@ -20,7 +20,7 @@ extend type Mutation {
       end: String,
       location: String,
       numberOfTrials: Int!
-    ): Experiment
+    ): Data
 
     buildExperimentData(
       uid: String!,
