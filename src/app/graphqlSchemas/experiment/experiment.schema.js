@@ -23,7 +23,7 @@ const resolvers = {
 
       pubsub.publish(EXPERIMENTS_UPDATED, { experimentsUpdated: true });
 
-      return context.data.addUpdateData(args, experiment);
+      return context.data.addUpdateExperimentData(args, experiment);
     },
     async buildExperimentData(_, args, context) {
       return context.experiment.buildExperimentData(args);

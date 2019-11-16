@@ -1,5 +1,5 @@
 const typeDef = `
-type Data {
+type ExperimentData {
   project: Experiment
   id: String!
   begin: String
@@ -9,12 +9,12 @@ type Data {
 }
 
 extend type Query {
-  experimentData(experimentId:String!): Data
-  experimentsWithData: [Data]
+  experimentData(experimentId:String!): ExperimentData
+  experimentsWithData: [ExperimentData]
 }
 
 extend type Mutation {
-  addUpdateData(
+  addUpdateExperimentData(
     project: String!,
     uid: String!,
     id: String!,
@@ -22,7 +22,7 @@ extend type Mutation {
     end: String,
     location: String,
     numberOfTrials: Int!,
-  ): Data
+  ): ExperimentData
 }
 
 extend type Subscription {
