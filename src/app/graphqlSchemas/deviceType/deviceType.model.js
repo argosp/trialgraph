@@ -28,7 +28,7 @@ class DeviceType {
     return result;
   }
 
-  async addUpdateDeviceTypes(args) {
+  async addUpdateDeviceType(args) {
     const {
       uid,
       experimentId,
