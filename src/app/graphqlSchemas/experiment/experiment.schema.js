@@ -19,10 +19,11 @@ const resolvers = {
   },
   Mutation: {
     async addUpdateExperiment(_, args, context) {
+      const experiment = await context.experiment.addUpdateExperiment(args, context);
+
       pubsub.publish(EXPERIMENTS_UPDATED, { experimentsUpdated: true });
-      const result = await context.experiment.addUpdateExperiment(args, context);
-      await context.data.addUpdateData(args, result);
-      return result;
+
+      return context.data.addUpdateExperimentData(args, experiment);
     },
     async buildExperimentData(_, args, context) {
       return context.experiment.buildExperimentData(args);

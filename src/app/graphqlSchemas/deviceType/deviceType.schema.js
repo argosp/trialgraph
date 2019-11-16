@@ -31,9 +31,9 @@ const resolvers = {
     },
   },
   Mutation: {
-    async addUpdateDeviceTypes(_, args, context) {
+    async addUpdateDeviceType(_, args, context) {
       pubsub.publish(DEVICE_TYPES_UPDATED, { deviceTypesUpdated: true });
-      return context.deviceType.addUpdateDeviceTypes(args, context);
+      return context.deviceType.addUpdateDeviceType(args, context);
     },
   },
   Subscription: {

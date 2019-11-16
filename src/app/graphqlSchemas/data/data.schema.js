@@ -3,7 +3,7 @@ const { pubsub, DATAS_UPDATED } = require('../../subscriptions');
 const dataTypeDefs = require('./data.typedefs');
 
 const typeResolver = {
-  Data: {
+  ExperimentData: {
     id: property('id'),
     begin: property('custom.data.begin'),
     end: property('custom.data.end'),
@@ -23,9 +23,9 @@ const resolvers = {
     },
   },
   Mutation: {
-    async addUpdateData(_, args, context) {
+    async addUpdateExperimentData(_, args, context) {
       pubsub.publish(DATAS_UPDATED, { experimentDataUpdated: true });
-      return context.data.addUpdateData(args, context);
+      return context.data.addUpdateExperimentData(args, context);
     },
   },
   Subscription: {
