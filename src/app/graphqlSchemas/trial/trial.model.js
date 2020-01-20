@@ -17,9 +17,10 @@ class Trial {
 
     const newTrial = {
       custom: {
-        id,
+        id: key,
         type: 'trial',
         data: {
+          id,
           key,
           name,
           trialSetKey,

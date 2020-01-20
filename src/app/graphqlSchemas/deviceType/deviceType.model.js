@@ -41,9 +41,10 @@ class DeviceType {
 
     const newDeviceType = {
       custom: {
-        id,
+        id: key,
         type: 'deviceType',
         data: {
+          id,
           key,
           numberOfDevices,
           properties,

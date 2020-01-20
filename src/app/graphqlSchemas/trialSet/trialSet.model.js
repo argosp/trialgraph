@@ -42,9 +42,10 @@ class TrialSet {
 
     const newTrialSet = {
       custom: {
-        id,
+        id: key,
         type: 'trialSet',
         data: {
+          id,
           key,
           name,
           description,

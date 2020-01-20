@@ -16,9 +16,10 @@ class Device {
 
     const newDevice = {
       custom: {
-        id,
+        id: key,
         type: 'device',
         data: {
+          id,
           key,
           name,
           deviceTypeKey,

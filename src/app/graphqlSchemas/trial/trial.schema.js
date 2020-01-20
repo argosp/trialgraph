@@ -4,7 +4,7 @@ const trialTypeDefs = require('./trial.typedefs');
 
 const typeResolver = {
   Trial: {
-    id: property('custom.id'),
+    id: property('custom.data.id'),
     name: property('custom.data.name'),
     key: property('custom.data.key'),
     created: property('created'),
