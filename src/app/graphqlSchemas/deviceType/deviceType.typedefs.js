@@ -19,6 +19,7 @@ type KeyVal {
   template: String
   multipleValues: Boolean
   trialField: Boolean
+  value: String
 }
 
 extend type Query {
@@ -49,6 +50,7 @@ input KeyValInput {
   template: String
   multipleValues: Boolean
   trialField: Boolean
+  value: String
 }
 
 extend type Subscription {
