@@ -6,6 +6,7 @@ type TrialSet {
   description: String
   numberOfTrials: Int
   properties: [KeyVal]
+  state: String
 }
 
 extend type Query {
@@ -21,6 +22,7 @@ extend type Mutation {
     name: String, 
     description: String,
     numberOfTrials: Int,
+    state: String,
     properties: [KeyValInput]
   ): TrialSet
 }

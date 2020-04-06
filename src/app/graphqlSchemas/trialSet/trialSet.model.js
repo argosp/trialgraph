@@ -14,7 +14,7 @@ class TrialSet {
     const { experimentId } = args;
     let result = await this.connector.getTasksFromExperiment(
       experimentId,
-      task => task.custom && task.custom.type === 'trialSet',
+      task => task.custom && task.custom.type === 'trialSet' && task.custom.data.state !== 'Deleted',
     );
     if (typeof result === 'string') {
       result = JSON.parse(result);
@@ -38,6 +38,7 @@ class TrialSet {
       properties,
       description,
       numberOfTrials,
+      state,
     } = args;
 
     const newTrialSet = {
@@ -51,6 +52,7 @@ class TrialSet {
           description,
           properties,
           numberOfTrials,
+          state,
         },
       },
     };
