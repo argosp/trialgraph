@@ -10,6 +10,7 @@ const typeResolver = {
     description: property('custom.data.description'),
     properties: property('custom.data.properties'),
     numberOfTrials: property('custom.data.numberOfTrials'),
+    state: property('custom.data.state'),
   },
 };
 
