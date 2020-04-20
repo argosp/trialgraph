@@ -20,6 +20,7 @@ type KeyVal {
   multipleValues: Boolean
   trialField: Boolean
   value: String
+  defaultValue: String
 }
 
 extend type Query {
@@ -51,6 +52,7 @@ input KeyValInput {
   multipleValues: Boolean
   trialField: Boolean
   value: String
+  defaultValue: String
 }
 
 extend type Subscription {
