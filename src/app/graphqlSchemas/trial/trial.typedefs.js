@@ -7,6 +7,7 @@ type Trial {
   created: String
   status: String
   numberOfDevices: Int!
+  state: String
   properties: [TrialProperty]
 }
 
@@ -29,6 +30,7 @@ extend type Mutation {
       id: String,
       name: String,
       trialSetKey: String!,
+      state: String,
       numberOfDevices: Int!,
       properties: [TrialPropertyInput]
     ): Trial
