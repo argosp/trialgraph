@@ -13,6 +13,7 @@ class Trial {
       trialSetKey,
       properties,
       numberOfDevices,
+      state,
     } = args;
 
     const newTrial = {
@@ -25,6 +26,7 @@ class Trial {
           name,
           trialSetKey,
           numberOfDevices,
+          state,
           properties,
         },
       },
@@ -44,7 +46,8 @@ class Trial {
       experimentId,
       task => task.custom
         && task.custom.data
-        && task.custom.data.trialSetKey === trialSetKey,
+        && task.custom.data.trialSetKey === trialSetKey
+        && task.custom.data.state !== 'Deleted',
     );
 
     if (typeof result === 'string') {

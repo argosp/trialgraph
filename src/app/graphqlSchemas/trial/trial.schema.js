@@ -11,6 +11,7 @@ const typeResolver = {
     trialSetKey: property('custom.data.trialSetKey'),
     numberOfDevices: property('custom.data.numberOfDevices'),
     status: property('status'),
+    state: property('custom.data.state'),
     properties: property('custom.data.properties'),
   },
 };
