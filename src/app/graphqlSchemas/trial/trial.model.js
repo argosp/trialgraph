@@ -12,6 +12,7 @@ class Trial {
       key,
       trialSetKey,
       properties,
+      entities,
       numberOfDevices,
       state,
     } = args;
@@ -28,6 +29,7 @@ class Trial {
           numberOfDevices,
           state,
           properties,
+          entities,
         },
       },
     };

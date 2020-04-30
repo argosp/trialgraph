@@ -9,12 +9,13 @@ type Trial {
   numberOfDevices: Int!
   state: String
   properties: [TrialProperty]
+  entities: [Entity]
 }
 
 type Entity {
-  entity: DeviceType
-  properties: [KeyVal]
-  name: String
+  typeKey: String
+  properties: [DeviceProperty]
+  key: String
   type: String
 }
 
@@ -33,6 +34,7 @@ extend type Mutation {
       state: String,
       numberOfDevices: Int!,
       properties: [TrialPropertyInput]
+      entities: [EntityInput]
     ): Trial
   }
   
@@ -47,9 +49,9 @@ type TrialProperty {
 }
 
 input EntityInput {
-  entity: String
-  properties: [KeyValInput]
-  name: String
+  typeKey: String
+  properties: [DevicePropertyInput]
+  key: String
   type: String
 }
 
