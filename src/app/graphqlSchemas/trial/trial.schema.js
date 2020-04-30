@@ -13,6 +13,7 @@ const typeResolver = {
     status: property('status'),
     state: property('custom.data.state'),
     properties: property('custom.data.properties'),
+    entities: property('custom.data.entities'),
   },
 };
 const resolvers = {
