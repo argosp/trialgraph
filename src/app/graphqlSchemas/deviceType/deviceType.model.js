@@ -14,7 +14,7 @@ class DeviceType {
     const { experimentId } = args;
     let result = await this.connector.getTasksFromExperiment(
       experimentId,
-      task => task.custom && task.custom.type === 'deviceType',
+      task => task.custom && task.custom.type === 'deviceType' && task.custom.data.state !== 'Deleted',
     );
     if (typeof result === 'string') {
       result = JSON.parse(result);
@@ -37,6 +37,7 @@ class DeviceType {
       name,
       properties,
       numberOfDevices,
+      state,
     } = args;
 
     const newDeviceType = {
@@ -47,6 +48,7 @@ class DeviceType {
           id,
           key,
           numberOfDevices,
+          state,
           properties,
           name,
         },

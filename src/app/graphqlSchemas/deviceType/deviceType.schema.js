@@ -9,6 +9,7 @@ const typeResolver = {
     name: property('custom.data.name'),
     properties: property('custom.data.properties'),
     numberOfDevices: property('custom.data.numberOfDevices'),
+    state: property('custom.data.state'),
   },
 /*  KeyVal: {
     key: property('key'),

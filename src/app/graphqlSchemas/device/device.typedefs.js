@@ -4,6 +4,7 @@ type Device {
   id: String
   name: String
   deviceTypeKey: String!
+  state: String
   properties: [DeviceProperty]
 }
 
@@ -19,6 +20,7 @@ extend type Mutation {
       id: String,
       name: String,
       deviceTypeKey: String!,
+      state: String,
       properties: [DevicePropertyInput] 
     ): Device
   }
