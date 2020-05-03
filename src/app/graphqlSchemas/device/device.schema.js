@@ -8,6 +8,7 @@ const typeResolver = {
     name: property('custom.data.name'),
     key: property('custom.data.key'),
     deviceTypeKey: property('custom.data.deviceTypeKey'),
+    state: property('custom.data.state'),
     properties: property('custom.data.properties'),
   },
 /*  DeviceKeyVal: {

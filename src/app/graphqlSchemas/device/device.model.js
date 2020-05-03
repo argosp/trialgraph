@@ -11,6 +11,7 @@ class Device {
       id,
       name,
       deviceTypeKey,
+      state,
       properties,
     } = args;
 
@@ -23,6 +24,7 @@ class Device {
           key,
           name,
           deviceTypeKey,
+          state,
           properties,
         },
       },
@@ -43,7 +45,8 @@ class Device {
       experimentId,
       task => task.custom
         && task.custom.data
-        && task.custom.data.deviceTypeKey === deviceTypeKey,
+        && task.custom.data.deviceTypeKey === deviceTypeKey
+        && task.custom.data.state !== 'Deleted',
     );
 
     if (typeof result === 'string') {

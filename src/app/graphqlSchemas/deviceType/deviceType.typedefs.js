@@ -4,6 +4,7 @@ type DeviceType {
   id: String
   name: String
   numberOfDevices: Int
+  state: String
   properties: [KeyVal]
 }
 
@@ -21,6 +22,7 @@ type KeyVal {
   trialField: Boolean
   value: String
   defaultValue: String
+  defaultProperty: Boolean
 }
 
 extend type Query {
@@ -35,6 +37,7 @@ extend type Mutation {
     id: String,
     name: String,
     numberOfDevices: Int,
+    state: String,
     properties: [KeyValInput]
   ): DeviceType
 }
@@ -53,6 +56,7 @@ input KeyValInput {
   trialField: Boolean
   value: String
   defaultValue: String
+  defaultProperty: Boolean
 }
 
 extend type Subscription {
