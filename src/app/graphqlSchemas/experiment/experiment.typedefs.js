@@ -14,12 +14,14 @@ extend type Mutation {
     addUpdateExperiment(
       uid: String!,
       id: String!,
+      key: String!,
       name: String,
       description: String,
       begin: String,
       end: String,
       location: String,
       numberOfTrials: Int!
+      state: String
     ): ExperimentData
 
     buildExperimentData(

@@ -2,10 +2,14 @@ const typeDef = `
 type ExperimentData {
   project: Experiment
   id: String!
+  key: String
+  name: String
+  description: String
   begin: String
   end: String
   location: String
   numberOfTrials: Int!
+  state: String
 }
 
 extend type Query {
@@ -18,6 +22,10 @@ extend type Mutation {
     project: String!,
     uid: String!,
     id: String!,
+    key: String!,
+    name: String
+    description: String
+    state: String
     begin: String,
     end: String,
     location: String,

@@ -5,11 +5,15 @@ const dataTypeDefs = require('./data.typedefs');
 const typeResolver = {
   ExperimentData: {
     id: property('id'),
+    key: property('custom.data.key'),
+    name: property('custom.data.name'),
+    description: property('custom.data.description'),
     begin: property('custom.data.begin'),
     end: property('custom.data.end'),
     location: property('custom.data.location'),
     numberOfTrials: property('custom.data.numberOfTrials'),
     project: property('project'),
+    state: property('custom.data.state'),
   },
 };
 
