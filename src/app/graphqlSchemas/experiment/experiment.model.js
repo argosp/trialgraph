@@ -17,17 +17,20 @@ class Experiment {
     return this.connector.getTasks(
       experiment => experiment.custom
         && experiment.custom.type === 'experimentData'
-        && experiment.recycled === undefined,
+        && experiment.recycled === undefined
+        && experiment.project
+        && experiment.custom.data.state !== 'Deleted',
     );
   }
 
   async addUpdateExperiment(args) {
-    const { uid, name, description } = args;
+    const { uid, name, description, state } = args;
 
     const newExperiment = {
       title: name,
       description,
     };
+    if (state === 'Deleted') newExperiment.recycled = new Date().toDateString();
     const response = await this.connector.addUpdateProject(newExperiment, uid);
 
     return response.data;

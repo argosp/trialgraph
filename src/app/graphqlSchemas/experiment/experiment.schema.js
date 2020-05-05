@@ -19,11 +19,19 @@ const resolvers = {
   },
   Mutation: {
     async addUpdateExperiment(_, args, context) {
-      const experiment = await context.experiment.addUpdateExperiment(args, context);
+      if (args.id === '') {
+        const experiment = await context.experiment.addUpdateExperiment(args, context);
 
-      pubsub.publish(EXPERIMENTS_UPDATED, { experimentsUpdated: true });
+        pubsub.publish(EXPERIMENTS_UPDATED, { experimentsUpdated: true });
 
       return context.data.addUpdateExperimentData(args, experiment);
+      } else {
+        if (args.state === 'Deleted') {
+          const experiment = await context.experiment.addUpdateExperiment(args, context);
+          pubsub.publish(EXPERIMENTS_UPDATED, { experimentsUpdated: true });
+        }
+        return context.data.addUpdateExperimentData(args, args);
+      }
     },
     async buildExperimentData(_, args, context) {
       return context.experiment.buildExperimentData(args);

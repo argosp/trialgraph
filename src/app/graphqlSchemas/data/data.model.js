@@ -22,16 +22,21 @@ class Data {
   }
 
   async addUpdateExperimentData(args, experiment) {
-    const { uid, id, begin, end, location, numberOfTrials } = args;
+    const { uid, key, name, description, begin, end, location, numberOfTrials, state } = args;
     const newData = {
       project: experiment.id,
-      id,
+      id: key,
       custom: {
+        id: key,
         type: 'experimentData',
         data: {
+          key,
+          name,
+          description,
           begin,
           end,
           location,
+          state,
           numberOfTrials,
         },
       },
