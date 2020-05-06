@@ -19,6 +19,7 @@ class Experiment {
         && experiment.custom.type === 'experimentData'
         && experiment.recycled === undefined
         && experiment.project
+        && experiment.project.recycled === undefined
         && experiment.custom.data.state !== 'Deleted',
     );
   }

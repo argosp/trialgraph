@@ -16,6 +16,7 @@ class Trial {
       deployedEntities,
       numberOfDevices,
       state,
+      status,
     } = args;
 
     const newTrial = {
@@ -32,10 +33,24 @@ class Trial {
           properties,
           entities,
           deployedEntities,
+          status,
         },
       },
     };
 
+    const trial = await this.connector.getTasksFromExperiment(
+      experimentId,
+      task => task.custom
+        && task.custom.data
+        && task.custom.data.key === key,
+    );
+    if (trial[0]) {
+      newTrial.custom.data.statusUpdated = !!trial[0].custom.data.statusUpdated;
+      if (status === 'deploy' && !trial[0].custom.data.statusUpdated) {
+        newTrial.custom.data.deployedEntities = entities;
+        newTrial.custom.data.statusUpdated = true;
+      }
+    }
     const response = await this.connector.addUpdateTask(
       newTrial,
       uid,

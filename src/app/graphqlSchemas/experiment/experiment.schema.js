@@ -29,15 +29,6 @@ const resolvers = {
         if (args.state === 'Deleted') {
           const experiment = await context.experiment.addUpdateExperiment(args, context);
           pubsub.publish(EXPERIMENTS_UPDATED, { experimentsUpdated: true });
-        } else {
-          const data = await context.data.getExperimentData({ experimentId: args.id });
-          args.statusChanged = data.custom.data.statusChanged;
-          if (args.status === 'deploy') {
-            args.statusChanged = true;
-            if (!data.custom.data.statusChanged) { // first time change to deploy
-              await context.trial.copyEntities({ experimentId: args.id, uid: args.uid });
-            }
-          }
         }
         return context.data.addUpdateExperimentData(args, args);
       }
