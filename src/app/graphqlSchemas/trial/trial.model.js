@@ -13,6 +13,7 @@ class Trial {
       trialSetKey,
       properties,
       entities,
+      deployedEntities,
       numberOfDevices,
       state,
     } = args;
@@ -30,6 +31,7 @@ class Trial {
           state,
           properties,
           entities,
+          deployedEntities,
         },
       },
     };
@@ -102,6 +104,36 @@ class Trial {
     } */
 
     return result;
+  }
+
+  async copyEntities(args) {
+    const { experimentId, uid } = args;
+    let result = await this.connector.getTasksFromExperiment(
+      experimentId,
+      task => task.custom
+        && task.custom.type === 'trial'
+        && task.custom.data
+        && task.custom.data.state !== 'Deleted',
+    );
+
+    if (typeof result === 'string') {
+      result = JSON.parse(result);
+    }
+
+    if (result === null || result === undefined || !Array.isArray(result)) {
+      return [
+        { error: 'Ooops. Something went wrong and we coudnt fetch the data' },
+      ];
+    }
+
+    result.forEach(trial => {
+      trial.custom.data.deployedEntities = trial.custom.data.entities;
+      this.connector.addUpdateTask(
+        trial,
+        uid,
+        experimentId,
+      );
+    });
   }
 }
 

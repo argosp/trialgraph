@@ -14,6 +14,7 @@ const typeResolver = {
     state: property('custom.data.state'),
     properties: property('custom.data.properties'),
     entities: property('custom.data.entities'),
+    deployedEntities: property('custom.data.deployedEntities'),
   },
 };
 const resolvers = {

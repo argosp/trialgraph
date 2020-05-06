@@ -10,6 +10,7 @@ type ExperimentData {
   location: String
   numberOfTrials: Int!
   state: String
+  status: String
 }
 
 extend type Query {
@@ -26,6 +27,7 @@ extend type Mutation {
     name: String
     description: String
     state: String
+    status: String
     begin: String,
     end: String,
     location: String,

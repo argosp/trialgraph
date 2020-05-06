@@ -24,16 +24,19 @@ class Experiment {
   }
 
   async addUpdateExperiment(args) {
-    const { uid, name, description, state } = args;
+    const { uid, name, description, state, status, id } = args;
 
     const newExperiment = {
+      custom: {
+        id,
+      },
       title: name,
       description,
     };
     if (state === 'Deleted') newExperiment.recycled = new Date().toDateString();
+    if (state) newExperiment.status = status;
     const response = await this.connector.addUpdateProject(newExperiment, uid);
-
-    return response.data;
+    return response ? response.data : null;
   }
 
   async buildExperimentData(args, context) {
