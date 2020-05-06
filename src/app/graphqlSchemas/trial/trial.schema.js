@@ -10,7 +10,7 @@ const typeResolver = {
     created: property('created'),
     trialSetKey: property('custom.data.trialSetKey'),
     numberOfDevices: property('custom.data.numberOfDevices'),
-    status: property('status'),
+    status: property('custom.data.status'),
     state: property('custom.data.state'),
     properties: property('custom.data.properties'),
     entities: property('custom.data.entities'),

@@ -33,6 +33,7 @@ extend type Mutation {
       name: String,
       trialSetKey: String!,
       state: String,
+      status: String,
       numberOfDevices: Int!,
       properties: [TrialPropertyInput]
       entities: [EntityInput]
