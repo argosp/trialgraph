@@ -10,6 +10,7 @@ type Trial {
   state: String
   properties: [TrialProperty]
   entities: [Entity]
+  deployedEntities: [Entity]
 }
 
 type Entity {
@@ -35,6 +36,7 @@ extend type Mutation {
       numberOfDevices: Int!,
       properties: [TrialPropertyInput]
       entities: [EntityInput]
+      deployedEntities: [EntityInput]
     ): Trial
   }
   

@@ -14,6 +14,7 @@ const typeResolver = {
     numberOfTrials: property('custom.data.numberOfTrials'),
     project: property('project'),
     state: property('custom.data.state'),
+    status: property('custom.data.status'),
   },
 };
 
