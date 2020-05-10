@@ -3,7 +3,7 @@ class Trial {
     this.connector = connector;
   }
 
-  async addUpdateTrial(args) {
+  async addUpdateTrial(args, context) {
     const {
       uid,
       experimentId,
@@ -44,12 +44,18 @@ class Trial {
         && task.custom.data
         && task.custom.data.key === key,
     );
+
     if (trial[0]) {
       newTrial.custom.data.statusUpdated = !!trial[0].custom.data.statusUpdated;
       if (status === 'deploy' && !trial[0].custom.data.statusUpdated) {
         newTrial.custom.data.deployedEntities = entities;
         newTrial.custom.data.statusUpdated = true;
       }
+      if (state === 'Deleted' && trial[0].custom.data.state !== 'Deleted') {
+        context.trialSet.setTrials('remove', trialSetKey, experimentId, uid);
+      }
+    } else {
+      context.trialSet.setTrials('add', trialSetKey, experimentId, uid);
     }
     const response = await this.connector.addUpdateTask(
       newTrial,
