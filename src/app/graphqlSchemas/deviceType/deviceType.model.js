@@ -1,3 +1,5 @@
+const { pubsub, DEVICE_TYPES_UPDATED } = require('../../subscriptions');
+
 class DeviceType {
   constructor({ connector }) {
     this.connector = connector;
@@ -26,6 +28,26 @@ class DeviceType {
     }
 
     return result;
+  }
+
+  async setDevices(operator, key, experimentId, uid) {
+    let result = await this.connector.getTasksFromExperiment(
+      experimentId,
+      task => task.custom && task.custom.type === 'deviceType' && task.custom.data.key === key,
+    );
+
+    if (operator === 'add') {
+      result[0].custom.data.numberOfDevices += 1;
+    } else {
+      result[0].custom.data.numberOfDevices -= 1;
+    }
+
+    await this.connector.addUpdateTask(
+      result[0],
+      uid,
+      experimentId,
+    );
+    pubsub.publish(DEVICE_TYPES_UPDATED, { deviceTypesUpdated: true });
   }
 
   async addUpdateDeviceType(args) {

@@ -1,3 +1,5 @@
+const { pubsub, TRIALSETS_UPDATED } = require('../../subscriptions');
+
 class TrialSet {
   constructor({ connector }) {
     this.connector = connector;
@@ -26,6 +28,26 @@ class TrialSet {
     }
 
     return result;
+  }
+
+  async setTrials(operator, key, experimentId, uid) {
+    let result = await this.connector.getTasksFromExperiment(
+      experimentId,
+      task => task.custom && task.custom.type === 'trialSet' && task.custom.data.key === key,
+    );
+
+    if (operator === 'add') {
+      result[0].custom.data.numberOfTrials += 1;
+    } else {
+      result[0].custom.data.numberOfTrials -= 1;
+    }
+
+    await this.connector.addUpdateTask(
+      result[0],
+      uid,
+      experimentId,
+    );
+    pubsub.publish(TRIALSETS_UPDATED, { trialSetsUpdated: true });
   }
 
   async addUpdateTrialSet(args) {

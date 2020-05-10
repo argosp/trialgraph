@@ -3,7 +3,7 @@ class Device {
     this.connector = connector;
   }
 
-  async addUpdateDevice(args) {
+  async addUpdateDevice(args, context) {
     const {
       key,
       uid,
@@ -29,6 +29,21 @@ class Device {
         },
       },
     };
+
+    const device = await this.connector.getTasksFromExperiment(
+      experimentId,
+      task => task.custom
+        && task.custom.data
+        && task.custom.data.key === key,
+    );
+
+    if (device[0]) {
+      if (state === 'Deleted' && device[0].custom.data.state !== 'Deleted') {
+        context.deviceType.setDevices('remove', deviceTypeKey, experimentId, uid);
+      }
+    } else {
+      context.deviceType.setDevices('add', deviceTypeKey, experimentId, uid);
+    }
 
     const response = await this.connector.addUpdateTask(
       newDevice,
