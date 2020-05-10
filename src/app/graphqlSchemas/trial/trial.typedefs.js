@@ -38,6 +38,7 @@ extend type Mutation {
       properties: [TrialPropertyInput]
       entities: [EntityInput]
       deployedEntities: [EntityInput]
+      action: String
     ): Trial
   }
   

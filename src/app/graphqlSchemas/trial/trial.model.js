@@ -3,6 +3,38 @@ class Trial {
     this.connector = connector;
   }
 
+
+  mergeDeep(...objects) {
+    const isObject = obj => obj && typeof obj === 'object';
+
+    return objects.reduce((prev, obj) => {
+      Object.keys(obj).forEach(key => {
+        const pVal = prev[key];
+        const oVal = obj[key];
+        if (Array.isArray(pVal) && Array.isArray(oVal)) {
+            if (pVal[0].key) {
+              oVal.forEach(v => {
+                let index = pVal.findIndex(p => p.key === v.key)
+                if (index !== -1) {
+                    pVal[index] = this.mergeDeep(pVal[index], v);
+                } else {
+                    pVal.push(v);
+                }
+            })
+            prev[key] = pVal;
+
+          } else prev[key] = pVal.concat(...oVal);
+      } else if (isObject(pVal) && isObject(oVal)) {
+        prev[key] = this.mergeDeep(pVal, oVal);
+        } else {
+          prev[key] = oVal;
+        }
+      });
+
+      return prev;
+    }, {});
+  }
+
   async addUpdateTrial(args, context) {
     const {
       uid,
@@ -17,26 +49,28 @@ class Trial {
       numberOfDevices,
       state,
       status,
+      action,
     } = args;
 
-    const newTrial = {
+    let newTrial = {
       custom: {
         id: key,
         type: 'trial',
         data: {
-          id,
           key,
-          name,
           trialSetKey,
-          numberOfDevices,
-          state,
-          properties,
-          entities,
-          deployedEntities,
-          status,
         },
       },
     };
+
+    if (action !== 'update' || args.hasOwnProperty('id')) newTrial.custom.data.id = id;
+    if (action !== 'update' || args.hasOwnProperty('name')) newTrial.custom.data.name = name;
+    if (action !== 'update' || args.hasOwnProperty('numberOfDevices')) newTrial.custom.data.numberOfDevices = numberOfDevices;
+    if (action !== 'update' || args.hasOwnProperty('state')) newTrial.custom.data.state = state;
+    if (action !== 'update' || args.hasOwnProperty('properties')) newTrial.custom.data.properties = properties;
+    if (action !== 'update' || args.hasOwnProperty('entities')) newTrial.custom.data.entities = entities;
+    if (action !== 'update' || args.hasOwnProperty('deployedEntities')) newTrial.custom.data.deployedEntities = deployedEntities;
+    if (action !== 'update' || args.hasOwnProperty('status')) newTrial.custom.data.status = status;
 
     const trial = await this.connector.getTasksFromExperiment(
       experimentId,
@@ -46,6 +80,9 @@ class Trial {
     );
 
     if (trial[0]) {
+      if (action === 'update') {
+        newTrial.custom = this.mergeDeep(trial[0].custom, newTrial.custom);
+      }
       newTrial.custom.data.statusUpdated = !!trial[0].custom.data.statusUpdated;
       if (status === 'deploy' && !trial[0].custom.data.statusUpdated) {
         newTrial.custom.data.deployedEntities = entities;
@@ -55,6 +92,11 @@ class Trial {
         context.trialSet.setTrials('remove', trialSetKey, experimentId, uid);
       }
     } else {
+      if (action === 'update') {
+        return [
+          { error: 'Ooops. Trial not found.' },
+        ];
+      }
       context.trialSet.setTrials('add', trialSetKey, experimentId, uid);
     }
     const response = await this.connector.addUpdateTask(
