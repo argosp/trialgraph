@@ -2,6 +2,37 @@ class Device {
   constructor({ connector }) {
     this.connector = connector;
   }
+  
+  mergeDeep(...objects) {
+    const isObject = obj => obj && typeof obj === 'object';
+
+    return objects.reduce((prev, obj) => {
+      Object.keys(obj).forEach(key => {
+        const pVal = prev[key];
+        const oVal = obj[key];
+        if (Array.isArray(pVal) && Array.isArray(oVal)) {
+            if (pVal[0].key) {
+              oVal.forEach(v => {
+                let index = pVal.findIndex(p => p.key === v.key)
+                if (index !== -1) {
+                    pVal[index] = this.mergeDeep(pVal[index], v);
+                } else {
+                    pVal.push(v);
+                }
+            })
+            prev[key] = pVal;
+
+          } else prev[key] = pVal.concat(...oVal);
+      } else if (isObject(pVal) && isObject(oVal)) {
+        prev[key] = this.mergeDeep(pVal, oVal);
+        } else {
+          prev[key] = oVal;
+        }
+      });
+
+      return prev;
+    }, {});
+  }
 
   async addUpdateDevice(args, context) {
     const {
@@ -13,22 +44,24 @@ class Device {
       deviceTypeKey,
       state,
       properties,
+      action,
     } = args;
 
-    const newDevice = {
+    let newDevice = {
       custom: {
         id: key,
         type: 'device',
         data: {
-          id,
           key,
-          name,
           deviceTypeKey,
-          state,
-          properties,
         },
       },
     };
+
+    if (action !== 'update' || args.hasOwnProperty('id')) newDevice.custom.data.id = id;
+    if (action !== 'update' || args.hasOwnProperty('name')) newDevice.custom.data.name = name;
+    if (action !== 'update' || args.hasOwnProperty('state')) newDevice.custom.data.state = state;
+    if (action !== 'update' || args.hasOwnProperty('properties')) newDevice.custom.data.properties = properties;
 
     const device = await this.connector.getTasksFromExperiment(
       experimentId,
@@ -38,10 +71,18 @@ class Device {
     );
 
     if (device[0]) {
+      if (action === 'update') {
+        newDevice.custom = this.mergeDeep(device[0].custom, newDevice.custom);
+      }
       if (state === 'Deleted' && device[0].custom.data.state !== 'Deleted') {
         context.deviceType.setDevices('remove', deviceTypeKey, experimentId, uid);
       }
     } else {
+      if (action === 'update') {
+        return [
+          { error: 'Ooops. Trial not found.' },
+        ];
+      }
       context.deviceType.setDevices('add', deviceTypeKey, experimentId, uid);
     }
 

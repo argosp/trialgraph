@@ -21,7 +21,8 @@ extend type Mutation {
       name: String,
       deviceTypeKey: String!,
       state: String,
-      properties: [DevicePropertyInput] 
+      properties: [DevicePropertyInput]
+      action: String
     ): Device
   }
 
