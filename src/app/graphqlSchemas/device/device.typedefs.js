@@ -9,7 +9,11 @@ type Device {
 }
 
 extend type Query {
-    devices(experimentId:String!, deviceTypeKey:String!): [Device]
+  devices(
+    experimentId:String!,
+    deviceTypeKey:String!
+    trialKey: String
+  ): [Device]
 }
 
 extend type Mutation {
