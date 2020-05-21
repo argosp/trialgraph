@@ -96,7 +96,8 @@ class Device {
   }
 
   async getDevices(args) {
-    const { experimentId, deviceTypeKey } = args;
+    const { experimentId, deviceTypeKey, trialKey } = args;
+
     let result = await this.connector.getTasksFromExperiment(
       experimentId,
       task => task.custom
@@ -113,6 +114,18 @@ class Device {
       return [
         { error: 'Ooops. Something went wrong and we coudnt fetch the data' },
       ];
+    }
+
+    if (trialKey) {
+      const trial = await this.connector.getTasksFromExperiment(
+        experimentId,
+        task => task.custom
+          && task.custom.data
+          && task.custom.data.key === trialKey
+          && task.custom.data.state !== 'Deleted',
+      );
+      const deviceskeys = trial[0].custom.data[trial[0].custom.data.status === 'design' ? 'entities' : 'deployedEntities'].map(e => e.key);
+      return result.filter(r => deviceskeys.indexOf(r.custom.data.key) !== -1);
     }
 
     return result;
