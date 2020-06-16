@@ -23,10 +23,11 @@ jobs:
 
       - kubernetes/install-kubeconfig:
           kubeconfig: NEW_KUBE_CONF
-
+          
       - run: |
           sudo mv ./bin/templater /usr/local/bin
           templater ./k8s.deployment.yaml | kubectl apply -f -
+
 
 orbs:
   kubernetes: circleci/kubernetes@0.7.0
