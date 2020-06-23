@@ -49,9 +49,9 @@ class Trial {
       numberOfDevices,
       state,
       status,
+      cloneFrom,
       action,
     } = args;
-
     let newTrial = {
       custom: {
         id: key,
@@ -59,6 +59,7 @@ class Trial {
         data: {
           key,
           trialSetKey,
+          cloneFrom
         },
       },
     };
@@ -71,7 +72,17 @@ class Trial {
     if (action !== 'update' || args.hasOwnProperty('entities')) newTrial.custom.data.entities = entities;
     if (action !== 'update' || args.hasOwnProperty('deployedEntities')) newTrial.custom.data.deployedEntities = deployedEntities;
     if (action !== 'update' || args.hasOwnProperty('status')) newTrial.custom.data.status = status;
-
+    if(cloneFrom)
+    {
+      // newTrial.custom.data.cloneFrom =cloneFrom;
+      // TODO
+        // when copy from deploy: should copy as is or copy the changes entities as if they were the originals?
+        // when copy from design: should copy only only the design source entities?
+        // In all case the copy items will be with status "design"?
+      if (action !== 'update' || args.hasOwnProperty('status'))  newTrial.custom.data.status = 'design';
+      if(cloneFrom=='design') newTrial.custom.data.entities=deployedEntities;
+      
+    }
     const trial = await this.connector.getTasksFromExperiment(
       experimentId,
       task => task.custom
