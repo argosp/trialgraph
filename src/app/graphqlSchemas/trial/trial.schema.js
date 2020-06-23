@@ -11,6 +11,7 @@ const typeResolver = {
     trialSetKey: property('custom.data.trialSetKey'),
     numberOfDevices: property('custom.data.numberOfDevices'),
     status: property('custom.data.status'),
+    cloneFrom:property('custom.data.cloneFrom'),
     state: property('custom.data.state'),
     properties: property('custom.data.properties'),
     entities: property('custom.data.entities'),

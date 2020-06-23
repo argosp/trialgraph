@@ -6,6 +6,7 @@ type Trial {
   trialSetKey: String!
   created: String
   status: String
+  cloneFrom: String
   numberOfDevices: Int!
   state: String
   properties: [TrialProperty]
@@ -34,6 +35,7 @@ extend type Mutation {
       trialSetKey: String!,
       state: String,
       status: String,
+      cloneFrom: String,
       numberOfDevices: Int,
       properties: [TrialPropertyInput]
       entities: [EntityInput]
@@ -59,6 +61,8 @@ input EntityInput {
   type: String
 }
 
+
+
 extend type Subscription {
   trialsUpdated: Boolean!
 }
@@ -66,3 +70,5 @@ extend type Subscription {
 `;
 
 module.exports = typeDef;
+
+
