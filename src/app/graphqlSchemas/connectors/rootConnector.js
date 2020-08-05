@@ -180,7 +180,7 @@ class RootConnector {
         return [{ error: `Ooops. Something went wrong while trying to addUpdate a ${data.type}` }];
       }
       return result;
-    } catch (error) { }
+    } catch (error) {console.log('error addUpdateTask in rootConnector: ', error) }
   }
 
   async getUser(uid) {

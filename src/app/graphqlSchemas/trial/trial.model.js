@@ -24,7 +24,7 @@ class Trial {
             prev[key] = pVal;
 
           } else prev[key] = pVal.concat(...oVal);
-      } else if (isObject(pVal) && isObject(oVal)) {
+      } else if (!Array.isArray(pVal) && isObject(pVal) && isObject(oVal) && !Array.isArray(oVal)) {
         prev[key] = this.mergeDeep(pVal, oVal);
         } else {
           prev[key] = oVal;
