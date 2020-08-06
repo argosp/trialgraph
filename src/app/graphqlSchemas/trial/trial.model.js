@@ -11,8 +11,8 @@ class Trial {
       Object.keys(obj).forEach(key => {
         const pVal = prev[key];
         const oVal = obj[key];
-        if (Array.isArray(pVal) && Array.isArray(oVal)) {
-            if (pVal[0].key) {
+        if (Array.isArray(pVal) && pVal.length && Array.isArray(oVal) && oVal.length) {
+            if (pVal[0] && pVal[0].key) {
               oVal.forEach(v => {
                 let index = pVal.findIndex(p => p.key === v.key)
                 if (index !== -1) {
@@ -24,7 +24,7 @@ class Trial {
             prev[key] = pVal;
 
           } else prev[key] = pVal.concat(...oVal);
-      } else if (isObject(pVal) && isObject(oVal)) {
+      } else if (!Array.isArray(pVal) && isObject(pVal) && isObject(oVal) && !Array.isArray(oVal)) {
         prev[key] = this.mergeDeep(pVal, oVal);
         } else {
           prev[key] = oVal;
@@ -107,6 +107,7 @@ class Trial {
       }
       context.trialSet.setTrials('add', trialSetKey, experimentId, uid);
     }
+    console.log('newTrial before one ms before update',JSON.stringify(newTrial));
     const response = await this.connector.addUpdateTask(
       newTrial,
       uid,
@@ -173,7 +174,6 @@ class Trial {
           && trial.custom.data.trialSet === task.custom.id,
       );
     } */
-
     return result;
   }
 
