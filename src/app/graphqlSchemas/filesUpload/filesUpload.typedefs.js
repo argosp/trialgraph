@@ -12,17 +12,14 @@ const typeDefs = `
   }
 
   extend type Mutation {
-    uploadFile(file: Upload!): File!
+    uploadFile(file: Upload!): String
+    moveFile(file: String): String
+    deleteFile(file: String): String
   }
   
 `;
-
-
-//  type Query {
-//     _ : Boolean // Added here to satisfy requirement of having at least one query defined
-//   }
-
-
 module.exports = typeDefs;
 
 
+
+// uploadFile(file: Upload!): File!

@@ -1,7 +1,6 @@
 const { property, merge } = require('lodash');
 const filesUploadTypeDefs = require('./filesUpload.typedefs');
-const { GraphQLUpload } = require('graphql-upload');
-
+const uploadModel = require('./filesUpload.model');
 
 const typeResolver = {
   File: {
@@ -12,25 +11,37 @@ const typeResolver = {
 };
 
 const resolvers = {
-  // Query: {
-  //   uploads: (parent, args) => {},
-  //   async files(_, args, context) {
-  //     return context.experiment.getfiles();
-  // },
-  Mutation: {
-    uploadFile: (parent, args) => {
-      return args.file.then(file => {
-        //Contents of Upload scalar: https://github.com/jaydenseric/graphql-upload#class-graphqlupload
-        //file.createReadStream() is a readable node stream that contains the contents of the uploaded file
-        //node stream api: https://nodejs.org/api/stream.html
-        const {createReadStream, filename, mimetype} = file;
-        const fileStream = createReadStream();
-        fileStream.pipe(fs.createWriteStream(`../../uploads/${filename}`));
 
-        return file;
-      });
-    },
-  },
+  Mutation: {
+    async uploadFile(_, args, context) {
+      try {
+          const file = await args.file
+          const fileUrl = await  uploadModel.uploadFile({ file }, context);
+          return fileUrl;
+      } catch (err) {
+          console.log(err)
+          return 'err';
+      }
+     },
+        async moveFile(_, args, context) {
+            try {
+                return await uploadModel.moveFileFromTmpToOriginFolder(args, context)
+            } catch (err) {
+                console.log('not moved')
+                return 'err'
+            }
+        },
+        async deleteFile(_, args, context) {
+            try {
+                await uploadModel.deleteFileFromTmp(args, context)
+                return 'deleted'
+            } catch (err) {
+                console.log('not deleted')
+                return 'err'
+            }
+        }
+      }
+
 };
 
 const filesUploadResolvers = merge(resolvers, typeResolver);
