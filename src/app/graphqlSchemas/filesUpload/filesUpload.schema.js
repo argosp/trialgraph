@@ -15,7 +15,7 @@ const resolvers = {
   Mutation: {
     async uploadFile(_, args, context) {
       try {
-          const file = await args.file
+          const file =  args
           const fileUrl = await  uploadModel.uploadFile({ file }, context);
           return fileUrl;
       } catch (err) {
