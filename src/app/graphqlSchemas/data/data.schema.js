@@ -15,6 +15,7 @@ const typeResolver = {
     project: property('project'),
     state: property('custom.data.state'),
     status: property('custom.data.status'),
+    maps: property('custom.data.maps'),
   },
 };
 

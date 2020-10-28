@@ -11,7 +11,9 @@ type ExperimentData {
   numberOfTrials: Int!
   state: String
   status: String
+  maps:[Map]
 }
+
 
 extend type Query {
   experimentData(experimentId:String!): ExperimentData
@@ -32,6 +34,7 @@ extend type Mutation {
     end: String,
     location: String,
     numberOfTrials: Int!,
+    maps:[MapInput]
   ): ExperimentData
 }
 
