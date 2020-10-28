@@ -12,26 +12,22 @@ extend type Query {
 input MapInput {
   imageUrl: String
   imageName: String
-  lat:Int
-  lon:Int
   lower: Float
   upper: Float
   left: Float
   right: Float
-  width: Float
+  width: Int
   height: Int
   embedded: Boolean
 }
 type Map {
   imageUrl: String
   imageName: String
-  lat:Int
-  lon:Int
   lower: Float
   upper: Float
   left: Float
   right: Float
-  width: Float
+  width: Int
   height: Int
   embedded: Boolean
 }
