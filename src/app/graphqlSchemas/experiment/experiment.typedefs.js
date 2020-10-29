@@ -9,7 +9,28 @@ type Experiment {
 extend type Query {
   experiments: [Experiment]
 }
-
+input MapInput {
+  imageUrl: String
+  imageName: String
+  lower: Float
+  upper: Float
+  left: Float
+  right: Float
+  width: Int
+  height: Int
+  embedded: Boolean
+}
+type Map {
+  imageUrl: String
+  imageName: String
+  lower: Float
+  upper: Float
+  left: Float
+  right: Float
+  width: Int
+  height: Int
+  embedded: Boolean
+}
 extend type Mutation {
     addUpdateExperiment(
       uid: String!,
@@ -23,6 +44,7 @@ extend type Mutation {
       numberOfTrials: Int!
       state: String
       status: String
+      maps: [MapInput]
     ): ExperimentData
 
     buildExperimentData(
