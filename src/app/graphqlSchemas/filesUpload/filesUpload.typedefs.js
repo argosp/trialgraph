@@ -1,18 +1,20 @@
 const typeDefs = `
  scalar Upload
 
-  type File {
-    filename: String!
-    mimetype: String!
-    encoding: String!
-  }
+ type File {
+  id: ID!
+  path: String!
+  filename: String!
+  mimetype: String!
+  encoding: String!
+}
 
   extend type Query {
     uploads: [File]
   }
 
   extend type Mutation {
-    uploadFile(file: Upload!): String
+    uploadFile(file: Upload!): File
     moveFile(file: String): String
     deleteFile(file: String): String
   }
@@ -21,5 +23,3 @@ const typeDefs = `
 module.exports = typeDefs;
 
 
-
-// uploadFile(file: Upload!): File!
