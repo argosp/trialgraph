@@ -7,8 +7,10 @@ module.exports = {
   uploadFile(data, context) {
     return new Promise((resolve, reject) => {
       let fs = require("fs");
-      let filename = data.filename;
+      let filename = data.file.filename;
+      //TODO: generete new file name for saving a multiple file in same name
       // filename = `argos/${this.generateFileName()}`;
+      const pathFile = path.join("/usr/src/app/uploads", data.file.filename);
       const stream1 = data.file.createReadStream();
       stream1
         .on("error", (error) => {
@@ -16,18 +18,16 @@ module.exports = {
         })
         .pipe(
           fs
-            .createWriteStream(
-              path.join('/usr/src/app/uploads/', data.file.filename)
-            )
+            .createWriteStream(pathFile)
             .on("error", (error) => reject(error))
             .on("finish", (res) => {
               console.log(
                 "finish uploadFile im model of uploadFile Mutation. file dir path: ",
-                path.join('/usr/src/app/uploads/', data.file.filename),'file: ',data.file
+                pathFile
               );
-              // __dirname, `../../uploads`, data.file.filename
               return resolve({
-                path: path.join('/usr/src/app/uploads/', data.file.filename),
+                path: pathFile,
+                filename: data.file.filename
               });
             })
         );
