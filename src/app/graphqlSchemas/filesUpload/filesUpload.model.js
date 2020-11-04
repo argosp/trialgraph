@@ -1,4 +1,6 @@
 const path = require("path");
+var fs = require('fs');
+
 module.exports = {
   generateFileName() {
     return `${Date.now()}${Math.floor(Math.random(100) * 100)}`;
@@ -8,8 +10,13 @@ module.exports = {
     return new Promise((resolve, reject) => {
       let fs = require("fs");
       let filename = data.file.filename;
+      const dir = '/usr/src/app/uploads';
       //TODO: generete new file name for saving a multiple file in same name
       // filename = `argos/${this.generateFileName()}`;
+        if (!fs.existsSync(dir)){
+          console.log('Uploads folder was created')
+          fs.mkdirSync(dir);
+      }
       const pathFile = path.join("/usr/src/app/uploads", data.file.filename);
       const stream1 = data.file.createReadStream();
       stream1
@@ -21,10 +28,7 @@ module.exports = {
             .createWriteStream(pathFile)
             .on("error", (error) => reject(error))
             .on("finish", (res) => {
-              console.log(
-                "finish uploadFile im model of uploadFile Mutation. file dir path: ",
-                pathFile
-              );
+              console.log('file was saved');
               return resolve({
                 path: pathFile,
                 filename: data.file.filename
