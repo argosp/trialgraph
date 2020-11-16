@@ -8,15 +8,17 @@ module.exports = {
   uploadFile(data, context) {
     return new Promise((resolve, reject) => {
       let fs = require("fs");
-      let filename = data.file.filename;
       const dir = '/usr/src/app/uploads';
-      //TODO: generete new file name for saving a multiple file in same name
-      // filename = `argos/${this.generateFileName()}`;
+      let filename = `${this.generateFileName()}${data.file.filename}`;
         if (!fs.existsSync(dir)){
           console.log('Uploads folder was created')
           fs.mkdirSync(dir);
       }
-      const pathFile = path.join("/usr/src/app/uploads", data.file.filename);
+     
+      const pathFile = path.join("/usr/tmp/uploads", filename);
+        console.log('docker volume pathFile ',pathFile);
+    // TODO -> move to submitExperiment save function
+    // const pathFile = path.join("/usr/src/app/uploads", data.file.filename);
       const stream1 = data.file.createReadStream();
       stream1
         .on("error", (error) => {
@@ -27,10 +29,10 @@ module.exports = {
             .createWriteStream(pathFile)
             .on("error", (error) => reject(error))
             .on("finish", (res) => {
-              console.log('file was saved');
+              console.log('file was saved' ,'uploads/'+filename);
               return resolve({
-                path: pathFile,
-                filename: data.file.filename
+                path: 'uploads/'+filename,
+                filename: filename
               });
             })
         );
