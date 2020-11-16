@@ -46,6 +46,17 @@ spec:
           envFrom:
             - configMapRef:
                 name: trialgraph-configmap
+          volumeMounts:
+          - mountPath: /usr/src/app/uploads
+            name: azurefile-argos-stage-claim
+          - mountPath: /usr/tmp/uploads
+            name: uploads-volume
+      volumes:
+      - name: azurefile-argos-stage-claim
+        persistentVolumeClaim:
+          claimName: azurefile-argos-stage-claim
+      - name: uploads-volume
+        emptyDir: {}
           # readinessProbe: uncomment when health endpoint will be ready
           #   httpGet:
           #     path: /graphql
