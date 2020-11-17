@@ -97,15 +97,25 @@ class Device {
 
   async getDevices(args) {
     const { experimentId, deviceTypeKey, trialKey } = args;
-
-    let result = await this.connector.getTasksFromExperiment(
+    let result; 
+    if(deviceTypeKey)
+     result = await this.connector.getTasksFromExperiment(
       experimentId,
       task => task.custom
         && task.custom.data
         && task.custom.data.deviceTypeKey === deviceTypeKey
         && task.custom.data.state !== 'Deleted',
     );
-
+     
+    else
+     result = await this.connector.getTasksFromExperiment(
+      experimentId,
+      task => task.custom
+        && task.custom.data
+        && task.custom.data.deviceTypeKey
+        && task.custom.data.state !== 'Deleted',
+    );
+     
     if (typeof result === 'string') {
       result = JSON.parse(result);
     }
@@ -127,6 +137,7 @@ class Device {
       const deviceskeys = trial[0].custom.data[trial[0].custom.data.status === 'design' ? 'entities' : 'deployedEntities'].map(e => e.key);
       return result.filter(r => deviceskeys.indexOf(r.custom.data.key) !== -1);
     }
+    console.log('result in getDevices',result);
 
     return result;
   }
