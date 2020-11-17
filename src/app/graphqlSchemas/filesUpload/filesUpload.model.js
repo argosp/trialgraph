@@ -1,22 +1,19 @@
 const path = require("path");
-
+const tmpDir = "/usr/tmp/uploads";
+const PermanentDIr ="/usr/src/app/uploads"
 module.exports = {
   generateFileName() {
     return `${Date.now()}${Math.floor(Math.random(100) * 100)}`;
   },
 
-  uploadFile(data, context) {
+  uploadFile(data) {
     return new Promise((resolve, reject) => {
       let fs = require("fs");
-      let filename = data.file.filename;
-      const dir = '/usr/src/app/uploads';
-      //TODO: generete new file name for saving a multiple file in same name
-      // filename = `argos/${this.generateFileName()}`;
-        if (!fs.existsSync(dir)){
-          console.log('Uploads folder was created')
-          fs.mkdirSync(dir);
-      }
-      const pathFile = path.join("/usr/src/app/uploads", data.file.filename);
+      let filename;
+       filename = `${this.generateFileName()}${data.file.filename}`;
+       //TODO: change to tmpDIr 
+      const pathFile = path.join(PermanentDIr, filename);
+      console.log('docker volume pathFile ',pathFile);
       const stream1 = data.file.createReadStream();
       stream1
         .on("error", (error) => {
@@ -27,20 +24,27 @@ module.exports = {
             .createWriteStream(pathFile)
             .on("error", (error) => reject(error))
             .on("finish", (res) => {
-              console.log('file was saved');
+              console.log('file was saved' ,'uploads/'+filename);
               return resolve({
-                path: pathFile,
-                filename: data.file.filename
+                path: 'uploads/'+filename,
+                filename: filename
               });
             })
         );
     });
   },
 
-  deleteFileFromTmp(args, context) {
-    return "deleteFile";
-  },
-  moveFileFromTmpToOriginFolder(args, context) {
-    return "movefile";
+  moveFileFromTmpToPermanent(file,dir) {
+    let fs = require("fs");
+    const pathToFile = path.join(tmpDir, file);
+    const pathToNewDestination = path.join(dir,file);
+    try {
+        fs.copyFileSync(pathToFile, pathToNewDestination)
+        console.log("Successfully copied and moved the file!");
+        return {res:"ok"};
+
+      } catch(err) {
+        throw err
+      }
   },
 };

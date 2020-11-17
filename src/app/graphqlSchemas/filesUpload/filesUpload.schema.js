@@ -15,7 +15,7 @@ const resolvers = {
   Mutation: {
     async uploadFile(_, args, context) {
       return args.file.then(async (file) => {
-        const fileRes = await uploadModel.uploadFile({ file }, context);
+        const fileRes = await uploadModel.uploadFile({ file });
         return fileRes;
       });
     },
@@ -24,15 +24,6 @@ const resolvers = {
         return await uploadModel.moveFileFromTmpToOriginFolder(args, context);
       } catch (err) {
         console.log("not moved");
-        return "err";
-      }
-    },
-    async deleteFile(_, args, context) {
-      try {
-        await uploadModel.deleteFileFromTmp(args, context);
-        return "deleted";
-      } catch (err) {
-        console.log("not deleted");
         return "err";
       }
     },

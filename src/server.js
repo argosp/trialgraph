@@ -14,6 +14,7 @@ httpServer.listen({ port: config.port },() => {
     console.log(`Apollo Server on http://localhost:${config.port}/graphql`);
 });
 app.use('/uploads',express.static('uploads'));
+app.use('/uploads',express.static('/usr/tmp/uploads'));
 
 //respond with json body for 404 status
 app.use((req, res, next) => {
