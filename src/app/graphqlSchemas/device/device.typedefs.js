@@ -11,7 +11,7 @@ type Device {
 extend type Query {
   devices(
     experimentId:String!,
-    deviceTypeKey:String!
+    deviceTypeKey:String
     trialKey: String
   ): [Device]
 }
