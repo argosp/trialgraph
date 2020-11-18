@@ -3,7 +3,7 @@ type Device {
   key: String!
   id: String
   name: String
-  deviceTypeKey: String
+  deviceTypeKey: String!
   state: String
   properties: [DeviceProperty]
 }
@@ -11,7 +11,7 @@ type Device {
 extend type Query {
   devices(
     experimentId:String!,
-    deviceTypeKey:String!
+    deviceTypeKey:String
     trialKey: String
   ): [Device]
 }
