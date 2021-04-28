@@ -30,20 +30,19 @@ class TrialSet {
     return result;
   }
 
-  async setTrials(operator, key, experimentId, uid) {
+  async setTrials(key, experimentId, uid) {
     let result = await this.connector.getTasksFromExperiment(
       experimentId,
-      task => task.custom && task.custom.type === 'trialSet' && task.custom.data.key === key,
+      task => task.custom &&
+        task.custom.data.state !== 'Deleted' &&
+        (task.custom.type === 'trialSet' && task.custom.data.key === key ||
+        task.custom.type === 'trial' && task.custom.data.trialSetKey === key),
     );
-
-    if (operator === 'add') {
-      result[0].custom.data.numberOfTrials += 1;
-    } else {
-      result[0].custom.data.numberOfTrials -= 1;
-    }
+    let trialSet = result.find(r => r.custom.type === 'trialSet' && r.custom.data.key === key);
+    trialSet.custom.data.numberOfTrials = result.length - 1;
 
     await this.connector.addUpdateTask(
-      result[0],
+      trialSet,
       uid,
       experimentId,
     );

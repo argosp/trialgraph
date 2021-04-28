@@ -63,6 +63,8 @@ class Device {
     if (action !== 'update' || args.hasOwnProperty('state')) newDevice.custom.data.state = state;
     if (action !== 'update' || args.hasOwnProperty('properties')) newDevice.custom.data.properties = properties;
 
+    let updateDeviceType = false;
+
     const device = await this.connector.getTasksFromExperiment(
       experimentId,
       task => task.custom
@@ -75,7 +77,7 @@ class Device {
         newDevice.custom = this.mergeDeep(device[0].custom, newDevice.custom);
       }
       if (state === 'Deleted' && device[0].custom.data.state !== 'Deleted') {
-        context.deviceType.setDevices('remove', deviceTypeKey, experimentId, uid);
+        updateDeviceType = true;
       }
     } else {
       if (action === 'update') {
@@ -83,7 +85,7 @@ class Device {
           { error: 'Ooops. Trial not found.' },
         ];
       }
-      context.deviceType.setDevices('add', deviceTypeKey, experimentId, uid);
+      updateDeviceType = true;
     }
 
     const response = await this.connector.addUpdateTask(
@@ -91,6 +93,8 @@ class Device {
       uid,
       experimentId,
     );
+
+    if (updateDeviceType) context.deviceType.setDevices(deviceTypeKey, experimentId, uid);
 
     return response.data;
   }

@@ -87,6 +87,8 @@ class Trial {
         && task.custom.data.key === key,
     );
 
+    let updateTrialSet = false;
+
     if (trial[0]) {
       if (action === 'update') {
         newTrial.custom = this.mergeDeep(trial[0].custom, newTrial.custom);
@@ -97,7 +99,7 @@ class Trial {
         newTrial.custom.data.statusUpdated = true;
       }
       if (state === 'Deleted' && trial[0].custom.data.state !== 'Deleted') {
-        context.trialSet.setTrials('remove', trialSetKey, experimentId, uid);
+        updateTrialSet = true;
       }
     } else {
       if (action === 'update') {
@@ -105,7 +107,7 @@ class Trial {
           { error: 'Ooops. Trial not found.' },
         ];
       }
-      context.trialSet.setTrials('add', trialSetKey, experimentId, uid);
+      updateTrialSet = true;
     }
     console.log('newTrial before one ms before update',JSON.stringify(newTrial));
     const response = await this.connector.addUpdateTask(
@@ -113,6 +115,7 @@ class Trial {
       uid,
       experimentId,
     );
+    if (updateTrialSet) context.trialSet.setTrials(trialSetKey, experimentId, uid);
     return response.data;
   }
 

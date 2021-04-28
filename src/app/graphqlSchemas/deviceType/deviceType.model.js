@@ -30,20 +30,19 @@ class DeviceType {
     return result;
   }
 
-  async setDevices(operator, key, experimentId, uid) {
+  async setDevices(key, experimentId, uid) {
     let result = await this.connector.getTasksFromExperiment(
       experimentId,
-      task => task.custom && task.custom.type === 'deviceType' && task.custom.data.key === key,
+      task => task.custom &&
+        task.custom.data.state !== 'Deleted' &&
+        (task.custom.type === 'deviceType' && task.custom.data.key === key ||
+        task.custom.type === 'device' && task.custom.data.deviceTypeKey === key),
     );
-
-    if (operator === 'add') {
-      result[0].custom.data.numberOfDevices += 1;
-    } else {
-      result[0].custom.data.numberOfDevices -= 1;
-    }
+    let deviceType = result.find(r => r.custom.type === 'deviceType' && r.custom.data.key === key);
+    deviceType.custom.data.numberOfDevices = result.length - 1;
 
     await this.connector.addUpdateTask(
-      result[0],
+      deviceType,
       uid,
       experimentId,
     );
