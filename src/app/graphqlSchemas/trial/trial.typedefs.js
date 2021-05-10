@@ -1,7 +1,6 @@
 const typeDef = `
 type Trial {
   key: String!
-  id: String
   name: String
   trialSetKey: String!
   created: String
@@ -30,7 +29,6 @@ extend type Mutation {
       key: String!,
       experimentId: String!,
       uid: String!,
-      id: String,
       name: String,
       trialSetKey: String!,
       state: String,

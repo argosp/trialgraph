@@ -4,7 +4,6 @@ const deviceTypeDefs = require('./device.typedefs');
 
 const typeResolver = {
   Device: {
-    id: property('custom.data.id'),
     name: property('custom.data.name'),
     key: property('custom.data.key'),
     deviceTypeKey: property('custom.data.deviceTypeKey'),

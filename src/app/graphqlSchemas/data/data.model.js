@@ -28,7 +28,6 @@ class Data {
       project: experiment.id,
       id: key,
       custom: {
-        id: key,
         type: 'experimentData',
         data: {
           key,
