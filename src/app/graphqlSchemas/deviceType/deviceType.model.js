@@ -64,6 +64,7 @@ class DeviceType {
 
     let newDeviceType = {
       custom: {
+        id: key,
         type: 'deviceType',
         data: {
           key,

@@ -45,6 +45,7 @@ extend type Mutation {
       state: String
       status: String
       maps: [MapInput]
+      action: String
     ): ExperimentData
 
     buildExperimentData(

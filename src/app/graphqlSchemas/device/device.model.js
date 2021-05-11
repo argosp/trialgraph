@@ -19,6 +19,7 @@ class Device {
 
     let newDevice = {
       custom: {
+        id: key,
         type: 'device',
         data: {
           key,
@@ -46,7 +47,7 @@ class Device {
       }
       if (state === 'Deleted' && device[0].custom.data.state !== 'Deleted') {
         updateDeviceType = true;
-        this.removeEntities(args);
+        this.removeEntities(args, context);
       }
     } else {
       if (action === 'update') {
@@ -68,17 +69,10 @@ class Device {
     return response.data;
   }
 
-  async removeEntities(args) {
+  async removeEntities(args, context) {
     const {
       key,
-      uid,
       experimentId,
-      id,
-      name,
-      deviceTypeKey,
-      state,
-      properties,
-      action,
     } = args;
     //remove entities of device from trials
     //1. get all trials that have the device in entities
@@ -88,15 +82,10 @@ class Device {
         && task.custom.data
         && task.custom.type === "trial"
     );
-    console.log(result.map(a=> a.custom.data.entities))
 
-
-    console.log('------------------------')
-    console.log(key)
-    console.log(result.filter(a=>a.custom.data.deployedEntities.find(e=>e.key===key) || a.custom.data.entities.find(e=>e.key===key)))
-    // context.trial.addUpdateTrial({}, context);
-    result.filter(a=>a.custom.data.deployedEntities.find(e=>e.key===key) || a.custom.data.entities.find(e=>e.key===key)).forEach(r => {
-
+    result.filter(a => a.custom.data.deployedEntities.find(e => e.key === key) || a.custom.data.entities.find(e => e.key === key)).forEach(r => {
+      //2. update entities of each trial 
+      context.trial.addUpdateTrial({ ...r.custom.data, experimentId, entities: r.custom.data.entities.filter(e => e.key !== key), deployedEntities: r.custom.data.deployedEntities.filter(e => e.key !== key) }, context);
     });
   }
 
@@ -107,13 +96,13 @@ class Device {
       experimentId,
       task => task.custom
         && task.custom.data
-        &&(!deviceTypeKey || task.custom.data.deviceTypeKey === deviceTypeKey)
-        && task.custom.type =="device"
+        && (!deviceTypeKey || task.custom.data.deviceTypeKey === deviceTypeKey)
+        && task.custom.type == "device"
         && task.custom.data.state !== 'Deleted',
     );
-     
- 
-     
+
+
+
     if (typeof result === 'string') {
       result = JSON.parse(result);
     }

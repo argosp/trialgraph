@@ -64,6 +64,7 @@ class TrialSet {
 
     let newTrialSet = {
       custom: {
+        id: key,
         type: 'trialSet',
         data: {
           key,

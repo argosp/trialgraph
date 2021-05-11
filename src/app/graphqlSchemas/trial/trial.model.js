@@ -5,7 +5,6 @@ class Trial {
   }
 
   async addUpdateTrial(args, context) {
-    console.log(JSON.stringify(args))
     const {
       uid,
       experimentId,
@@ -23,6 +22,7 @@ class Trial {
     } = args;
     let newTrial = {
       custom: {
+        id: key,
         type: 'trial',
         data: {
           key,
