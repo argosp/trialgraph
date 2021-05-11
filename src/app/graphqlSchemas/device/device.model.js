@@ -1,37 +1,8 @@
+const Utils = require('../services/utils');
+
 class Device {
   constructor({ connector }) {
     this.connector = connector;
-  }
-  
-  mergeDeep(...objects) {
-    const isObject = obj => obj && typeof obj === 'object';
-
-    return objects.reduce((prev, obj) => {
-      Object.keys(obj).forEach(key => {
-        const pVal = prev[key];
-        const oVal = obj[key];
-        if (Array.isArray(pVal) && Array.isArray(oVal)) {
-            if (pVal[0].key) {
-              oVal.forEach(v => {
-                let index = pVal.findIndex(p => p.key === v.key)
-                if (index !== -1) {
-                    pVal[index] = this.mergeDeep(pVal[index], v);
-                } else {
-                    pVal.push(v);
-                }
-            })
-            prev[key] = pVal;
-
-          } else prev[key] = pVal.concat(...oVal);
-      } else if (isObject(pVal) && isObject(oVal)) {
-        prev[key] = this.mergeDeep(pVal, oVal);
-        } else {
-          prev[key] = oVal;
-        }
-      });
-
-      return prev;
-    }, {});
   }
 
   async addUpdateDevice(args, context) {
@@ -71,7 +42,7 @@ class Device {
 
     if (device[0]) {
       if (action === 'update') {
-        newDevice.custom = this.mergeDeep(device[0].custom, newDevice.custom);
+        newDevice.custom = Utils.mergeDeep(device[0].custom, newDevice.custom);
       }
       if (state === 'Deleted' && device[0].custom.data.state !== 'Deleted') {
         updateDeviceType = true;

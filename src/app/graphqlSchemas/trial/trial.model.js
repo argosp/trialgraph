@@ -1,37 +1,7 @@
+const Utils = require('../services/utils');
 class Trial {
   constructor({ connector }) {
     this.connector = connector;
-  }
-
-  mergeDeep(...objects) {
-    const isObject = obj => obj && typeof obj === 'object';
-
-    return objects.reduce((prev, obj) => {
-      Object.keys(obj).forEach(key => {
-        const pVal = prev[key];
-        const oVal = obj[key];
-        if (Array.isArray(pVal) && pVal.length && Array.isArray(oVal) && oVal.length) {
-          if (pVal[0] && pVal[0].key) {
-            oVal.forEach(v => {
-              let index = pVal.findIndex(p => p.key === v.key)
-              if (index !== -1) {
-                pVal[index] = this.mergeDeep(pVal[index], v);
-              } else {
-                pVal.push(v);
-              }
-            })
-            prev[key] = pVal;
-
-          } else prev[key] = pVal.concat(...oVal);
-        } else if (!Array.isArray(pVal) && isObject(pVal) && isObject(oVal) && !Array.isArray(oVal)) {
-          prev[key] = this.mergeDeep(pVal, oVal);
-        } else {
-          prev[key] = oVal;
-        }
-      });
-
-      return prev;
-    }, {});
   }
 
   async addUpdateTrial(args, context) {
@@ -86,7 +56,7 @@ class Trial {
 
     if (trial[0]) {
       if (action === 'update') {
-        newTrial.custom = this.mergeDeep(trial[0].custom, newTrial.custom);
+        newTrial.custom = Utils.mergeDeep(trial[0].custom, newTrial.custom);
       }
       newTrial.custom.data.statusUpdated = !!trial[0].custom.data.statusUpdated;
       if (status === 'deploy' && !trial[0].custom.data.statusUpdated) {

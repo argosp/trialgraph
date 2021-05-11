@@ -36,6 +36,7 @@ extend type Mutation {
     numberOfDevices: Int,
     state: String,
     properties: [KeyValInput]
+    action: String
   ): DeviceType
 }
 

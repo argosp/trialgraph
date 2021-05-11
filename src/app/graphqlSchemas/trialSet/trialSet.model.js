@@ -1,5 +1,5 @@
 const { pubsub, TRIALSETS_UPDATED } = require('../../subscriptions');
-
+const Utils = require('../services/utils');
 class TrialSet {
   constructor({ connector }) {
     this.connector = connector;
@@ -11,37 +11,6 @@ class TrialSet {
     );
     return trialSets != null ? trialSets : [];
   } */
-
-  mergeDeep(...objects) {
-    const isObject = obj => obj && typeof obj === 'object';
-
-    return objects.reduce((prev, obj) => {
-      Object.keys(obj).forEach(key => {
-        const pVal = prev[key];
-        const oVal = obj[key];
-        if (Array.isArray(pVal) && pVal.length && Array.isArray(oVal) && oVal.length) {
-          if (pVal[0] && pVal[0].key) {
-            oVal.forEach(v => {
-              let index = pVal.findIndex(p => p.key === v.key)
-              if (index !== -1) {
-                pVal[index] = this.mergeDeep(pVal[index], v);
-              } else {
-                pVal.push(v);
-              }
-            })
-            prev[key] = pVal;
-
-          } else prev[key] = pVal.concat(...oVal);
-        } else if (!Array.isArray(pVal) && isObject(pVal) && isObject(oVal) && !Array.isArray(oVal)) {
-          prev[key] = this.mergeDeep(pVal, oVal);
-        } else {
-          prev[key] = oVal;
-        }
-      });
-
-      return prev;
-    }, {});
-  }
 
   async getTrialSets(args) {
     const { experimentId } = args;
@@ -117,7 +86,7 @@ class TrialSet {
 
     if (trialSet[0]) {
       if (action === 'update') {
-        newTrialSet.custom = this.mergeDeep(trialSet[0].custom, newTrialSet.custom);
+        newTrialSet.custom = Utils.mergeDeep(trialSet[0].custom, newTrialSet.custom);
       }
     } else {
       if (action === 'update') {
