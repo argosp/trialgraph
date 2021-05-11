@@ -35,6 +35,7 @@ extend type Mutation {
     location: String,
     numberOfTrials: Int!,
     maps:[MapInput]
+    action: String
   ): ExperimentData
 }
 

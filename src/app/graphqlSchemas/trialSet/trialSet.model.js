@@ -1,5 +1,5 @@
 const { pubsub, TRIALSETS_UPDATED } = require('../../subscriptions');
-
+const Utils = require('../services/utils');
 class TrialSet {
   constructor({ connector }) {
     this.connector = connector;
@@ -54,29 +54,48 @@ class TrialSet {
       uid,
       experimentId,
       key,
-      id,
       name,
       properties,
       description,
       numberOfTrials,
       state,
+      action,
     } = args;
 
-    const newTrialSet = {
+    let newTrialSet = {
       custom: {
         id: key,
         type: 'trialSet',
         data: {
-          id,
           key,
-          name,
-          description,
-          properties,
-          numberOfTrials,
-          state,
         },
       },
     };
+
+    if (action !== 'update' || args.hasOwnProperty('name')) newTrialSet.custom.data.name = name;
+    if (action !== 'update' || args.hasOwnProperty('description')) newTrialSet.custom.data.description = description;
+    if (action !== 'update' || args.hasOwnProperty('properties')) newTrialSet.custom.data.properties = properties;
+    if (action !== 'update' || args.hasOwnProperty('numberOfTrials')) newTrialSet.custom.data.numberOfTrials = numberOfTrials;
+    if (action !== 'update' || args.hasOwnProperty('state')) newTrialSet.custom.data.state = state;
+    
+    const trialSet = await this.connector.getTasksFromExperiment(
+      experimentId,
+      task => task.custom
+        && task.custom.data
+        && task.custom.data.key === key,
+    );
+
+    if (trialSet[0]) {
+      if (action === 'update') {
+        newTrialSet.custom = Utils.mergeDeep(trialSet[0].custom, newTrialSet.custom);
+      }
+    } else {
+      if (action === 'update') {
+        return [
+          { error: 'Ooops. TrialSet not found.' },
+        ];
+      }
+    }
 
     const response = await this.connector.addUpdateTask(
       newTrialSet,

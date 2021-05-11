@@ -1,7 +1,6 @@
 const typeDef = `
 type TrialSet {
   key: String!
-  id: String
   name: String
   description: String
   numberOfTrials: Int
@@ -18,12 +17,12 @@ extend type Mutation {
     key: String!,
     experimentId: String!,
     uid: String!,
-    id: String,
     name: String, 
     description: String,
     numberOfTrials: Int,
     state: String,
     properties: [KeyValInput]
+    action: String
   ): TrialSet
 }
 

@@ -1,37 +1,8 @@
+const Utils = require('../services/utils');
+
 class Device {
   constructor({ connector }) {
     this.connector = connector;
-  }
-  
-  mergeDeep(...objects) {
-    const isObject = obj => obj && typeof obj === 'object';
-
-    return objects.reduce((prev, obj) => {
-      Object.keys(obj).forEach(key => {
-        const pVal = prev[key];
-        const oVal = obj[key];
-        if (Array.isArray(pVal) && Array.isArray(oVal)) {
-            if (pVal[0].key) {
-              oVal.forEach(v => {
-                let index = pVal.findIndex(p => p.key === v.key)
-                if (index !== -1) {
-                    pVal[index] = this.mergeDeep(pVal[index], v);
-                } else {
-                    pVal.push(v);
-                }
-            })
-            prev[key] = pVal;
-
-          } else prev[key] = pVal.concat(...oVal);
-      } else if (isObject(pVal) && isObject(oVal)) {
-        prev[key] = this.mergeDeep(pVal, oVal);
-        } else {
-          prev[key] = oVal;
-        }
-      });
-
-      return prev;
-    }, {});
   }
 
   async addUpdateDevice(args, context) {
@@ -39,7 +10,6 @@ class Device {
       key,
       uid,
       experimentId,
-      id,
       name,
       deviceTypeKey,
       state,
@@ -58,7 +28,6 @@ class Device {
       },
     };
 
-    if (action !== 'update' || args.hasOwnProperty('id')) newDevice.custom.data.id = id;
     if (action !== 'update' || args.hasOwnProperty('name')) newDevice.custom.data.name = name;
     if (action !== 'update' || args.hasOwnProperty('state')) newDevice.custom.data.state = state;
     if (action !== 'update' || args.hasOwnProperty('properties')) newDevice.custom.data.properties = properties;
@@ -74,10 +43,11 @@ class Device {
 
     if (device[0]) {
       if (action === 'update') {
-        newDevice.custom = this.mergeDeep(device[0].custom, newDevice.custom);
+        newDevice.custom = Utils.mergeDeep(device[0].custom, newDevice.custom);
       }
       if (state === 'Deleted' && device[0].custom.data.state !== 'Deleted') {
         updateDeviceType = true;
+        this.removeEntities(args, context);
       }
     } else {
       if (action === 'update') {
@@ -99,19 +69,40 @@ class Device {
     return response.data;
   }
 
+  async removeEntities(args, context) {
+    const {
+      key,
+      experimentId,
+    } = args;
+    //remove entities of device from trials
+    //1. get all trials that have the device in entities
+    let result = await this.connector.getTasksFromExperiment(
+      experimentId,
+      task => task.custom
+        && task.custom.data
+        && task.custom.type === "trial"
+    );
+
+    result.filter(a => a.custom.data.deployedEntities.find(e => e.key === key) || a.custom.data.entities.find(e => e.key === key)).forEach(r => {
+      //2. update entities of each trial 
+      context.trial.addUpdateTrial({ ...r.custom.data, experimentId, entities: r.custom.data.entities.filter(e => e.key !== key), deployedEntities: r.custom.data.deployedEntities.filter(e => e.key !== key) }, context);
+    });
+  }
+
+
   async getDevices(args) {
     const { experimentId, deviceTypeKey, trialKey } = args;
     let result = await this.connector.getTasksFromExperiment(
       experimentId,
       task => task.custom
         && task.custom.data
-        &&(!deviceTypeKey || task.custom.data.deviceTypeKey === deviceTypeKey)
-        && task.custom.type =="device"
+        && (!deviceTypeKey || task.custom.data.deviceTypeKey === deviceTypeKey)
+        && task.custom.type == "device"
         && task.custom.data.state !== 'Deleted',
     );
-     
- 
-     
+
+
+
     if (typeof result === 'string') {
       result = JSON.parse(result);
     }

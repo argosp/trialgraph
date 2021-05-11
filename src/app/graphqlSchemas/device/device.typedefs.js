@@ -1,7 +1,6 @@
 const typeDef = `
 type Device {
   key: String!
-  id: String
   name: String
   deviceTypeKey: String!
   state: String
@@ -21,7 +20,6 @@ extend type Mutation {
       key: String!,
       experimentId: String!,
       uid: String!,
-      id: String,
       name: String,
       deviceTypeKey: String!,
       state: String,
