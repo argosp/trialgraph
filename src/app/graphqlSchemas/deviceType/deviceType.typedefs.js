@@ -24,7 +24,7 @@ type KeyVal {
 }
 
 extend type Query {
-  deviceTypes(experimentId:String!): [DeviceType]
+  entitiesTypes(experimentId:String!): [DeviceType]
 }
 
 extend type Mutation {

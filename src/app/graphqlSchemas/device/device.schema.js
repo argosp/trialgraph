@@ -28,7 +28,7 @@ const typeResolver = {
 
 const resolvers = {
   Query: {
-    async devices(_, args, context) {
+    async entities(_, args, context) {
       return context.device.getDevices(args, context);
     },
   },

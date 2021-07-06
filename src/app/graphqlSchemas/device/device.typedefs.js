@@ -8,7 +8,7 @@ type Device {
 }
 
 extend type Query {
-  devices(
+  entities(
     experimentId:String!,
     deviceTypeKey:String
     trialKey: String
