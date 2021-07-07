@@ -1,5 +1,5 @@
 const { property, merge } = require('lodash');
-const { pubsub, DEVICES_UPDATED } = require('../../subscriptions');
+const { pubsub, ENTITIES_UPDATED } = require('../../subscriptions');
 const deviceTypeDefs = require('./device.typedefs');
 
 const typeResolver = {
@@ -33,14 +33,14 @@ const resolvers = {
     },
   },
   Mutation: {
-    async addUpdateDevice(_, args, context) {
-      pubsub.publish(DEVICES_UPDATED, { devicesUpdated: true });
-      return context.device.addUpdateDevice(args, context);
+    async addUpdateEntity(_, args, context) {
+      pubsub.publish(ENTITIES_UPDATED, { devicesUpdated: true });
+      return context.device.addUpdateEntity(args, context);
     },
   },
   Subscription: {
     devicesUpdated: {
-      subscribe: () => pubsub.asyncIterator(DEVICES_UPDATED),
+      subscribe: () => pubsub.asyncIterator(ENTITIES_UPDATED),
     },
   },
 };

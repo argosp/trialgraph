@@ -16,7 +16,7 @@ extend type Query {
 }
 
 extend type Mutation {
-    addUpdateDevice(
+    addUpdateEntity(
       key: String!,
       experimentId: String!,
       uid: String!,
