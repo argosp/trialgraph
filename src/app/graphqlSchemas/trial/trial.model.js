@@ -104,44 +104,6 @@ class Trial {
       ];
     }
 
-    /*    const trials = result.filter(
-      task => task.custom && task.custom.type === 'trial',
-    );
-
-    for (const trial of trials) {
-      trial.devices = trial.custom.data.devices
-        && trial.custom.data.devices.map(d => ({
-          entity: result.find(
-            task => task.custom
-              && task.custom.type === 'device'
-              && trial.custom.data
-              && d.entity === task.custom.id,
-          ),
-          properties: d.properties || [],
-          type: d.type,
-          name: d.name,
-        }));
-
-      trial.assets = trial.custom.data.assets
-        && trial.custom.data.assets.map(d => ({
-          entity: result.find(
-            task => task.custom
-              && task.custom.type === 'asset'
-              && trial.custom.data
-              && d.entity === task.custom.id,
-          ),
-          properties: d.properties || [],
-          type: d.type,
-          name: d.name,
-        }));
-
-      trial.trialSet = result.find(
-        task => task.custom
-          && task.custom.type === 'trialSet'
-          && trial.custom.data
-          && trial.custom.data.trialSet === task.custom.id,
-      );
-    } */
     return result;
   }
 

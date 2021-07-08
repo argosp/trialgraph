@@ -60,22 +60,8 @@ class Experiment {
         entityType: 'DEVICE',
       }))
       : [];
-    const assets = tasks[0].custom.data.assets
-      ? tasks[0].custom.data.assets.map(d => ({
-        Name: d.name,
-        Type: d.type,
-        attributes: d.properties
-          ? d.properties.reduce(
-            (obj, item) => Object.assign(obj, { [item.key]: item.val }),
-            {},
-          )
-          : {},
-        contains: [],
-        entityType: 'ASSET',
-      }))
-      : [];
     const res = {
-      Entities: devices.concat(assets),
+      Entities: devices,
       properties: tasks[0].custom.data.properties
         ? tasks[0].custom.data.properties.reduce(
           (obj, item) => Object.assign(obj, { [item.key]: item.val }),

@@ -11,13 +11,12 @@ const {
   deviceTypeTypeDefs,
 } = require('./deviceType/deviceType.schema');
 const { trialResolvers, trialTypeDefs } = require('./trial/trial.schema');
-const { assetResolvers, assetTypeDefs } = require('./asset/asset.schema');
 const { dataResolvers, dataTypeDefs } = require('./data/data.schema');
 const {
   trialSetResolvers,
   trialSetTypeDefs,
 } = require('./trialSet/trialSet.schema');
-const { deviceResolvers, deviceTypeDefs } = require('./device/device.schema');
+const { deviceResolvers, deviceTypeDefs } = require('./entity/device.schema');
 const { authResolvers, authTypeDefs } = require('./auth/auth.schema');
 const {
   filesUploadResolvers,
@@ -34,7 +33,6 @@ const executableSchema = makeExecutableSchema({
     deviceTypeTypeDefs,
     deviceTypeDefs,
     trialTypeDefs,
-    assetTypeDefs,
     dataTypeDefs,
     trialSetTypeDefs,
     authTypeDefs,
@@ -46,7 +44,6 @@ const executableSchema = makeExecutableSchema({
     deviceTypeResolvers,
     deviceResolvers,
     trialResolvers,
-    assetResolvers,
     dataResolvers,
     trialSetResolvers,
     authResolvers,

@@ -7,7 +7,7 @@ module.exports = `
 # 	}
 
 # 	{
-#     devices {
+#     entities {
 #       id
 #       name
 #       type
