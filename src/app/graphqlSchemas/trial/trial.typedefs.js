@@ -9,15 +9,8 @@ type Trial {
   numberOfDevices: Int!
   state: String
   properties: [TrialProperty]
-  entities: [Entity]
-  deployedEntities: [Entity]
-}
-
-type Entity {
-  typeKey: String
-  properties: [DeviceProperty]
-  key: String
-  type: String
+  entities: JSON
+  deployedEntities: JSON
 }
 
 extend type Query {
@@ -36,8 +29,8 @@ extend type Mutation {
       cloneFrom: String,
       numberOfDevices: Int,
       properties: [TrialPropertyInput]
-      entities: [EntityInput]
-      deployedEntities: [EntityInput]
+      entities: JSON
+      deployedEntities: JSON
       action: String
     ): Trial
   }
@@ -51,15 +44,6 @@ type TrialProperty {
   val: String
   key: String!
 }
-
-input EntityInput {
-  typeKey: String
-  properties: [DevicePropertyInput]
-  key: String
-  type: String
-}
-
-
 
 extend type Subscription {
   trialsUpdated: Boolean!
