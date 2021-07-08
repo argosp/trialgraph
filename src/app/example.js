@@ -18,24 +18,17 @@ module.exports = `
 #     }
 # 	}
 
-
-# 	{
-#     trials(experimentId: "5cea62e70e6784000a0da8cd"){
-#       id
-#       name
-#       begin
-#       end
-#       devices{
-#           id
-#           name
-#           type
-#           properties{
-#               key
-#               val
-#            }
-#        }
+# {
+#    trials(experimentId: "5f8e944bed482662174a21ff",trialSetKey:"0962fe6a-5c4e-4c5f-a8b0-e8352859682c"){
+#     properties{
+#       key
+#        val
 #     }
-# 	}
+#      name 
+#    }
+#}
+
+
     
 #   mutation {
 #     register(input: {name:"test",username:"test", email: "test11@linnovate.net", password:"newstart11", confirmPassword:"newstart11"}){
