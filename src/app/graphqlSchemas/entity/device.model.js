@@ -5,7 +5,7 @@ class Device {
     this.connector = connector;
   }
 
-  async addUpdateDevice(args, context) {
+  async addUpdateEntity(args, context) {
     const {
       key,
       uid,

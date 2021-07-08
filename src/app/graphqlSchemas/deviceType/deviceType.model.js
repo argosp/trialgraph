@@ -1,4 +1,4 @@
-const { pubsub, DEVICE_TYPES_UPDATED } = require('../../subscriptions');
+const { pubsub, ENTITIES_TYPES_UPDATED } = require('../../subscriptions');
 const Utils = require('../services/utils');
 
 class DeviceType {
@@ -47,10 +47,10 @@ class DeviceType {
       uid,
       experimentId,
     );
-    pubsub.publish(DEVICE_TYPES_UPDATED, { deviceTypesUpdated: true });
+    pubsub.publish(ENTITIES_TYPES_UPDATED, { deviceTypesUpdated: true });
   }
 
-  async addUpdateDeviceType(args) {
+  async addUpdateEntitiesType(args) {
     const {
       uid,
       experimentId,

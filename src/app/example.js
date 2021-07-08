@@ -7,7 +7,7 @@ module.exports = `
 # 	}
 
 # 	{
-#     devices {
+#     entities {
 #       id
 #       name
 #       type
@@ -45,7 +45,7 @@ module.exports = `
 #  }
  
 #  mutation {
-#    addUpdateDeviceTypes(
+#    addUpdateEntitiesTypes(
 #        uid: "1f596b40-77c4-11e9-84ec-4b23f2be1633",
 #        id: "device1",
 #        name: "device1",
