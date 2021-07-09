@@ -9,8 +9,8 @@ type Trial {
   numberOfDevices: Int!
   state: String
   properties: [TrialProperty]
-  entities: JSON
-  deployedEntities: JSON
+  entities: [EntityInput]
+  deployedEntities: [EntityInput]
 }
 
 extend type Query {
@@ -30,8 +30,8 @@ extend type Mutation {
       numberOfDevices: Int,
       properties: [TrialPropertyInput]
       entities: JSON
-      deployedEntities: JSON
-      action: String
+      entities: [EntityInput]
+      deployedEntities: [EntityInput]
     ): Trial
   }
   
@@ -45,6 +45,16 @@ type TrialProperty {
   key: String!
 }
 
+input EntityInput {
+  typeKey: String
+  properties: [DevicePropertyInput]
+  containsEntities: [containsEntities]
+  key: String
+  type: String
+}
+type containsEntities {
+  key: String
+}
 extend type Subscription {
   trialsUpdated: Boolean!
 }
