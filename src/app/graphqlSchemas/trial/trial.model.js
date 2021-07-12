@@ -14,7 +14,7 @@ class Trial {
       properties,
       entities,
       deployedEntities,
-      numberOfDevices,
+      numberOfEntities,
       state,
       status,
       cloneFrom,
@@ -33,7 +33,7 @@ class Trial {
     };
 
     if (action !== 'update' || args.hasOwnProperty('name')) newTrial.custom.data.name = name;
-    if (action !== 'update' || args.hasOwnProperty('numberOfDevices')) newTrial.custom.data.numberOfDevices = numberOfDevices;
+    if (action !== 'update' || args.hasOwnProperty('numberOfEntities')) newTrial.custom.data.numberOfEntities = numberOfEntities;
     if (action !== 'update' || args.hasOwnProperty('state')) newTrial.custom.data.state = state;
     if (action !== 'update' || args.hasOwnProperty('properties')) newTrial.custom.data.properties = properties;
     if (action !== 'update' || args.hasOwnProperty('entities')) newTrial.custom.data.entities = entities;

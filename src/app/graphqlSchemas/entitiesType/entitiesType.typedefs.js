@@ -1,8 +1,8 @@
 const typeDef = `
-type DeviceType {
+type EntitiesType {
   key: String!
   name: String
-  numberOfDevices: Int
+  numberOfEntities: Int
   state: String
   properties: [KeyVal]
 }
@@ -24,7 +24,7 @@ type KeyVal {
 }
 
 extend type Query {
-  entitiesTypes(experimentId:String!): [DeviceType]
+  entitiesTypes(experimentId:String!): [EntitiesType]
 }
 
 extend type Mutation {
@@ -33,11 +33,11 @@ extend type Mutation {
     experimentId: String!,
     uid: String!,
     name: String,
-    numberOfDevices: Int,
+    numberOfEntities: Int,
     state: String,
     properties: [KeyValInput]
     action: String
-  ): DeviceType
+  ): EntitiesType
 }
 
 input KeyValInput {
@@ -57,7 +57,7 @@ input KeyValInput {
 }
 
 extend type Subscription {
-  deviceTypesUpdated: Boolean!
+  entitiesTypesUpdated: Boolean!
 }
 `;
 module.exports = typeDef;

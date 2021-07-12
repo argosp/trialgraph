@@ -1,6 +1,6 @@
 const Utils = require('../services/utils');
 
-class Device {
+class Entity {
   constructor({ connector }) {
     this.connector = connector;
   }
@@ -11,28 +11,28 @@ class Device {
       uid,
       experimentId,
       name,
-      deviceTypeKey,
+      entitiesTypeKey,
       state,
       properties,
       action,
     } = args;
 
-    let newDevice = {
+    let newEntity = {
       custom: {
         id: key,
         type: 'device',
         data: {
           key,
-          deviceTypeKey,
+          entitiesTypeKey,
         },
       },
     };
 
-    if (action !== 'update' || args.hasOwnProperty('name')) newDevice.custom.data.name = name;
-    if (action !== 'update' || args.hasOwnProperty('state')) newDevice.custom.data.state = state;
-    if (action !== 'update' || args.hasOwnProperty('properties')) newDevice.custom.data.properties = properties;
+    if (action !== 'update' || args.hasOwnProperty('name')) newEntity.custom.data.name = name;
+    if (action !== 'update' || args.hasOwnProperty('state')) newEntity.custom.data.state = state;
+    if (action !== 'update' || args.hasOwnProperty('properties')) newEntity.custom.data.properties = properties;
 
-    let updateDeviceType = false;
+    let updateEntitiesType = false;
 
     const device = await this.connector.getTasksFromExperiment(
       experimentId,
@@ -43,10 +43,10 @@ class Device {
 
     if (device[0]) {
       if (action === 'update') {
-        newDevice.custom = Utils.mergeDeep(device[0].custom, newDevice.custom);
+        newEntity.custom = Utils.mergeDeep(device[0].custom, newEntity.custom);
       }
       if (state === 'Deleted' && device[0].custom.data.state !== 'Deleted') {
-        updateDeviceType = true;
+        updateEntitiesType = true;
         this.removeEntities(args, context);
       }
     } else {
@@ -55,16 +55,16 @@ class Device {
           { error: 'Ooops. Trial not found.' },
         ];
       }
-      updateDeviceType = true;
+      updateEntitiesType = true;
     }
 
     const response = await this.connector.addUpdateTask(
-      newDevice,
+      newEntity,
       uid,
       experimentId,
     );
 
-    if (updateDeviceType) context.deviceType.setDevices(deviceTypeKey, experimentId, uid);
+    if (updateEntitiesType) context.entitiesType.setEntities(entitiesTypeKey, experimentId, uid);
 
     return response.data;
   }
@@ -75,7 +75,7 @@ class Device {
       experimentId,
     } = args;
     //remove entities of device from trials
-    //1. get all trials that have the device in entities
+    //1. get all trials that have the entity in entities
     let result = await this.connector.getTasksFromExperiment(
       experimentId,
       task => task.custom
@@ -90,13 +90,13 @@ class Device {
   }
 
 
-  async getDevices(args) {
-    const { experimentId, deviceTypeKey, trialKey } = args;
+  async getEntities(args) {
+    const { experimentId, entitiesTypeKey, trialKey } = args;
     let result = await this.connector.getTasksFromExperiment(
       experimentId,
       task => task.custom
         && task.custom.data
-        && (!deviceTypeKey || task.custom.data.deviceTypeKey === deviceTypeKey)
+        && (!entitiesTypeKey || task.custom.data.entitiesTypeKey === entitiesTypeKey)
         && task.custom.type == "device"
         && task.custom.data.state !== 'Deleted',
     );
@@ -128,4 +128,4 @@ class Device {
   }
 }
 
-module.exports = Device;
+module.exports = Entity;

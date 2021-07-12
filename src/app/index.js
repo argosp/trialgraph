@@ -4,8 +4,8 @@ const { SubscriptionServer } = require('subscriptions-transport-ws');
 const RootConnector = require('./graphqlSchemas/connectors/rootConnector');
 const Auth = require('./graphqlSchemas/auth/auth.model');
 const Experiment = require('./graphqlSchemas/experiment/experiment.model');
-const DeviceType = require('./graphqlSchemas/deviceType/deviceType.model');
-const Device = require('./graphqlSchemas/entity/device.model');
+const EntitiesType = require('./graphqlSchemas/entitiesType/entitiesType.model');
+const Entity = require('./graphqlSchemas/entity/entity.model');
 const Data = require('./graphqlSchemas/data/data.model');
 const Trial = require('./graphqlSchemas/trial/trial.model');
 const TrialSet = require('./graphqlSchemas/trialSet/trialSet.model');
@@ -22,8 +22,8 @@ module.exports = {
         return {
           auth: new Auth({ connector: rootConnector }),
           experiment: new Experiment({ connector: rootConnector }),
-          deviceType: new DeviceType({ connector: rootConnector }),
-          device: new Device({ connector: rootConnector }),
+          entitiesType: new EntitiesType({ connector: rootConnector }),
+          entity: new Entity({ connector: rootConnector }),
           trialSet: new TrialSet({ connector: rootConnector }),
           trial: new Trial({ connector: rootConnector }),
           data: new Data({ connector: rootConnector }),
