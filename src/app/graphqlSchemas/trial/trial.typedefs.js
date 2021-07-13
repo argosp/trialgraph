@@ -13,13 +13,6 @@ type Trial {
   deployedEntities: [Entity]
 }
 
-type Entity {
-  typeKey: String
-  properties: [DeviceProperty]
-  key: String
-  type: String
-}
-
 extend type Query {
     trials(experimentId:String!, trialSetKey:String!): [Trial]
 }
@@ -51,15 +44,6 @@ type TrialProperty {
   val: String
   key: String!
 }
-
-input EntityInput {
-  typeKey: String
-  properties: [DevicePropertyInput]
-  key: String
-  type: String
-}
-
-
 
 extend type Subscription {
   trialsUpdated: Boolean!

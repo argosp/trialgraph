@@ -1,9 +1,10 @@
 const typeDef = `
 type Entity {
-  key: String!
+  key: String
   name: String
   entitiesTypeKey: String
   state: String
+  containsEntities:[String]
   properties: [EntityProperty]
 }
 
@@ -26,6 +27,13 @@ extend type Mutation {
       properties: [EntityPropertyInput]
       action: String
     ): Entity
+  }
+
+  input EntityInput {
+    entitiesTypeKey: String
+    containsEntities:[String]
+    properties: [EntityPropertyInput]
+    key: String
   }
 
 input EntityPropertyInput { 
