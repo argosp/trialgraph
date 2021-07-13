@@ -62,7 +62,7 @@ class Data {
     } else {
       if (action === 'update') {
         return [
-          { error: 'Ooops. deviceType not found.' },
+          { error: 'Ooops. entitiesType not found.' },
         ];
       }
     }

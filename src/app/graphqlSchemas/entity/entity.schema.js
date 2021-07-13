@@ -1,16 +1,16 @@
 const { property, merge } = require('lodash');
 const { pubsub, ENTITIES_UPDATED } = require('../../subscriptions');
-const deviceTypeDefs = require('./device.typedefs');
+const entitiesTypeDefs = require('./entity.typedefs');
 
 const typeResolver = {
-  Device: {
+  Entity: {
     name: property('custom.data.name'),
     key: property('custom.data.key'),
-    deviceTypeKey: property('custom.data.deviceTypeKey'),
+    entitiesTypeKey: property('custom.data.entitiesTypeKey'),
     state: property('custom.data.state'),
     properties: property('custom.data.properties'),
   },
-/*  DeviceKeyVal: {
+/*  EntityKeyVal: {
     val: property('val'),
     key: property('key'),
     type: property('type'),
@@ -29,13 +29,13 @@ const typeResolver = {
 const resolvers = {
   Query: {
     async entities(_, args, context) {
-      return context.device.getDevices(args, context);
+      return context.entity.getEntities(args, context);
     },
   },
   Mutation: {
     async addUpdateEntity(_, args, context) {
       pubsub.publish(ENTITIES_UPDATED, { devicesUpdated: true });
-      return context.device.addUpdateEntity(args, context);
+      return context.entity.addUpdateEntity(args, context);
     },
   },
   Subscription: {
@@ -48,6 +48,6 @@ const resolvers = {
 const deviceResolvers = merge(typeResolver, resolvers);
 
 module.exports = {
-  deviceTypeDefs,
+  entitiesTypeDefs,
   deviceResolvers,
 };

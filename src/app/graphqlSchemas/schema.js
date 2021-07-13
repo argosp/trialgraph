@@ -7,16 +7,16 @@ const {
   experimentTypeDefs,
 } = require('./experiment/experiment.schema');
 const {
-  deviceTypeResolvers,
-  deviceTypeTypeDefs,
-} = require('./deviceType/deviceType.schema');
+  entitiesTypeResolvers,
+  entitiesTypeTypeDefs,
+} = require('./entitiesType/entitiesType.schema');
 const { trialResolvers, trialTypeDefs } = require('./trial/trial.schema');
 const { dataResolvers, dataTypeDefs } = require('./data/data.schema');
 const {
   trialSetResolvers,
   trialSetTypeDefs,
 } = require('./trialSet/trialSet.schema');
-const { deviceResolvers, deviceTypeDefs } = require('./entity/device.schema');
+const { deviceResolvers, entitiesTypeDefs } = require('./entity/entity.schema');
 const { authResolvers, authTypeDefs } = require('./auth/auth.schema');
 const {
   filesUploadResolvers,
@@ -30,8 +30,8 @@ const executableSchema = makeExecutableSchema({
   typeDefs: [
     rootTypeDefs,
     experimentTypeDefs,
-    deviceTypeTypeDefs,
-    deviceTypeDefs,
+    entitiesTypeTypeDefs,
+    entitiesTypeDefs,
     trialTypeDefs,
     dataTypeDefs,
     trialSetTypeDefs,
@@ -41,7 +41,7 @@ const executableSchema = makeExecutableSchema({
     ],
   resolvers: merge(
     experimentResolvers,
-    deviceTypeResolvers,
+    entitiesTypeResolvers,
     deviceResolvers,
     trialResolvers,
     dataResolvers,
