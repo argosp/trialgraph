@@ -8,7 +8,7 @@ const typeResolver = {
     key: property('custom.data.key'),
     created: property('created'),
     trialSetKey: property('custom.data.trialSetKey'),
-    numberOfDevices: property('custom.data.numberOfDevices'),
+    numberOfEntities: property('custom.data.numberOfEntities'),
     status: property('custom.data.status'),
     cloneFrom:property('custom.data.cloneFrom'),
     state: property('custom.data.state'),

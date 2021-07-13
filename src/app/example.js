@@ -85,7 +85,7 @@ module.exports = `
 #        experimentId: "5cea62e70e6784000a0da8cd"
 #        status: "design"
 #        trialSetKey: "a9b6de2b-4cd8-4c7f-9e45-b3900c75cc4a"
-#        numberOfDevices: 0
+#        numberOfEntities: 0
 #        properties: [
 #          { key: "276b14ba-03b1-404a-aca5-79293d2e3e45", val: "jjj" }
 #          { key: "591aaec4-c1d9-47fb-9110-c595920332e2", val: "ff" }
@@ -115,7 +115,7 @@ module.exports = `
 #        id
 #        name
 #        trialSetKey
-#        numberOfDevices
+#        numberOfEntities
 #        state
 #        properties {
 #          key
@@ -172,7 +172,7 @@ module.exports = `
 #        id
 #        name
 #        trialSetKey
-#        numberOfDevices
+#        numberOfEntities
 #        state
 #        properties {
 #          key

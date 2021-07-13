@@ -1,18 +1,18 @@
 const typeDef = `
-type Device {
+type Entity {
   key: String!
   name: String
-  deviceTypeKey: String!
+  entitiesTypeKey: String
   state: String
-  properties: [DeviceProperty]
+  properties: [EntityProperty]
 }
 
 extend type Query {
   entities(
     experimentId:String!,
-    deviceTypeKey:String
+    entitiesTypeKey:String
     trialKey: String
-  ): [Device]
+  ): [Entity]
 }
 
 extend type Mutation {
@@ -21,19 +21,19 @@ extend type Mutation {
       experimentId: String!,
       uid: String!,
       name: String,
-      deviceTypeKey: String!,
+      entitiesTypeKey: String!,
       state: String,
-      properties: [DevicePropertyInput]
+      properties: [EntityPropertyInput]
       action: String
-    ): Device
+    ): Entity
   }
 
-input DevicePropertyInput { 
+input EntityPropertyInput { 
     val: String
     key: String!
 }
 
-type DeviceProperty { 
+type EntityProperty { 
     val: String
     key: String!
 }
