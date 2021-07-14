@@ -60,7 +60,6 @@ type TrialEntity {
   key: String!
   name: String
   entitiesTypeKey: String
-  state: String
   containsEntities:[String]
   properties: [EntityProperty]
 }

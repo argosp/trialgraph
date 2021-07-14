@@ -31,7 +31,7 @@ extend type Mutation {
 
   input EntityInput {
     entitiesTypeKey: String
-    containsEntities:[String]
+    state: String
     properties: [EntityPropertyInput]
     key: String
   }
