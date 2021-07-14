@@ -4,6 +4,7 @@ type Entity {
   name: String
   entitiesTypeKey: String
   state: String
+  containsEntities:[String]
   properties: [EntityProperty]
 }
 
@@ -26,6 +27,13 @@ extend type Mutation {
       properties: [EntityPropertyInput]
       action: String
     ): Entity
+  }
+
+  input EntityInput {
+    entitiesTypeKey: String
+    state: String
+    properties: [EntityPropertyInput]
+    key: String
   }
 
 input EntityPropertyInput { 
