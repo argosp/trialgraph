@@ -1,6 +1,6 @@
 const typeDef = `
 type Entity {
-  key: String
+  key: String!
   name: String
   entitiesTypeKey: String
   state: String

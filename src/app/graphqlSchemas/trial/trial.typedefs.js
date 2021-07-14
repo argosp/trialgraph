@@ -9,8 +9,8 @@ type Trial {
   numberOfEntities: Int
   state: String
   properties: [TrialProperty]
-  entities: [Entity]
-  deployedEntities: [Entity]
+  entities: [TrialEntity]
+  deployedEntities: [TrialEntity]
 }
 
 extend type Query {
@@ -29,8 +29,8 @@ extend type Mutation {
       cloneFrom: String,
       numberOfEntities: Int,
       properties: [TrialPropertyInput]
-      entities: [EntityInput]
-      deployedEntities: [EntityInput]
+      entities: [TrialEntityInput]
+      deployedEntities: [TrialEntityInput]
       action: String
     ): Trial
   }
@@ -49,6 +49,21 @@ extend type Subscription {
   trialsUpdated: Boolean!
 }
 
+input TrialEntityInput {
+  entitiesTypeKey: String
+  containsEntities:[String]
+  properties: [EntityPropertyInput]
+  key: String
+}
+
+type TrialEntity {
+  key: String!
+  name: String
+  entitiesTypeKey: String
+  state: String
+  containsEntities:[String]
+  properties: [EntityProperty]
+}
 `;
 
 module.exports = typeDef;
