@@ -35,6 +35,17 @@ extend type Mutation {
     ): Trial
   }
   
+extend type Mutation {
+  updateTrialContainsEntities(
+    uid: String!
+    key: String!
+    experimentId: String!
+    parentEntityKey: String!
+    entity: TrialEntityInput!
+    action: String!
+    ): Trial
+}
+  
 input TrialPropertyInput { 
   val: String
   key: String!
@@ -66,5 +77,3 @@ type TrialEntity {
 `;
 
 module.exports = typeDef;
-
-
