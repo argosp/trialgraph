@@ -1,6 +1,9 @@
 const { property, merge } = require('lodash');
 const { pubsub, TRIALS_UPDATED } = require('../../subscriptions');
 const trialTypeDefs = require('./trial.typedefs');
+const {
+  UserInputError
+} = require('apollo-server-express');
 
 const typeResolver = {
   Trial: {
@@ -30,7 +33,9 @@ const resolvers = {
     },
     async updateTrialContainsEntities(_, args, context) {
       pubsub.publish(TRIALS_UPDATED, { trialsUpdated: true });
-      return context.trial.updateTrialContainsEntities(args, context);
+      const res = await context.trial.updateTrialContainsEntities(args, context);
+        if (!res.error) return res;
+        throw new UserInputError("Error", res);
     }
   },
   Subscription: {

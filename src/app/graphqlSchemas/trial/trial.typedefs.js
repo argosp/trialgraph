@@ -41,8 +41,8 @@ extend type Mutation {
     key: String!
     experimentId: String!
     parentEntityKey: String!
-    entity: TrialEntityInput
-    action: String
+    entity: TrialEntityInput!
+    action: String!
     ): Trial
 }
   

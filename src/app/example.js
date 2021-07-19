@@ -62,6 +62,27 @@ module.exports = `
 #        }
 #    }
  
+# mutation updateTrialContainsEntities {
+  #     updateTrialContainsEntities(
+  #       uid:"ffce-11e9-9865-5d15a8cc481c"
+  #       experimentId: "60ee9c4dad6cb1431c543bc6"
+  #       key: "4d08cc4e-df9d-420d-9d00-b6f620c4f802"
+  #       parentEntityKey: "42c6e5fa-c802-49d1-b6d7-e5d3cc60d5ec"
+  #       action:"delete"
+  #       entity: {
+  #            key:"fcfeab97-6bcc-4885-8d06-e5e140ee81c4",
+  #           entitiesTypeKey:"242ac170-4125-4a41-b063-9ad5017ed921",
+  #           properties:[{key:"ab12460b-e1e7-4608-a9a7-2b2009b2b3df",val:null}]
+  #       }
+                
+  #     ) {
+  #       entities{
+  #         containsEntities
+  # 				key
+  #       }
+  #     }
+  #   }
+    
 #  For update all trial properties:
 #  set all the field except the action field,
 #  If a field not set it will be null.
