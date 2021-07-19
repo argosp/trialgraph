@@ -28,6 +28,10 @@ const resolvers = {
       pubsub.publish(TRIALS_UPDATED, { trialsUpdated: true });
       return context.trial.addUpdateTrial(args, context);
     },
+    async updateTrialContainsEntities(_, args, context) {
+      pubsub.publish(TRIALS_UPDATED, { trialsUpdated: true });
+      return context.trial.updateTrialContainsEntities(args, context);
+    }
   },
   Subscription: {
     trialsUpdated: {
