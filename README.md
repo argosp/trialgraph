@@ -1,4 +1,4 @@
-# ELEMENTOR GRAPHQL
+# Trials graphQL service
 
 Midlleware graphql server based on dockers
 
@@ -26,9 +26,12 @@ cd graph
 ```
 #### .env
 
-The directory your just cloned contains .env.example file.
-.env.example has the minimum values you need in order to get started.
-remove the ".example" extension and you are ready to go.
+create a .env file with the next contents
+```
+PORT=8888
+ROOT_URI=http://localhost:3000
+ROOT_TOKEN=eyJhbGciOiJIUzI1NiJ9.JTdCJTIyX2lkJTIyOiUyMjYwZmU4MTM3OWNjMTU4NmUxOThkODdiYiUyMiwlMjJ1aWQlMjI6JTIyNmJiMDZlYTAtZWRmNC0xMWViLWJhOWMtNzVhNzk5YmZkYTMzJTIyLCUyMmlkJTIyOiUyMnRlc3RAbGlubm92YXRlLm5ldCUyMiwlMjJ1c2VybmFtZSUyMjolMjJsaW9yJTIyLCUyMm5hbWUlMjI6JTIybGlvciUyMiwlMjJlbWFpbCUyMjolMjJ0ZXN0QGxpbm5vdmF0ZS5uZXQlMjIsJTIyX192JTIyOjAsJTIyR2V0TWFpbEV2ZXJ5RGF5QWJvdXRHaXZlblRhc2tzJTIyOiUyMm5vJTIyLCUyMkdldE1haWxFdmVyeURheUFib3V0TXlUYXNrcyUyMjolMjJubyUyMiwlMjJHZXRNYWlsRXZlcnlXZWVrQWJvdXRHaXZlblRhc2tzJTIyOiUyMm5vJTIyLCUyMkdldE1haWxFdmVyeVdlZWtBYm91dE15VGFza3MlMjI6JTIybm8lMjIsJTIycHJvdmlkZXIlMjI6JTIybG9jYWwlMjIsJTIycm9sZXMlMjI6JTVCJTIyYXV0aGVudGljYXRlZCUyMiU1RCU3RA.kHHiw6_OVCS1esL4imxjt0XHtUlM_3PsHxKGYFWY5oo
+```
 
 #### Run build.sh 
 
