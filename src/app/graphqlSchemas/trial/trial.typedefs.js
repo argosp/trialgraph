@@ -43,6 +43,7 @@ extend type Mutation {
     parentEntityKey: String!
     entity: TrialEntityInput!
     action: String!
+    type: String
     ): Trial
 }
   
