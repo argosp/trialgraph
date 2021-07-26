@@ -35,8 +35,7 @@ ROOT_TOKEN=eyJhbGciOiJIUzI1NiJ9.JTdCJTIyX2lkJTIyOiUyMjYwZmU4MTM3OWNjMTU4NmUxOThk
 
 To get the ROOT_TOKEN you need to simulate a login within the graphql
 See the following loom for the example.
-
-<div style="position: relative; padding-bottom: 62.5%; height: 0;"><iframe src="https://www.loom.com/embed/6d3973b262374f84b2a6338fa9c297e6" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;"></iframe></div>
+https://www.loom.com/share/6d3973b262374f84b2a6338fa9c297e6
 
 
 #### Run build.sh 
