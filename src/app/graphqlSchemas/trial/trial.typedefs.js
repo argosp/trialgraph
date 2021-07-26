@@ -43,7 +43,6 @@ extend type Mutation {
     parentEntityKey: String!
     entity: TrialEntityInput!
     action: String!
-    type: String
     ): Trial
 }
   
@@ -66,6 +65,7 @@ input TrialEntityInput {
   containsEntities:[String]
   properties: [EntityPropertyInput]
   key: String
+  type: String
 }
 
 type TrialEntity {
