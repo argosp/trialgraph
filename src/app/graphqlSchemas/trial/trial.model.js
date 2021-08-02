@@ -3,10 +3,10 @@ class Trial {
   constructor({ connector }) {
     this.connector = connector;
   }
-  async getTrial(experimentId, key) {
+  async getTrialBytrialKey(experimentId, trialKey) {
     return await this.connector.getTasksFromExperiment(
       experimentId,
-      (task) => task.custom && task.custom.data && task.custom.data.key === key
+      (task) => task.custom && task.custom.data && task.custom.data.key === trialKey
     );
   }
 
@@ -37,7 +37,6 @@ class Trial {
         },
       },
     };
-
     if (action !== "update" || args.hasOwnProperty("name"))
       newTrial.custom.data.name = name;
     if (action !== "update" || args.hasOwnProperty("numberOfEntities"))
@@ -60,13 +59,14 @@ class Trial {
         newTrial.custom.data.entities = deployedEntities;
       newTrial.custom.data.deployedEntities = [];
     }
-    const trial = await this.getTrial(experimentId, key);
+    const trial = await this.getTrialBytrialKey(experimentId, key); //key is trial.key
 
     let updateTrialSet = false;
 
     if (trial[0]) {
       if (action === "update") {
         newTrial.custom = Utils.mergeDeep(trial[0].custom, newTrial.custom);
+        // await this.updateInheritableProperties(newTrial.custom.data.entities, experimentId);//deployEntities
       }
       newTrial.custom.data.statusUpdated = !!trial[0].custom.data.statusUpdated;
       if (status === "deploy" && !trial[0].custom.data.statusUpdated) {
@@ -82,6 +82,7 @@ class Trial {
       }
       updateTrialSet = true;
     }
+
     console.log(
       "newTrial before one ms before update",
       JSON.stringify(newTrial)
@@ -91,12 +92,14 @@ class Trial {
       uid,
       experimentId
     );
+
     if (updateTrialSet)
       context.trialSet.setTrials(trialSetKey, experimentId, uid);
     return response.data;
   }
 
-  async getTrials(args) {
+ 
+  async getTrials(args) { 
     const { experimentId, trialSetKey } = args;
     let result = await this.connector.getTasksFromExperiment(
       experimentId,
@@ -185,24 +188,26 @@ class Trial {
         },
       },
     };
-    const trial = await this.getTrial(experimentId, key);
+    const trial = await this.getTrialBytrialKey(experimentId, key);
     if (trial[0]) {
       updatedTrial.custom = Utils.mergeDeep(
         trial[0].custom,
         updatedTrial.custom
       );
+      const currentEntities = updatedTrial.custom.data.status == "design" ?updatedTrial.custom.data.entities:
+        updatedTrial.custom.data.status == "deployedEntities"? updatedTrial.custom.data.deployedEntities:[];
       const updatedEntitiesResponse = this.findAndUpdateParentyEntity(
-        trial[0].custom.data.entities,
+        currentEntities,
         parentEntityKey,
         entity,
         action
       );
       if (!updatedEntitiesResponse.error) {
-        if ((updatedTrial.custom.data.status = "design"))
+        if (updatedTrial.custom.data.status = "design")
           updatedTrial.custom.data.entities = updatedEntitiesResponse;
-        else if (updatedTrial.custom.data.status == "deployedEntities") {
+        else if (updatedTrial.custom.data.status == "deployedEntities") 
           updatedTrial.custom.data.deployedEntities = updatedEntitiesResponse;
-        }
+
         console.log(
           "Trial entities before update in root",
           updatedTrial.custom.data.entities
@@ -227,7 +232,7 @@ class Trial {
         if (!el.containsEntities) el.containsEntities = [];
         const index = el.containsEntities.indexOf(entity.key);
         if (action == "update") {
-          if (index < 0) el.containsEntities.push(entity.key);
+          if (index < 0) el.containsEntities.push(entity.key);//not exist when index == -1
           else {
             error = { error: "Entity alredy exist." };
             return;
@@ -244,8 +249,9 @@ class Trial {
       if (el.key === entity.key) isExistEntityInTrial = true;
     });
     if (!isExistEntityInTrial) entitiesArray.push(entity);
-
-    return error || entitiesArray;
+    //  const updatedInheritableEntitiesArray = 
+    //  await this.updateInheritableProperties(parentEntityKey, entitiesArray, experimentId);
+    return error || entitiesArray; //return updatedInheritableEntitiesArray
   }
 }
 
