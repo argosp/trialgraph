@@ -204,7 +204,6 @@ class Trial {
         entity,
         action
       );
-      debugger; 
       if (!updatedEntitiesResponse.error) {
         if (updatedTrial.custom.data.status = "design")
           updatedTrial.custom.data.entities = updatedEntitiesResponse;
@@ -227,7 +226,6 @@ class Trial {
   }
 
   async findAndUpdateParentyEntity(entitiesArray, parentEntityKey, entity, action) {
-    debugger;
     let parentEntityOjb = this.findEntity(entitiesArray, parentEntityKey);
       if(parentEntityOjb){
         if (!parentEntityOjb.containsEntities) parentEntityOjb.containsEntities = [];
