@@ -198,12 +198,13 @@ class Trial {
       );
       const currentEntities = updatedTrial.custom.data.status == "design" ?
       updatedTrial.custom.data.entities:updatedTrial.custom.data.deployedEntities;
-      const updatedEntitiesResponse = this.findAndUpdateParentyEntity(
+      const updatedEntitiesResponse = await this.findAndUpdateParentyEntity(
         currentEntities,
         parentEntityKey,
         entity,
         action
       );
+      debugger; 
       if (!updatedEntitiesResponse.error) {
         if (updatedTrial.custom.data.status = "design")
           updatedTrial.custom.data.entities = updatedEntitiesResponse;
@@ -225,25 +226,35 @@ class Trial {
     }
   }
 
-  findAndUpdateParentyEntity(entitiesArray, parentEntityKey, entity, action) {
+  async findAndUpdateParentyEntity(entitiesArray, parentEntityKey, entity, action) {
+    debugger;
     let parentEntityOjb = this.findEntity(entitiesArray, parentEntityKey);
-    if (!parentEntityOjb.containsEntities) parentEntityOjb.containsEntities = [];
-    const index = parentEntityOjb.containsEntities.indexOf(entity.key);
-    if (action == "update") {
-        if (index < 0) parentEntityOjb.containsEntities.push(entity.key); //not exist when index == -1
-        else return {
-            error: "Entity alredy exist."
-        };
+      if(parentEntityOjb){
+        if (!parentEntityOjb.containsEntities) parentEntityOjb.containsEntities = [];
+        const index = parentEntityOjb.containsEntities.indexOf(entity.key);
+        if (action == "update") {
+            if (index < 0)
+            {
+              parentEntityOjb.containsEntities.push(entity.key); //not exist when index == -1
+              const found = this.findEntity(entitiesArray, entity.key);
+              if (!found)
+                  entitiesArray.push(entity);
+            }
+            else return {
+                error: "Entity alredy exist."
+            };
+        }
+        if (action == "delete") {
+            if (index > -1) parentEntityOjb.containsEntities.splice(index, 1);
+            else return {
+                error: "Entity not found."
+            };
+        }
+        return entitiesArray; 
     }
-    if (action == "delete") {
-        if (index > -1) parentEntityOjb.containsEntities.splice(index, 1);
-        else return {
-            error: "Entity not found."
-        };
-    }
-    if (entitiesArray.indexOf(entity.key) < 0)
-        entitiesArray.push(entity);
-    return entitiesArray;
+    else  return {
+      error: "Parent entity not found."
+  };
   }
 }
 
