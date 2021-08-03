@@ -176,7 +176,9 @@ class Trial {
       this.connector.addUpdateTask(trial, uid, experimentId);
     });
   }
-
+  findEntity(entitiesArray, entityKey){
+    return entitiesArray.find((el) => el.key === entityKey);
+    }
   async updateTrialContainsEntities(args, context) {
     const { key, experimentId, parentEntityKey, entity, uid, action } = args;
     let updatedTrial = {
@@ -194,8 +196,8 @@ class Trial {
         trial[0].custom,
         updatedTrial.custom
       );
-      const currentEntities = updatedTrial.custom.data.status == "design" ?updatedTrial.custom.data.entities:
-        updatedTrial.custom.data.status == "deployedEntities"? updatedTrial.custom.data.deployedEntities:[];
+      const currentEntities = updatedTrial.custom.data.status == "design" ?
+      updatedTrial.custom.data.entities:updatedTrial.custom.data.deployedEntities;
       const updatedEntitiesResponse = this.findAndUpdateParentyEntity(
         currentEntities,
         parentEntityKey,
@@ -205,8 +207,7 @@ class Trial {
       if (!updatedEntitiesResponse.error) {
         if (updatedTrial.custom.data.status = "design")
           updatedTrial.custom.data.entities = updatedEntitiesResponse;
-        else if (updatedTrial.custom.data.status == "deployedEntities") 
-          updatedTrial.custom.data.deployedEntities = updatedEntitiesResponse;
+        else updatedTrial.custom.data.deployedEntities = updatedEntitiesResponse;
 
         console.log(
           "Trial entities before update in root",
@@ -225,33 +226,24 @@ class Trial {
   }
 
   findAndUpdateParentyEntity(entitiesArray, parentEntityKey, entity, action) {
-    let isExistEntityInTrial = false;
-    let error;
-    entitiesArray.forEach((el) => {
-      if (el.key === parentEntityKey) {
-        if (!el.containsEntities) el.containsEntities = [];
-        const index = el.containsEntities.indexOf(entity.key);
-        if (action == "update") {
-          if (index < 0) el.containsEntities.push(entity.key);//not exist when index == -1
-          else {
-            error = { error: "Entity alredy exist." };
-            return;
-          }
-        }
-        if (action == "delete") {
-          if (index > -1) el.containsEntities.splice(index, 1);
-          else {
-            error = { error: "Entity not found." };
-            return;
-          }
-        }
-      }
-      if (el.key === entity.key) isExistEntityInTrial = true;
-    });
-    if (!isExistEntityInTrial) entitiesArray.push(entity);
-    //  const updatedInheritableEntitiesArray = 
-    //  await this.updateInheritableProperties(parentEntityKey, entitiesArray, experimentId);
-    return error || entitiesArray; //return updatedInheritableEntitiesArray
+    let parentEntityOjb = this.findEntity(entitiesArray, parentEntityKey);
+    if (!parentEntityOjb.containsEntities) parentEntityOjb.containsEntities = [];
+    const index = parentEntityOjb.containsEntities.indexOf(entity.key);
+    if (action == "update") {
+        if (index < 0) parentEntityOjb.containsEntities.push(entity.key); //not exist when index == -1
+        else return {
+            error: "Entity alredy exist."
+        };
+    }
+    if (action == "delete") {
+        if (index > -1) parentEntityOjb.containsEntities.splice(index, 1);
+        else return {
+            error: "Entity not found."
+        };
+    }
+    if (entitiesArray.indexOf(entity.key) < 0)
+        entitiesArray.push(entity);
+    return entitiesArray;
   }
 }
 
