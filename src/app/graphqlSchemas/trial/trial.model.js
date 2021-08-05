@@ -4,10 +4,11 @@ class Trial {
     this.connector = connector;
   }
   async getTrialBytrialKey(experimentId, trialKey) {
-    return await this.connector.getTasksFromExperiment(
+    const res =  await this.connector.getTasksFromExperiment(
       experimentId,
       (task) => task.custom && task.custom.data && task.custom.data.key === trialKey
     );
+    return res[0];
   }
 
   async addUpdateTrial(args, context) {
@@ -63,17 +64,17 @@ class Trial {
 
     let updateTrialSet = false;
 
-    if (trial[0]) {
+    if (trial) {
       if (action === "update") {
-        newTrial.custom = Utils.mergeDeep(trial[0].custom, newTrial.custom);
+        newTrial.custom = Utils.mergeDeep(trial.custom, newTrial.custom);
         // await this.updateInheritableProperties(newTrial.custom.data.entities, experimentId);//deployEntities
       }
-      newTrial.custom.data.statusUpdated = !!trial[0].custom.data.statusUpdated;
-      if (status === "deploy" && !trial[0].custom.data.statusUpdated) {
+      newTrial.custom.data.statusUpdated = !!trial.custom.data.statusUpdated;
+      if (status === "deploy" && !trial.custom.data.statusUpdated) {
         newTrial.custom.data.deployedEntities = entities;
         newTrial.custom.data.statusUpdated = true;
       }
-      if (state === "Deleted" && trial[0].custom.data.state !== "Deleted") {
+      if (state === "Deleted" && trial.custom.data.state !== "Deleted") {
         updateTrialSet = true;
       }
     } else {
@@ -181,43 +182,35 @@ class Trial {
     }
   async updateTrialContainsEntities(args, context) {
     const { key, experimentId, parentEntityKey, entity, uid, action } = args;
-    let updatedTrial = {
-      custom: {
-        id: key,
-        type: "trial",
-        data: {
-          key,
-        },
-      },
-    };
     const trial = await this.getTrialBytrialKey(experimentId, key);
-    if (trial[0]) {
-      updatedTrial.custom = Utils.mergeDeep(
-        trial[0].custom,
-        updatedTrial.custom
-      );
-      const currentEntities = updatedTrial.custom.data.status == "design" ?
-      updatedTrial.custom.data.entities:updatedTrial.custom.data.deployedEntities;
-      const updatedEntitiesResponse = await this.findAndUpdateParentyEntity(
-        currentEntities,
+    if (trial) {
+      const currentEntitiesByStatus = trial.custom.data.status == "design" ?
+      trial.custom.data.entities:trial.custom.data.deployedEntities;
+      let updatedEntitiesResponse = await this.updateEntitiesByParent(
+        currentEntitiesByStatus,
         parentEntityKey,
         entity,
         action
       );
       if (!updatedEntitiesResponse.error) {
-        if (updatedTrial.custom.data.status = "design")
-          updatedTrial.custom.data.entities = updatedEntitiesResponse;
-        else updatedTrial.custom.data.deployedEntities = updatedEntitiesResponse;
+        if(action == "update"){
+          //  const updatedInheritableEntitiesArray = 
+          // updatedEntitiesResponse = await this.updateInheritableProperties(parentEntityKey, updatedEntitiesResponse, experimentId);
+        }
+        if (trial.custom.data.status = "design")
+          trial.custom.data.entities = updatedEntitiesResponse;
+        else trial.custom.data.deployedEntities = updatedEntitiesResponse;
 
         console.log(
           "Trial entities before update in root",
-          updatedTrial.custom.data.entities
+          trial.custom.data.entities
         );
         const response = await this.connector.addUpdateTask(
-          updatedTrial,
+          trial,
           uid,
           experimentId
         );
+        // const response ={ data:"ok"};
         return response.data;
       } else return updatedEntitiesResponse;
     } else {
@@ -225,35 +218,131 @@ class Trial {
     }
   }
 
-  async findAndUpdateParentyEntity(entitiesArray, parentEntityKey, entity, action) {
-    let parentEntityOjb = this.findEntity(entitiesArray, parentEntityKey);
-      if(parentEntityOjb){
-        if (!parentEntityOjb.containsEntities) parentEntityOjb.containsEntities = [];
-        const index = parentEntityOjb.containsEntities.indexOf(entity.key);
-        if (action == "update") {
-            if (index < 0)
+  async updateEntitiesByParent(entitiesArray, parentEntityKey, entity, action) {
+    let parentEntityOjb = this.getParentObj(entitiesArray, parentEntityKey);
+     if(parentEntityOjb){
+        const index = this.getEntityIndexFromContainsEntitiesInParent(parentEntityOjb.containsEntities, entity);
+        switch (action) {
+          case "update":
             {
-              parentEntityOjb.containsEntities.push(entity.key); //not exist when index == -1
-              const found = this.findEntity(entitiesArray, entity.key);
-              if (!found)
+              if (index < 0)
+              {
+              //add to array
+                parentEntityOjb.containsEntities.push(entity.key); //not exist when index == -1
+                //addNewEntityToTrialEntitiesArray if not exsit. refactor to new func
+                const found = this.findEntity(entitiesArray, entity.key); 
+                if (!found)
                   entitiesArray.push(entity);
+              }
+              else return { 
+                  error: "Entity alredy exist."
+              };
             }
-            else return {
-                error: "Entity alredy exist."
-            };
-        }
-        if (action == "delete") {
-            if (index > -1) parentEntityOjb.containsEntities.splice(index, 1);
-            else return {
-                error: "Entity not found."
-            };
+            break;
+            case "delete":
+            {
+              //remove from array
+              if (index > -1) parentEntityOjb.containsEntities.splice(index, 1);
+              else return {
+                  error: "Entity not found."
+              };
+            }
+              break;
+          default:
+            break;
         }
         return entitiesArray; 
     }
     else  return {
       error: "Parent entity not found."
-  };
+   };
   }
+
+  getParentObj(entitiesArray, parentEntityKey) {
+    let parentEntityOjb = this.findEntity(entitiesArray, parentEntityKey);   
+    if (!parentEntityOjb.containsEntities) parentEntityOjb.containsEntities = [];
+    return parentEntityOjb;
+
+  }
+  getEntityIndexFromContainsEntitiesInParent(containsEntitiesArray, entity) {
+    return containsEntitiesArray.indexOf(entity.key);
+  }
+  
+  async updateInheritableProperties(parentEntityKey, entitiesArray, experimentId) { 
+    let parentEntityOjb = this.findEntity(entitiesArray, parentEntityKey);
+    //NOTE: each trial holds ALL entites include the contian entites.
+       if (parentEntityOjb.containsEntities.length) {
+         const inheritablePropertiesKeys = await this.getProp(experimentId, parentEntityOjb.entitiesTypeKey, "inheritable", true);
+         if(inheritablePropertiesKeys.length){
+          let inheritablePropertiesArray = [];
+          inheritablePropertiesKeys.forEach((prop) => {
+          inheritablePropertiesArray = parentEntityOjb.properties.filter((p) => p.key == prop.key);
+         });        
+            const entitiesWithParentInheritable = this.findEntitiesToUpdate(parentEntityOjb, entitiesArray);//TODO: rucrsive fucntion to fetch all entities from trial by  key         
+            if (entitiesWithParentInheritable.length){
+             entitiesWithParentInheritable.forEach(entityToUpdate => {
+              inheritablePropertiesArray.forEach( inheritableProp =>{
+               let index = entityToUpdate.properties.findIndex(propToUpdate => propToUpdate.key == inheritableProp.key);
+              if(index>-1) 
+               entityToUpdate.properties[index].val = inheritableProp.val;
+               else
+                entityToUpdate.properties.push(inheritableProp);
+              })
+             });
+          let res = this.mergeArrayObjects(entitiesArray, entitiesWithParentInheritable); 
+             return res;
+           // let locationPropertiesKeys = this.getProp(experimentId, entitiesWithParentInheritable[0].entitiesTypeKey,"type", "location");
+           // locationPropertiesKeys.forEach(element => {
+           //   element.val = valueToCopy;
+           // });
+         }
+         return  'no  entities with parent to update';
+        }
+       }
+       else return 'no inheritable properties in parent';
+     
+   }
+   mergeArrayObjects(arr1, arr2){
+     arr2.forEach((item) => {
+       let index = arr1.findIndex(e => e.key == item.key)
+       arr1[index] = Object.assign({},arr1[index],item);
+     });
+     return arr1;
+  }
+   async getEntitiesType(experimentId, entitiesTypekey) {
+    return await this.connector.getTasksFromExperiment(
+      experimentId,
+      (task) => task.custom && task.custom.data && task.custom.data.key === entitiesTypekey
+    );
+  }
+  
+  findEntitiesToUpdate(parentEntity, entitiesArray) {
+    let entitiesWithParentInheritable = [];
+    entitiesWithParentInheritable = this.findRecursive(entitiesWithParentInheritable, parentEntity, entitiesArray);
+     return entitiesWithParentInheritable;
+}
+
+
+findRecursive(entitiesWithParentInheritable, parentEntity, entitiesArray) {
+      parentEntity.containsEntities.forEach(entityKey => {
+        let foundEntity = this.findEntity(entitiesArray, entityKey);//למצוא למה לו מוצא את האובייקט
+        let index = entitiesWithParentInheritable.indexOf(foundEntity.key);
+        if (index < 0)
+          entitiesWithParentInheritable.push(foundEntity);
+        if (foundEntity.containsEntities &&foundEntity.containsEntities.length)
+          return findRecursive(entitiesWithParentInheritable, foundEntity, entitiesArray);
+      });
+    return entitiesWithParentInheritable;
+  }
+
+async getProp(experimentId, entitiesTypeKey, fieldName, value) {
+  const entitiesTypesData = await this.getEntitiesType(experimentId, entitiesTypeKey);
+  console.log('getProp: entitiesTypesData[0].custom.data.properties ', entitiesTypesData[0].custom.data.properties)
+  const propertiesKeysOfEntityTypes = entitiesTypesData[0].custom.data.properties.filter(
+      (e) => e[fieldName] == value //for example: inheritable == true OR type == 'location'
+  );
+  return propertiesKeysOfEntityTypes;
+}
 }
 
 module.exports = Trial;

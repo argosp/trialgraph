@@ -21,6 +21,7 @@ type KeyVal {
   value: String
   defaultValue: String
   defaultProperty: Boolean
+  inheritable: Boolean
 }
 
 extend type Query {
@@ -54,6 +55,7 @@ input KeyValInput {
   value: String
   defaultValue: String
   defaultProperty: Boolean
+  inheritable: Boolean
 }
 
 extend type Subscription {
