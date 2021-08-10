@@ -207,15 +207,19 @@ class Trial {
     getCurrentEntitsNameByStatus(){
       return  this.trial.custom.data.status == "design" ?  'entities':  'deployedEntities';
     }
-    // getEntitiesFromExperiment(){
-    //   const filterData =
-    //   task => task.custom
-    //     && task.custom.data
-    //     && task.custom.type == "device"
-    //     && task.custom.data.state !== 'Deleted'    
-    //   return this.experimentData.filter(filterData);
-    // }
-    getParentAndChildObj(entityKey, parentEntityKey){
+    getEntitiesFromExperiment(){
+      const filterData =
+      task => task.custom
+        && task.custom.data
+        && task.custom.type == "device"
+        && task.custom.data.state !== 'Deleted'    
+      return this.experimentData.filter(filterData);
+    }
+    getChildEntityFromExperiment(key){
+       const entities = this.getEntitiesFromExperiment();
+        return entities.find((el) => el.custom.data.key === key).custom.data;
+    }
+    getParentAndChildObjFromTrial(entityKey, parentEntityKey){
     const entities = this.getTrialEntitis();
     let en = {};
     for (const e of entities) {
@@ -233,11 +237,14 @@ class Trial {
 // trail-set: true & inheritable: true
 // will inherit to the child entity.
     const { key, experimentId, parentEntityKey, entity, uid, action } = args;
+    this.experimentData = await this.getExperimentData(experimentId);
+    //TODO: get trial data from same call of experiment.
     this.trial = await this.getTrial(experimentId, key);
-    //TODO: get child and parent form experimnt data 
+    //TODO: get child and parent form experimnt data if doesnt exist in trial.
     //'cause in case user add the parent and child  in same session - 
     //in that case child and parent are not trial's so we cant find them in trial entities
-    const {parentEntity, childEntity} = this.getParentAndChildObj(entity.key, parentEntityKey);
+    let {parentEntity, childEntity} = this.getParentAndChildObjFromTrial(entity.key, parentEntityKey);
+    if(!childEntity) childEntity = this.getChildEntityFromExperiment(entity.key);
     if ( this.trial) {
       let updatedEntitiesResponse = await this.updateParentEntity(parentEntity, childEntity, action);
       if (!updatedEntitiesResponse.error) {
@@ -311,11 +318,14 @@ class Trial {
           let inheritablePropertiesArray = this.getInheritablePropertiesObjectsByKeys(inheritablePropertiesKeys, parentEntityOjb);        
           if(inheritablePropertiesArray.length){
           //A rucrsive fucntion to fetch all entities from trial by  key
-            const inheritorsEntities = this.getinheritorsEntities(parentEntityOjb, entitiesArray);         
+          //TODO: when came to here form add child to parent 0
+          // neet the child become a parent here
+          // because this all we need to update
+            const inheritorsEntities = this.getInheritorsEntities(parentEntityOjb, entitiesArray);         
             if (inheritorsEntities.length){
              const updatedInheritorsEntities =  this.updateInheritorsEntities(inheritorsEntities, inheritablePropertiesArray);
             return this.updateEntitiesArrayWithheritorsEntities(entitiesArray, updatedInheritorsEntities); 
-
+              //TODO: always inherit location prop
             // let locationPropertiesKeys = this.getProp(experimentId,  updatedInheritorsEntities [0].entitiesTypeKey,"type", "location");
            // locationPropertiesKeys.forEach(element => {
            //   element.val = valueToCopy;
@@ -368,7 +378,7 @@ class Trial {
     );
   }
   
-  getinheritorsEntities (parentEntity, entitiesArray) {
+  getInheritorsEntities (parentEntity, entitiesArray) {
     let  inheritorsEntities  = [];
      inheritorsEntities  = this.findRecursive( inheritorsEntities , parentEntity, entitiesArray);
      return  inheritorsEntities ;
