@@ -18,10 +18,10 @@ type KeyVal {
   template: String
   multipleValues: Boolean
   trialField: Boolean
+  inheritable: Boolean
   value: String
   defaultValue: String
   defaultProperty: Boolean
-  inheritable: Boolean
 }
 
 extend type Query {
@@ -52,10 +52,10 @@ input KeyValInput {
   template: String
   multipleValues: Boolean
   trialField: Boolean
+  inheritable: Boolean
   value: String
   defaultValue: String
   defaultProperty: Boolean
-  inheritable: Boolean
 }
 
 extend type Subscription {
