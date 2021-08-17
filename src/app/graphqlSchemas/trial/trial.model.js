@@ -97,7 +97,8 @@ class Trial {
       }
 
       if(changedEntities.length){
-        //update ineherit entities
+        try {
+           //update ineherit entities
         let finalResult = [];
         let results = changedEntities.map(async (updatedEntity) => 
          await this.updateInheritableProperties(updatedEntity, newTrial.custom.data[this.getCurrentEntitsNameByStatus().valueOf()], experimentId));
@@ -109,6 +110,10 @@ class Trial {
             else
            finalResult.push(res);
         }
+        } catch (error) {
+          return error;
+        }
+       
       }
 
     } else {
