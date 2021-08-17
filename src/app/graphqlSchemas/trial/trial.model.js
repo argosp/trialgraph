@@ -96,7 +96,7 @@ class Trial {
         updateTrialSet = true;
       }
 
-      if(changedEntities.length){
+      if(changedEntities && changedEntities.length){
         try {
            //update ineherit entities
         let finalResult = [];
