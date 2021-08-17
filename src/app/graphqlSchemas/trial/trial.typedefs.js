@@ -32,6 +32,7 @@ extend type Mutation {
       entities: [TrialEntityInput]
       deployedEntities: [TrialEntityInput]
       action: String
+      changedEntities: [TrialEntityInput]
     ): Trial
   }
   
