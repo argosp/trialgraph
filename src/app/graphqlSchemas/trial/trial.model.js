@@ -25,7 +25,7 @@ class Trial {
     return res[0];
   }
 
-  async getTrialByKey(trialKey) {
+   getTrialByKey(trialKey) {
    const filterData = (task) => task.custom && task.custom.data && task.custom.data.key === trialKey
    return this.experimentData.filter(filterData)[0];
    }
@@ -44,6 +44,7 @@ class Trial {
       status,
       cloneFrom,
       action,
+      changedEntities
     } = args;
     let newTrial = {
       custom: {
@@ -78,23 +79,38 @@ class Trial {
         newTrial.custom.data.entities = deployedEntities;
       newTrial.custom.data.deployedEntities = [];
     }
-    const trial = await this.getTrial(experimentId, key); //key is trial.key
+    this.trial = await this.getTrial(experimentId, key); //key is trial.key
 
     let updateTrialSet = false;
 
-    if (trial) {
+    if (this.trial) {
       if (action === "update") {
-        newTrial.custom = Utils.mergeDeep(trial.custom, newTrial.custom);
-        // await this.updateInheritableProperties(newTrial.custom.data.entities, experimentId);//deployEntities
+        newTrial.custom = Utils.mergeDeep(this.trial.custom, newTrial.custom);
       }
-      newTrial.custom.data.statusUpdated = !!trial.custom.data.statusUpdated;
-      if (status === "deploy" && !trial.custom.data.statusUpdated) {
+      newTrial.custom.data.statusUpdated = !!this.trial.custom.data.statusUpdated;
+      if (status === "deploy" && !this.trial.custom.data.statusUpdated) {
         newTrial.custom.data.deployedEntities = entities;
         newTrial.custom.data.statusUpdated = true;
       }
-      if (state === "Deleted" && trial.custom.data.state !== "Deleted") {
+      if (state === "Deleted" && this.trial.custom.data.state !== "Deleted") {
         updateTrialSet = true;
       }
+
+      if(changedEntities.length){
+        //update ineherit entities
+        let finalResult = [];
+        let results = changedEntities.map(async (updatedEntity) => 
+         await this.updateInheritableProperties(updatedEntity, newTrial.custom.data[this.getCurrentEntitsNameByStatus().valueOf()], experimentId));
+         console.log(results);
+        for (const result of results) {
+          let res = await result;//check what to do if no changes
+            if(res.error)
+              console.log(res.error);
+            else
+           finalResult.push(res);
+        }
+      }
+
     } else {
       if (action === "update") {
         return [{ error: "Ooops. Trial not found." }];
@@ -204,8 +220,8 @@ class Trial {
     getTrialEntitis(){
        return this.trial.custom.data[this.getCurrentEntitsNameByStatus().valueOf()];
     }
-    getCurrentEntitsNameByStatus(){
-      return  this.trial.custom.data.status == "design" ?  'entities':  'deployedEntities';
+    getCurrentEntitsNameByStatus(trial){
+      return  trial || this.trial.custom.data.status == "design" ?  'entities':  'deployedEntities';
     }
     getEntitiesFromExperiment(){
       const filterData =
@@ -238,7 +254,7 @@ class Trial {
 // will inherit to the child entity.
     const { key, experimentId, parentEntityKey, entity, uid, action } = args;
     this.experimentData = await this.getExperimentData(experimentId);
-    this.trial = await this.getTrialByKey(key);
+    this.trial = this.getTrialByKey(key);
     //get child and parent form experimnt data if doesnt exist in trial.
     //'cause in case user add the parent and child  in same session - 
     //in that case child and parent are not trial's so we cant find them in trial entities
@@ -249,9 +265,8 @@ class Trial {
       if (!updatedEntitiesResponse.error) {
         if(action == "update"){
           updatedEntitiesResponse = await this.updateInheritableProperties(parentEntity, updatedEntitiesResponse, experimentId);
-          if (updatedEntitiesResponse.error) {
-            return updatedEntitiesResponse;
-          }
+          if (updatedEntitiesResponse.error)
+            console.log(updatedEntitiesResponse.error);
         }
         this.updateTrialEntitis(updatedEntitiesResponse);
         console.log("Trial entities before update in root", this.trial.custom.data.entities);
@@ -313,7 +328,7 @@ class Trial {
   }
   async updateInheritableProperties(parentEntityOjb, entitiesArray, experimentId) {
     //NOTE: each trial holds ALL entites include the contian entites.
-       if (parentEntityOjb.containsEntities.length) {
+       if (parentEntityOjb.containsEntities && parentEntityOjb.containsEntities.length) {
          const inheritablePropertiesOfParentEntityType = await this.getProp(experimentId, parentEntityOjb.entitiesTypeKey, "inheritable", true);
          if(inheritablePropertiesOfParentEntityType.length){
           let inheritablePropertiesObjectsOfParent = this.getInheritablePropertiesObjects(inheritablePropertiesOfParentEntityType, parentEntityOjb);        
@@ -327,13 +342,12 @@ class Trial {
             return this.updateEntitiesArrayWithheritorsEntities(entitiesArray, updatedInheritorsEntities); 
            
          }
-         return {error:'no inheritors entities to update'};
-
+         return {error:`parent key: ${parentEntityOjb.key} has no inheritors entities to update`};
         }
-         return  {error: 'no inheritable properties in parent'};
+        return {error:`parent key: ${parentEntityOjb.key} has no inheritable properties`};
         }
        }
-        return {error:'parent has no containsEntities'};
+       return {error:`parent key: ${parentEntityOjb.key} has no containsEntities`};
    }
   updateEntitiesArrayWithheritorsEntities(oldEntitiesArray, updatedEntitiesArray) {
     return this.mergeArrayObjects(oldEntitiesArray, updatedEntitiesArray);
@@ -341,11 +355,9 @@ class Trial {
   findLocationPropKey(locationPropArray, prop){
     //type:'location'
     return locationPropArray.found(prop);
-  }
-    
-  
- 
-async  updateInheritorsEntities(inheritorsEntities, inheritablePropertiesObjectsOfParent, inheritablePropertiesOfParentEntityType, experimentId) {
+  } 
+
+  async updateInheritorsEntities(inheritorsEntities, inheritablePropertiesObjectsOfParent, inheritablePropertiesOfParentEntityType, experimentId) {
     let locationKey;
     let ind;
     for (let entityToUpdate of inheritorsEntities) {    
