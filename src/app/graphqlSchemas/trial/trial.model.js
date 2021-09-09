@@ -266,18 +266,22 @@ class Trial {
     let {parentEntity, childEntity} = this.getParentAndChildObjFromTrial(entity.key, parentEntityKey);
     if(!childEntity) childEntity = this.getChildEntityFromExperiment(entity.key);
     if ( this.trial) {
-      let updatedEntitiesResponse = await this.updateParentEntity(parentEntity, childEntity, action);
-      if (!updatedEntitiesResponse.error) {
+      let res;
+      let updatedParendtEntity = await this.updateParentEntity(parentEntity, childEntity, action);
+      if (updatedParendtEntity && !!updatedParendtEntity.length) {
+        res = updatedParendtEntity;
+        let updatedEntitiesResponse;
         if(action == "update"){
-          updatedEntitiesResponse = await this.updateInheritableProperties(parentEntity, updatedEntitiesResponse, experimentId);
-          if (updatedEntitiesResponse.error)
-            console.log(updatedEntitiesResponse.error);
+         updatedEntitiesResponse = await this.updateInheritableProperties(parentEntity, updatedParendtEntity, experimentId);
+         if (updatedEntitiesResponse && !!updatedEntitiesResponse.length) res  = updatedEntitiesResponse;
+         else if (updatedEntitiesResponse.error)
+          console.log('A note form updateInheritableProperties function: ',updatedEntitiesResponse.error);
         }
-        this.updateTrialEntitis(updatedEntitiesResponse);
+        this.updateTrialEntitis(res);
         console.log("Trial entities before update in root", this.trial.custom.data.entities);
         const response = await this.connector.addUpdateTask(this.trial, uid, experimentId);
         return response.data;
-      } else return updatedEntitiesResponse;
+      } else  if(updatedEntitiesResponse.error) return updatedEntitiesResponse;
     } else {
       return { error: "Trial not found." };
     }
@@ -298,7 +302,7 @@ class Trial {
                 if (!found)
                 trialEntitiesArray.push(entity);
               }
-              else return { 
+              else return {
                   error: "Entity alredy exist."
               };
             }
