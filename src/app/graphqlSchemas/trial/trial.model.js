@@ -42,7 +42,7 @@ class Trial {
       numberOfEntities,
       state,
       status,
-      cloneFrom,
+      cloneFromData,
       action,
       changedEntities
     } = args;
@@ -53,7 +53,7 @@ class Trial {
         data: {
           key,
           trialSetKey,
-          cloneFrom,
+          cloneFromData: cloneFromData,
         },
       },
     };
@@ -74,8 +74,8 @@ class Trial {
     if (cloneFrom) {
       if (action !== "update" || args.hasOwnProperty("status"))
         newTrial.custom.data.status = "design";
-      if (cloneFrom == "design") newTrial.custom.data.entities = entities;
-      if (cloneFrom == "deploy")
+      if (cloneFrom.state == "design") newTrial.custom.data.entities = entities;
+      if (cloneFrom.state == "deploy")
         newTrial.custom.data.entities = deployedEntities;
       newTrial.custom.data.deployedEntities = [];
     }
@@ -296,7 +296,7 @@ class Trial {
               if (index < 0)
               {
               //add to array
-                parentEntityOjb.containsEntities.push(entity.key); //not exist when index == -1
+                parentEntityOjb.containsEntities.push(entity.key);
                 //TODO: should always do, because in case entity was deleted from trial.
                 const found = this.findEntity(trialEntitiesArray, entity.key); 
                 if (!found)
@@ -310,7 +310,7 @@ class Trial {
             case "delete":
             {
               //remove from array
-              if (index > -1) parentEntityOjb.containsEntities.splice(index, 1);
+              if (index > -1) parentEntityOjb.containsEntities.splice(index, 1); //not exist when index == -1
               else return {
                   error: "Entity not found."
               };
