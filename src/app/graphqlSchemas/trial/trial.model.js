@@ -42,7 +42,8 @@ class Trial {
       numberOfEntities,
       state,
       status,
-      cloneFromData,
+      cloneFrom,
+      cloneFromTrailKey,
       action,
       changedEntities
     } = args;
@@ -53,7 +54,8 @@ class Trial {
         data: {
           key,
           trialSetKey,
-          cloneFromData: cloneFromData,
+          cloneFrom,
+          cloneFromTrailKey
         },
       },
     };
@@ -74,8 +76,8 @@ class Trial {
     if (cloneFrom) {
       if (action !== "update" || args.hasOwnProperty("status"))
         newTrial.custom.data.status = "design";
-      if (cloneFrom.state == "design") newTrial.custom.data.entities = entities;
-      if (cloneFrom.state == "deploy")
+      if (cloneFrom == "design") newTrial.custom.data.entities = entities;
+      if (cloneFrom == "deploy")
         newTrial.custom.data.entities = deployedEntities;
       newTrial.custom.data.deployedEntities = [];
     }

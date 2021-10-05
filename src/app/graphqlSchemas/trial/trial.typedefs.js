@@ -5,7 +5,8 @@ type Trial {
   trialSetKey: String!
   created: String
   status: String
-  cloneFrom: [CloneFrom]
+  cloneFrom: String
+  cloneFromTrailKey: String
   numberOfEntities: Int
   state: String
   properties: [TrialProperty]
@@ -26,7 +27,8 @@ extend type Mutation {
       trialSetKey: String!,
       state: String,
       status: String,
-      cloneFrom: [CloneFromInput],
+      cloneFrom: String,
+      cloneFromTrailKey: String,
       numberOfEntities: Int,
       properties: [TrialPropertyInput]
       entities: [TrialEntityInput]
@@ -57,15 +59,6 @@ type TrialProperty {
   key: String!
 }
 
-type CloneFrom {
-  state: String
-  trial: String
-}
-
-input CloneFromInput {
-  state: String
-  trial: String
-}
 extend type Subscription {
   trialsUpdated: Boolean!
 }
