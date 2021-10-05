@@ -43,6 +43,7 @@ class Trial {
       state,
       status,
       cloneFrom,
+      cloneFromTrailKey,
       action,
       changedEntities
     } = args;
@@ -54,6 +55,7 @@ class Trial {
           key,
           trialSetKey,
           cloneFrom,
+          cloneFromTrailKey
         },
       },
     };
@@ -296,7 +298,7 @@ class Trial {
               if (index < 0)
               {
               //add to array
-                parentEntityOjb.containsEntities.push(entity.key); //not exist when index == -1
+                parentEntityOjb.containsEntities.push(entity.key);
                 //TODO: should always do, because in case entity was deleted from trial.
                 const found = this.findEntity(trialEntitiesArray, entity.key); 
                 if (!found)
@@ -310,7 +312,7 @@ class Trial {
             case "delete":
             {
               //remove from array
-              if (index > -1) parentEntityOjb.containsEntities.splice(index, 1);
+              if (index > -1) parentEntityOjb.containsEntities.splice(index, 1); //not exist when index == -1
               else return {
                   error: "Entity not found."
               };

@@ -6,6 +6,7 @@ type Trial {
   created: String
   status: String
   cloneFrom: String
+  cloneFromTrailKey: String
   numberOfEntities: Int
   state: String
   properties: [TrialProperty]
@@ -27,6 +28,7 @@ extend type Mutation {
       state: String,
       status: String,
       cloneFrom: String,
+      cloneFromTrailKey: String,
       numberOfEntities: Int,
       properties: [TrialPropertyInput]
       entities: [TrialEntityInput]

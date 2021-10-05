@@ -14,6 +14,7 @@ const typeResolver = {
     numberOfEntities: property('custom.data.numberOfEntities'),
     status: property('custom.data.status'),
     cloneFrom:property('custom.data.cloneFrom'),
+    cloneFromTrailKey:property('custom.data.cloneFromTrailKey'),
     state: property('custom.data.state'),
     properties: property('custom.data.properties'),
     entities: property('custom.data.entities'),
