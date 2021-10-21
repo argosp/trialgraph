@@ -74,7 +74,9 @@ module.exports = `
   #             properties: [
   #               {
   #                 key: "5dd5b984-6971-4db8-be07-4df5bc8b6b64",
-  #                 val: "Some default child of parentA\n",
+  #                 val: ""
+  #                      Some default child of parentA
+  #                      "",
   #               },
   #               {
   #                 key: "b24723e4-af1b-41b1-8d6e-13d8514da76b",
