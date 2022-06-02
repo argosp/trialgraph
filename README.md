@@ -5,7 +5,7 @@ Midlleware graphql server based on dockers
 WE DO NOT USE BABEL AND ES6 MODULES. USE REQUIRE AND MODULE.EXPORTS...
 ### Prerequisites
 
-Make sure to have docker installed on your machine
+Make sure to have a docker installed on your machine
 
 ```
 docker -v
