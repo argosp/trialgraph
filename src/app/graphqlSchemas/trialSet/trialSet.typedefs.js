@@ -22,7 +22,8 @@ extend type Mutation {
     numberOfTrials: Int,
     state: String,
     properties: [KeyValInput]
-    action: String
+    action: String,
+    cloneTrailKey: String
   ): TrialSet
 }
 

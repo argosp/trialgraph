@@ -1,5 +1,6 @@
 const { pubsub, TRIALSETS_UPDATED } = require('../../subscriptions');
 const Utils = require('../services/utils');
+const uuid = require('uuid/v4');
 class TrialSet {
   constructor({ connector }) {
     this.connector = connector;
@@ -49,7 +50,7 @@ class TrialSet {
     pubsub.publish(TRIALSETS_UPDATED, { trialSetsUpdated: true });
   }
 
-  async addUpdateTrialSet(args) {
+  async addUpdateTrialSet(args, context) {
     const {
       uid,
       experimentId,
@@ -60,6 +61,7 @@ class TrialSet {
       numberOfTrials,
       state,
       action,
+      cloneTrailKey
     } = args;
 
     let newTrialSet = {
@@ -71,6 +73,21 @@ class TrialSet {
         },
       },
     };
+    if(cloneTrailKey) {
+      const trials = await context.trial.getTrials({experimentId, trialSetKey: cloneTrailKey})
+      trials.forEach(element => {
+        context.trial.addUpdateTrial({
+          ...element.custom.data,
+          uid,
+          key: uuid(),
+          experimentId,
+          trialSetKey: key,
+          cloneFrom: null,
+          cloneFromTrailKey: null
+        }, context)
+      });
+    }
+
 
     if (action !== 'update' || args.hasOwnProperty('name')) newTrialSet.custom.data.name = name;
     if (action !== 'update' || args.hasOwnProperty('description')) newTrialSet.custom.data.description = description;

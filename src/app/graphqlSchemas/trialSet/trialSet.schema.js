@@ -16,7 +16,7 @@ const typeResolver = {
 const resolvers = {
   Query: {
     async trialSets(_, args, context) {
-      return context.trialSet.getTrialSets(args);
+      return context.trialSet.getTrialSets(args, context);
     },
   },
   Mutation: {
