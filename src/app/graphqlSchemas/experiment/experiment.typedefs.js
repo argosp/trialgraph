@@ -46,6 +46,7 @@ extend type Mutation {
       status: String
       maps: [MapInput]
       action: String
+      cloneTrailId: String
     ): ExperimentData
 
     buildExperimentData(
