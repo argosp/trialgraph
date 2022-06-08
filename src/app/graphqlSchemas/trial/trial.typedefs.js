@@ -1,8 +1,8 @@
 const typeDef = `
 type Trial {
-  key: String!
+  key: String
   name: String
-  trialSetKey: String!
+  trialSetKey: String
   created: String
   status: String
   cloneFrom: String
@@ -12,6 +12,7 @@ type Trial {
   properties: [TrialProperty]
   entities: [TrialEntity]
   deployedEntities: [TrialEntity]
+  error: String
 }
 
 extend type Query {

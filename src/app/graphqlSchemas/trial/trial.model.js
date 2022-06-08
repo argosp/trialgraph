@@ -124,6 +124,12 @@ class Trial {
       }
       updateTrialSet = true;
     }
+    const isTrialValidated = await this.validateTrialName({newTrial, experimentId})
+    if (!isTrialValidated) {
+      return {
+        error: 'duplicate name'
+      }
+    }
 
     console.log(
       "newTrial before one ms before update",
@@ -163,6 +169,14 @@ class Trial {
     }
 
     return result;
+  }
+
+  async validateTrialName(args) {
+    const {newTrial, experimentId} = args
+    const trials = await this.getTrials({experimentId, trialSetKey: newTrial.custom.data.trialSetKey})
+    const findTrialByName = trials.find(t => 
+      t.custom.data.name === newTrial.custom.data.name && t.custom.data.key !== newTrial.custom.data.key)
+    return findTrialByName ? false : true
   }
 
   async copyEntities(args) {
