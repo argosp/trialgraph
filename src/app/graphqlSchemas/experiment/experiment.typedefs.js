@@ -31,6 +31,10 @@ type Map {
   height: Int
   embedded: Boolean
 }
+
+extend type Query {
+  getAllExperimentData(experimentId: String): JSON
+}
 extend type Mutation {
     addUpdateExperiment(
       uid: String!,

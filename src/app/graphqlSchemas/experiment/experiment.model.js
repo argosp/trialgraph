@@ -121,6 +121,25 @@ class Experiment {
     return response ? response.data : null;
   }
 
+  async getAllExperimentData(args, context) {
+    const {experimentId} = args;
+    const entityTypes = new Promise(async(resolve) => {
+      resolve(await context.entitiesType.getEntitiesTypes({experimentId}))
+    });
+    const entities = new Promise(async(resolve) => {
+      resolve(await context.entity.getEntities({experimentId}))
+    });
+    const trialSets = new Promise(async(resolve) => {
+      resolve(await context.trialSet.getTrialSets({experimentId}))
+    });
+    const trials = new Promise(async(resolve) => {
+      resolve(await context.trial.getTrials({experimentId}))
+    });
+    const data = await Promise.all([entityTypes, entities, trialSets, trials])
+    console.log('33333333333', data)
+    return {}
+  }
+
   async buildExperimentData(args, context) {
     const { uid, id } = args;
     const tasks = await this.connector.getTasksFromExperiment(

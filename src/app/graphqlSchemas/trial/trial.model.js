@@ -154,7 +154,7 @@ class Trial {
       (task) =>
         task.custom &&
         task.custom.data &&
-        task.custom.data.trialSetKey === trialSetKey &&
+        (!trialSetKey || task.custom.data.trialSetKey === trialSetKey) &&
         task.custom.data.state !== "Deleted"
     );
 
