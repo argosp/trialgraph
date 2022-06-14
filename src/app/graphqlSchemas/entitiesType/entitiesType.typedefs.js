@@ -7,6 +7,15 @@ type EntitiesType {
   properties: [KeyVal]
 }
 
+input EntityTypeInput {
+  key: String
+  experimentId: String
+  name: String
+  numberOfEntities: Int
+  state: String
+  properties: [KeyValInput]
+}
+
 type KeyVal {
   key: String
   type: String

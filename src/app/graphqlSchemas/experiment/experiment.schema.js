@@ -7,7 +7,7 @@ const typeResolver = {
     id: property('id'),
     name: property('title'),
     description: property('description'),
-    status: property('status'),
+    status: property('status')
   },
 };
 
@@ -39,6 +39,10 @@ const resolvers = {
     async buildExperimentData(_, args, context) {
       return context.experiment.buildExperimentData(args);
     },
+    async uploadExperiment(_, args, context) {
+      const experiment = await context.experiment.uploadExperiment(args, context)
+      return context.data.addUpdateExperimentData({...args.experiment, ...args}, experiment);
+    }
   },
 };
 

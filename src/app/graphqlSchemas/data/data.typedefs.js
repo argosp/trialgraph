@@ -8,7 +8,7 @@ type ExperimentData {
   begin: String
   end: String
   location: String
-  numberOfTrials: Int!
+  numberOfTrials: Int
   state: String
   status: String
   maps:[Map]

@@ -17,6 +17,7 @@ class Experiment {
   async getAllExperimentsWithData() {
     return this.connector.getTasks(
       experiment => experiment.custom
+        && experiment.custom.data
         && experiment.custom.type === 'experimentData'
         && experiment.recycled === undefined
         && experiment.project
@@ -25,14 +26,15 @@ class Experiment {
     );
   }
 
-  async cloneEntity({ element, experimentId,entitiesTypeKey, uid }, context) {
+  async cloneEntity({ element, experimentId, entitiesTypeKey, uid }, context) {
     return new Promise(async (resolve) => {
       const newDevice = await context.entity.addUpdateEntity({
         ...element.custom.data,
         key: uuid(),
         experimentId,
         entitiesTypeKey,
-        uid
+        uid,
+        dontUpdateEntityType: true
       }, context)
       if (newDevice) {
         return resolve({ [element.custom.id]: newDevice.custom.id })
@@ -54,21 +56,8 @@ class Experiment {
     })
   }
 
-  async cloneDeepExperiment(args, context) {
-    const { experimentId, cloneTrailId, uid } = args;
-    const entityTypes = await context.entitiesType.getEntitiesTypes({experimentId: cloneTrailId});
-    const entityTypeIds = await Promise.all(entityTypes.map(async element => {
-      return await this.cloneEntityType({ element, experimentId, uid }, context)
-    }))
-    const entityTypeIdsMap = Object.assign({}, ...entityTypeIds);
-    const entities = await context.entity.getEntities({ experimentId: cloneTrailId }, context)
-    const entitiesIds = await Promise.all(entities.map(async element => {
-      const entitiesTypeKey = entityTypeIdsMap[element.custom.data.entitiesTypeKey]
-      return await this.cloneEntity({ element, experimentId, uid, entitiesTypeKey }, context)
-    }))
-    const entitiesIdsMap = Object.assign({}, ...entitiesIds);
-    const trialSets = await context.trialSet.getTrialSets({ experimentId: cloneTrailId });
-    trialSets.forEach(async element => {
+  async cloneTrialSet({ element, experimentId, uid, trials }, context) {
+    return new Promise(async (resolve) => {
       const newTrialSet = await context.trialSet.addUpdateTrialSet({
         ...element.custom.data,
         key: uuid(),
@@ -76,28 +65,90 @@ class Experiment {
         uid
       }, context)
       if (newTrialSet) {
-        const trials = await context.trial.getTrials({ experimentId: cloneTrailId, trialSetKey: element.custom.id })
-        trials.forEach(t => {
-          const newEntites = t.custom.data.entities && t.custom.data.entities.map(w => ({
-            ...w,
-            key: entitiesIdsMap[w.key],
-            entitiesTypeKey: entityTypeIdsMap[w.entitiesTypeKey]
-          }))
-          context.trial.addUpdateTrial({
-            ...t.custom.data,
-            uid,
-            key: uuid(),
-            experimentId,
-            trialSetKey: newTrialSet.custom.id,
-            cloneFrom: null,
-            cloneFromTrailKey: null,
-            entities: newEntites
-          }, context)
-        });
+        return resolve({oldId: element.custom.id, newId: newTrialSet.custom.id})
       }
+    })
+  }
+  async cloneTrial({ element, experimentId, uid, entityTypeIdsMap, entitiesIdsMap, trialSetId }, context) {
+    return new Promise(async (resolve) => {
+      const newEntites = element.custom.data.entities && element.custom.data.entities.map(w => ({
+        ...w,
+        key: entitiesIdsMap[w.key],
+        entitiesTypeKey: entityTypeIdsMap[w.entitiesTypeKey]
+      }))
+      await context.trial.addUpdateTrial({
+        ...element.custom.data,
+        uid,
+        key: uuid(),
+        experimentId,
+        trialSetKey: trialSetId,
+        cloneFrom: null,
+        cloneFromTrailKey: null,
+        entities: newEntites,
+        dontUpdateTrialSet: true
+      }, context)
+      return resolve()
+    })
+  }
+
+  async cloneDeepExperiment(args, context) {
+    const { experimentId, cloneTrailId, uid } = args;
+    const entityTypes = args.entityTypes || await context.entitiesType.getEntitiesTypes({ experimentId: cloneTrailId });
+    const entityTypeIds = await Promise.all(entityTypes.map(async element => {
+      return await this.cloneEntityType({ element, experimentId, uid }, context)
+    }))
+    const entityTypeIdsMap = Object.assign({}, ...entityTypeIds);
+    const entities = args.entities || await context.entity.getEntities({ experimentId: cloneTrailId }, context)
+    const entitiesIds = await Promise.all(entities.map(async element => {
+      const entitiesTypeKey = entityTypeIdsMap[element.custom.data.entitiesTypeKey]
+      return await this.cloneEntity({ element, experimentId, uid, entitiesTypeKey }, context)
+    }))
+    const entitiesIdsMap = Object.assign({}, ...entitiesIds);
+    Promise.all(entityTypes.map(async element => {
+      return await context.entitiesType.setEntities(entityTypeIdsMap[element.custom.id], experimentId, uid);
+    }))
+    const trialSets = args.trialSets || await context.trialSet.getTrialSets({ experimentId: cloneTrailId });
+    const trialSetsIds = await Promise.all(trialSets.map(async element => {
+      return await this.cloneTrialSet({ element, experimentId, uid }, context)
+    }))
+    await Promise.all(trialSetsIds.map(async element => {
+      let trials = [];
+      if (args.trials) {
+        trials = args.trials.filter(q => q.custom.data.trialSetKey === element.oldId)
+      } else {
+        trials = await context.trial.getTrials({ experimentId: cloneTrailId, trialSetKey: element.oldId })
+      }
+      await Promise.all(trials.map(async t => {
+        return await this.cloneTrial({element: t, experimentId, uid, entityTypeIdsMap, entitiesIdsMap, trialSetId: element.newId}, context)
+      }))
+      await context.trialSet.setTrials(element.newId, experimentId, uid);
+    }))
+  }
 
 
-    });
+
+  async uploadExperiment(args, context) {
+    const { experiment, uid, entityTypes, entities, trialSets, trials } = args
+    const newExperiment = {
+      custom: {
+        id: '',
+      },
+      title: experiment.name,
+      description: experiment.description,
+    };
+    const response = await this.connector.addUpdateProject(newExperiment, uid);
+    if (response) {
+      this.cloneDeepExperiment({
+        experimentId: response.data.id,
+        uid,
+        entityTypes: entityTypes.map(q => ({ custom: { data: { ...q }, id: q.key } })),
+        entities: entities.map(q => ({ custom: { data: { ...q }, id: q.key } })),
+        trialSets: trialSets.map(q => ({ custom: { data: { ...q }, id: q.key } })),
+        trials: trials.map(q => ({ custom: { data: { ...q }, id: q.key } })),
+      }, context)
+    }
+
+    return response ? response.data : null;
   }
 
   async addUpdateExperiment(args, context) {
@@ -115,29 +166,32 @@ class Experiment {
     const response = await this.connector.addUpdateProject(newExperiment, uid);
     if (cloneTrailId && response) {
       this.cloneDeepExperiment({ experimentId: response.data.id, cloneTrailId, uid }, context)
-
     }
 
     return response ? response.data : null;
   }
 
   async getAllExperimentData(args, context) {
-    const {experimentId} = args;
-    const entityTypes = new Promise(async(resolve) => {
-      resolve(await context.entitiesType.getEntitiesTypes({experimentId}))
+    const { experimentId } = args;
+    const entityTypes = new Promise(async (resolve) => {
+      resolve(await context.entitiesType.getEntitiesTypes({ experimentId }))
     });
-    const entities = new Promise(async(resolve) => {
-      resolve(await context.entity.getEntities({experimentId}))
+    const entities = new Promise(async (resolve) => {
+      resolve(await context.entity.getEntities({ experimentId }))
     });
-    const trialSets = new Promise(async(resolve) => {
-      resolve(await context.trialSet.getTrialSets({experimentId}))
+    const trialSets = new Promise(async (resolve) => {
+      resolve(await context.trialSet.getTrialSets({ experimentId }))
     });
-    const trials = new Promise(async(resolve) => {
-      resolve(await context.trial.getTrials({experimentId}))
+    const trials = new Promise(async (resolve) => {
+      resolve(await context.trial.getTrials({ experimentId }))
     });
     const data = await Promise.all([entityTypes, entities, trialSets, trials])
-    console.log('33333333333', data)
-    return {}
+    return {
+      entityTypes: data[0],
+      entities: data[1],
+      trialSets: data[2],
+      trials: data[3]
+    }
   }
 
   async buildExperimentData(args, context) {

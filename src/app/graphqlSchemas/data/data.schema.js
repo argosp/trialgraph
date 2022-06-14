@@ -25,7 +25,7 @@ const resolvers = {
       return context.data.getExperimentData(args);
     },
     async experimentsWithData(_, args, context) {
-      return context.experiment.getAllExperimentsWithData();
+      return await context.experiment.getAllExperimentsWithData();
     },
   },
   Mutation: {

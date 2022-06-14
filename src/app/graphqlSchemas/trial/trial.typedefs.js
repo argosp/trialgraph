@@ -15,6 +15,22 @@ type Trial {
   error: String
 }
 
+input TrialInput {
+  key: String
+  name: String
+  trialSetKey: String
+  state: String
+  status: String
+  cloneFrom: String
+  cloneFromTrailKey: String
+  numberOfEntities: Int
+  properties: [TrialPropertyInput]
+  entities: [TrialEntityInput]
+  deployedEntities: [TrialEntityInput]
+  action: String
+  changedEntities: [TrialEntityInput]
+}
+
 extend type Query {
     trials(experimentId:String!, trialSetKey:String!): [Trial]
 }

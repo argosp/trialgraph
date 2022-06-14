@@ -34,6 +34,7 @@ extend type Mutation {
     state: String
     properties: [EntityPropertyInput]
     key: String
+    name: String
   }
 
 input EntityPropertyInput { 

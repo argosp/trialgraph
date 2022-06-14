@@ -122,7 +122,9 @@ class Trial {
       if (action === "update") {
         return [{ error: "Ooops. Trial not found." }];
       }
-      updateTrialSet = true;
+      if (!args.dontUpdateTrialSet) {
+        updateTrialSet = true;
+      } 
     }
     const isTrialValidated = await this.validateTrialName({newTrial, experimentId})
     if (!isTrialValidated) {
@@ -153,6 +155,7 @@ class Trial {
       experimentId,
       (task) =>
         task.custom &&
+        task.custom.type === 'trial' && 
         task.custom.data &&
         (!trialSetKey || task.custom.data.trialSetKey === trialSetKey) &&
         task.custom.data.state !== "Deleted"

@@ -15,6 +15,7 @@ class Entity {
       state,
       properties,
       action,
+      dontUpdateEntityType
     } = args;
 
     let newEntity = {
@@ -28,6 +29,7 @@ class Entity {
       },
     };
 
+
     if (action !== 'update' || args.hasOwnProperty('name')) newEntity.custom.data.name = name;
     if (action !== 'update' || args.hasOwnProperty('state')) newEntity.custom.data.state = state;
     if (action !== 'update' || args.hasOwnProperty('properties')) newEntity.custom.data.properties = properties;
@@ -40,6 +42,7 @@ class Entity {
         && task.custom.data
         && task.custom.data.key === key,
     );
+
 
     if (device[0]) {
       if (action === 'update') {
@@ -55,7 +58,9 @@ class Entity {
           { error: 'Ooops. Trial not found.' },
         ];
       }
-      updateEntitiesType = true;
+      if (!dontUpdateEntityType) {
+        updateEntitiesType = true;
+      }
     }
 
     const response = await this.connector.addUpdateTask(

@@ -6,6 +6,20 @@ type Experiment {
   status: String
 }
 
+input ExperimentInput {
+  id: String
+  key: String
+  name: String
+  description: String 
+  begin: String
+  end: String
+  location: String
+  numberOfTrials: Int
+  state: String
+  status: String
+  maps: [MapInput]
+}
+
 extend type Query {
   experiments: [Experiment]
 }
@@ -31,9 +45,15 @@ type Map {
   height: Int
   embedded: Boolean
 }
+type AllExperimentData {
+  entityTypes: [EntitiesType]
+  entities: [Entity]
+  trialSets:[TrialSet]
+  trials: [Trial]
+}
 
 extend type Query {
-  getAllExperimentData(experimentId: String): JSON
+  getAllExperimentData(experimentId: String): AllExperimentData
 }
 extend type Mutation {
     addUpdateExperiment(
@@ -51,6 +71,15 @@ extend type Mutation {
       maps: [MapInput]
       action: String
       cloneTrailId: String
+    ): ExperimentData
+
+    uploadExperiment(
+      experiment: ExperimentInput
+      entityTypes: [EntityTypeInput]
+      entities: [EntityInput]
+      trialSets: [TrialSetInput]
+      trials: [TrialInput]
+      uid: String
     ): ExperimentData
 
     buildExperimentData(

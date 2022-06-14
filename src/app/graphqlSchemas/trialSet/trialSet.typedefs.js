@@ -8,6 +8,15 @@ type TrialSet {
   state: String
 }
 
+input TrialSetInput {
+  key: String
+  name: String
+  description: String
+  numberOfTrials: Int
+  properties: [KeyValInput]
+  state: String 
+}
+
 extend type Query {
   trialSets(experimentId:String!): [TrialSet]
 }
