@@ -13,6 +13,7 @@ httpServer.listen({ port: config.port },() => {
     graphql.subscriptionServer(httpServer),
     console.log(`Apollo Server on http://localhost:${config.port}/graphql`);
 });
+
 app.use('/uploads',express.static('uploads'));
 app.use('/uploads',express.static('/usr/tmp/uploads'));
 
