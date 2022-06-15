@@ -95,6 +95,7 @@ class TrialSet {
     if (action !== 'update' || args.hasOwnProperty('numberOfTrials')) newTrialSet.custom.data.numberOfTrials = numberOfTrials;
     if (action !== 'update' || args.hasOwnProperty('state')) newTrialSet.custom.data.state = state;
     
+    
     const trialSet = await this.connector.getTasksFromExperiment(
       experimentId,
       task => task.custom
