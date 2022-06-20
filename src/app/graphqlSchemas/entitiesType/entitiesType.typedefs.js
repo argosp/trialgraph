@@ -27,6 +27,7 @@ type KeyVal {
   template: String
   multipleValues: Boolean
   trialField: Boolean
+  static: Boolean
   inheritable: Boolean
   value: String
   defaultValue: String
@@ -62,6 +63,7 @@ input KeyValInput {
   multipleValues: Boolean
   trialField: Boolean
   inheritable: Boolean
+  static: Boolean
   value: String
   defaultValue: String
   defaultProperty: Boolean
