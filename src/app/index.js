@@ -12,6 +12,7 @@ const TrialSet = require('./graphqlSchemas/trialSet/trialSet.model');
 const schema = require('./graphqlSchemas/schema');
 const example = require('./example');
 const config = require('../config');
+const Logs = require('./graphqlSchemas/logs/logs.model');
 
 module.exports = {
   graphql: ((app) => {
@@ -27,6 +28,7 @@ module.exports = {
           trialSet: new TrialSet({ connector: rootConnector }),
           trial: new Trial({ connector: rootConnector }),
           data: new Data({ connector: rootConnector }),
+          logs: new Logs({connector: rootConnector})
         };
       },
       playground: {

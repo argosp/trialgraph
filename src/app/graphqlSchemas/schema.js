@@ -23,6 +23,11 @@ const {
   filesUploadTypeDefs,
 } = require('./filesUpload/filesUpload.schema');
 
+const {
+  logsResolvers,
+  logsTypeDefs,
+} = require('./logs/logs.schema');
+
 const jsonTypeDef = 'scalar JSON';
 const JSON = { JSON: GraphQLJSON };
 
@@ -37,7 +42,8 @@ const executableSchema = makeExecutableSchema({
     trialSetTypeDefs,
     authTypeDefs,
     jsonTypeDef,
-    filesUploadTypeDefs
+    filesUploadTypeDefs,
+    logsTypeDefs
     ],
   resolvers: merge(
     experimentResolvers,
@@ -48,6 +54,7 @@ const executableSchema = makeExecutableSchema({
     trialSetResolvers,
     authResolvers,
     filesUploadResolvers,
+    logsResolvers,
     JSON,
     
   ),
