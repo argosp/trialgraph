@@ -50,6 +50,7 @@ type AllExperimentData {
   entities: [Entity]
   trialSets:[TrialSet]
   trials: [Trial]
+  logs: [Log]
 }
 
 extend type Query {
@@ -79,6 +80,7 @@ extend type Mutation {
       entities: [EntityInput]
       trialSets: [TrialSetInput]
       trials: [TrialInput]
+      logs: [LogInput]
       uid: String
     ): ExperimentData
 

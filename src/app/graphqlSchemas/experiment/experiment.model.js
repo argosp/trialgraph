@@ -55,7 +55,19 @@ class Experiment {
       }
     })
   }
-
+  async cloneLog({ element, experimentId, uid }, context) {
+    return new Promise(async (resolve) => {
+      await context.logs.addUpdateLog({
+        logData: {
+          ...element.custom.data,
+          key: uuid()
+        },
+        experimentId,
+        uid
+      }, context)
+      return resolve()
+    })
+  }
   async cloneTrialSet({ element, experimentId, uid, trials }, context) {
     return new Promise(async (resolve) => {
       const newTrialSet = await context.trialSet.addUpdateTrialSet({
@@ -93,6 +105,10 @@ class Experiment {
 
   async cloneDeepExperiment(args, context) {
     const { experimentId, cloneTrailId, uid } = args;
+    const logs = args.logs || await context.logs.getLogs({ experimentId: cloneTrailId });
+    Promise.all(logs.map(async element => {
+      return await this.cloneLog({ element, experimentId, uid }, context)
+    }))
     const entityTypes = args.entityTypes || await context.entitiesType.getEntitiesTypes({ experimentId: cloneTrailId });
     const entityTypeIds = await Promise.all(entityTypes.map(async element => {
       return await this.cloneEntityType({ element, experimentId, uid }, context)
@@ -128,7 +144,7 @@ class Experiment {
 
 
   async uploadExperiment(args, context) {
-    const { experiment, uid, entityTypes, entities, trialSets, trials } = args
+    const { experiment, uid, entityTypes, entities, trialSets, trials, logs } = args
     const newExperiment = {
       custom: {
         id: '',
@@ -145,6 +161,7 @@ class Experiment {
         entities: entities.map(q => ({ custom: { data: { ...q }, id: q.key } })),
         trialSets: trialSets.map(q => ({ custom: { data: { ...q }, id: q.key } })),
         trials: trials.map(q => ({ custom: { data: { ...q }, id: q.key } })),
+        logs: logs.map(q => ({ custom: { data: { ...q }, id: q.key } }))
       }, context)
     }
 
@@ -185,12 +202,16 @@ class Experiment {
     const trials = new Promise(async (resolve) => {
       resolve(await context.trial.getTrials({ experimentId }))
     });
-    const data = await Promise.all([entityTypes, entities, trialSets, trials])
+    const logs = new Promise(async (resolve) => {
+      resolve(await context.logs.getLogs({ experimentId }))
+    });
+    const data = await Promise.all([entityTypes, entities, trialSets, trials, logs])
     return {
       entityTypes: data[0],
       entities: data[1],
       trialSets: data[2],
-      trials: data[3]
+      trials: data[3],
+      logs: data[4]
     }
   }
 
