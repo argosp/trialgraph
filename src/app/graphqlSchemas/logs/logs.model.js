@@ -1,4 +1,3 @@
-const config = require('../../../config');
 const uuid = require('uuid/v4');
 
 class Logs {
@@ -18,6 +17,28 @@ class Logs {
       return [
         { error: 'Ooops. Something went wrong and we coudnt fetch the data' },
       ];
+    }
+
+    return result;
+  }
+
+  async getLabels(args) {
+    let result = await this.connector.getTasksFromExperiment(
+      args.experimentId,
+      task => task.custom && task.custom.type === 'label' && task.custom.data.state !== 'Deleted',
+    );
+    if (typeof result === 'string') {
+      result = JSON.parse(result);
+    }
+
+    if (result === null || result === undefined || !Array.isArray(result)) {
+      return [
+        { error: 'Ooops. Something went wrong and we coudnt fetch the data' },
+      ];
+    }
+
+    if (args.keys) {
+      result = result.filter(r => args.keys.find(w => w === r.custom.id))
     }
 
     return result;
@@ -46,7 +67,31 @@ class Logs {
 
     return responseNewLog.data;
   }
- 
+
+  async addUpdateLabel(args) {
+    const key = args.key || uuid();
+
+    const newLabel = {
+      custom: {
+        id: key,
+        type: 'label',
+        data: {
+          key,
+          name: args.name,
+          color: args.color
+        },
+      },
+    };
+
+    const responseNewLabel = await this.connector.addUpdateTask(
+      newLabel,
+      args.uid,
+      args.experimentId,
+    );
+
+    return responseNewLabel.data;
+  }
+
 }
 
 module.exports = Logs;
