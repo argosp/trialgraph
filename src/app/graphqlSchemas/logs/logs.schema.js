@@ -15,7 +15,7 @@ const typeResolver = {
         updated: property('updated'),
         creator: property('creator.name'),
         labels: async (log, args, context) => {
-            return await context.logs.getLabels({ experimentId: log.project._id, keys: log.custom.data.labels })
+            return await context.logs.getLabels({ experimentId: log.project._id, keys: log.custom.data.labels || [] })
         },
         allLabels: async (log, args, context) => {
             return await context.logs.getLabels({ experimentId: log.project._id })

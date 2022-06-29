@@ -8,15 +8,24 @@ type Log {
   creator: String
   labels: [Label]
   allLabels: [Label]
+  state: String
 }
 
 input LogInput {
   title: String,
   comment: String,
   key: String
+  labels: [String]
+  state: String
 }
 
 type Label {
+  key: String
+  name: String
+  color: String
+}
+
+input LabelInput {
   key: String
   name: String
   color: String
