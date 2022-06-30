@@ -84,6 +84,9 @@ class Logs {
         },
       },
     };
+    if (args.state) {
+      newLabel.custom.data.state = args.state
+    }
     
 
     const responseNewLabel = await this.connector.addUpdateTask(

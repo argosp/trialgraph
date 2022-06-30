@@ -48,7 +48,8 @@ extend type Mutation {
       uid: String,
       key: String,
       name: String,
-      color: String
+      color: String,
+      state: String
     ): Label
   }
 `;
