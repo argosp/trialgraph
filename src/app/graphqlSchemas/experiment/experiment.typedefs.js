@@ -51,6 +51,7 @@ type AllExperimentData {
   trialSets:[TrialSet]
   trials: [Trial]
   logs: [Log]
+  labels: [Label]
 }
 
 extend type Query {
@@ -81,6 +82,7 @@ extend type Mutation {
       trialSets: [TrialSetInput]
       trials: [TrialInput]
       logs: [LogInput]
+      labels: [LabelInput]
       uid: String
     ): ExperimentData
 

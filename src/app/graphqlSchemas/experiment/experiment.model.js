@@ -55,11 +55,25 @@ class Experiment {
       }
     })
   }
-  async cloneLog({ element, experimentId, uid }, context) {
+  async cloneLabel({ element, experimentId, uid }, context) {
+    return new Promise(async (resolve) => {
+      const newLabel = await context.logs.addUpdateLabel({
+        ...element.custom.data,
+        key: uuid(),
+        experimentId,
+        uid
+      }, context)
+      if (newLabel) {
+        return resolve({ [element.custom.id]: newLabel.custom.id })
+      }
+    })
+  }
+  async cloneLog({ element, experimentId, uid, labels }, context) {
     return new Promise(async (resolve) => {
       await context.logs.addUpdateLog({
         logData: {
           ...element.custom.data,
+          labels,
           key: uuid()
         },
         experimentId,
@@ -105,10 +119,17 @@ class Experiment {
 
   async cloneDeepExperiment(args, context) {
     const { experimentId, cloneTrailId, uid } = args;
-    const logs = args.logs || await context.logs.getLogs({ experimentId: cloneTrailId });
-    Promise.all(logs.map(async element => {
-      return await this.cloneLog({ element, experimentId, uid }, context)
+    const labels = args.labels || await context.logs.getLabels({ experimentId: cloneTrailId });
+    const labelsIds = await Promise.all(labels.map(async element => {
+      return await this.cloneLabel({ element, experimentId, uid }, context)
     }))
+    const labelsIdsMap = Object.assign({}, ...labelsIds);
+    const logs = args.logs || await context.logs.getLogs({ experimentId: cloneTrailId });
+    await Promise.all(logs.map(async element => {
+      const labelsArr = element.custom.data.labels && element.custom.data.labels.map(l => labelsIdsMap[l])
+      return await this.cloneLog({ element, experimentId, uid, labels: labelsArr }, context)
+    }))
+
     const entityTypes = args.entityTypes || await context.entitiesType.getEntitiesTypes({ experimentId: cloneTrailId });
     const entityTypeIds = await Promise.all(entityTypes.map(async element => {
       return await this.cloneEntityType({ element, experimentId, uid }, context)
@@ -144,7 +165,7 @@ class Experiment {
 
 
   async uploadExperiment(args, context) {
-    const { experiment, uid, entityTypes, entities, trialSets, trials, logs } = args
+    const { experiment, uid, entityTypes, entities, trialSets, trials, logs, labels } = args
     const newExperiment = {
       custom: {
         id: '',
@@ -161,7 +182,8 @@ class Experiment {
         entities: entities.map(q => ({ custom: { data: { ...q }, id: q.key } })),
         trialSets: trialSets.map(q => ({ custom: { data: { ...q }, id: q.key } })),
         trials: trials.map(q => ({ custom: { data: { ...q }, id: q.key } })),
-        logs: logs.map(q => ({ custom: { data: { ...q }, id: q.key } }))
+        logs: logs.map(q => ({ custom: { data: { ...q }, id: q.key } })),
+        labels: labels.map(q => ({ custom: { data: { ...q }, id: q.key } }))
       }, context)
     }
 
@@ -205,13 +227,17 @@ class Experiment {
     const logs = new Promise(async (resolve) => {
       resolve(await context.logs.getLogs({ experimentId }))
     });
-    const data = await Promise.all([entityTypes, entities, trialSets, trials, logs])
+    const labels = new Promise(async (resolve) => {
+      resolve(await context.logs.getLabels({ experimentId }))
+    });
+    const data = await Promise.all([entityTypes, entities, trialSets, trials, logs, labels])
     return {
       entityTypes: data[0],
       entities: data[1],
       trialSets: data[2],
       trials: data[3],
-      logs: data[4]
+      logs: data[4],
+      labels: data[5]
     }
   }
 
