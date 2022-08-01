@@ -56,7 +56,8 @@ class Logs {
           title: args.logData.title,
           comment: args.logData.comment,
           labels: args.logData.labels,
-          state: args.logData.state
+          state: args.logData.state,
+          startDate: args.logData.startDate
         },
       },
     };
@@ -87,7 +88,7 @@ class Logs {
     if (args.state) {
       newLabel.custom.data.state = args.state
     }
-    
+
 
     const responseNewLabel = await this.connector.addUpdateTask(
       newLabel,

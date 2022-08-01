@@ -9,6 +9,7 @@ type Log {
   labels: [Label]
   allLabels: [Label]
   state: String
+  startDate: String
 }
 
 input LogInput {
@@ -17,6 +18,7 @@ input LogInput {
   key: String
   labels: [String]
   state: String
+  startDate: String
 }
 
 type Label {

@@ -5,7 +5,7 @@ const typeResolver = {
     Label: {
         key: property('custom.data.key'),
         name: property('custom.data.name'),
-        color: property('custom.data.color') 
+        color: property('custom.data.color')
     },
     Log: {
         key: property('custom.data.key'),
@@ -13,6 +13,7 @@ const typeResolver = {
         comment: property('custom.data.comment'),
         created: property('created'),
         updated: property('updated'),
+        startDate :property('custom.data.startDate'),
         creator: property('creator.name'),
         labels: async (log, args, context) => {
             return await context.logs.getLabels({ experimentId: log.project._id, keys: log.custom.data.labels || [] })
