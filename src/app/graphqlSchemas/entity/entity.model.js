@@ -4,6 +4,13 @@ class Entity {
   constructor({ connector }) {
     this.connector = connector;
   }
+  async validateEntityName(args) {
+    const {newEntity, experimentId} = args
+    const entities = await this.getEntities({experimentId, entitiesTypeKey: newEntity.custom.data.entitiesTypeKey})
+    const findEntityByName = entities.find(t =>
+      t.custom.data.name === newEntity.custom.data.name && t.custom.data.key !== newEntity.custom.data.key)
+    return findEntityByName ? false : true
+  }
 
   async addUpdateEntity(args, context) {
     const {
@@ -62,6 +69,12 @@ class Entity {
         updateEntitiesType = true;
       }
     }
+    const isEntityValidated = await this.validateEntityName({newEntity, experimentId})
+    if (!isEntityValidated) {
+      return {
+        error: 'duplicate name'
+      }
+    }
 
     const response = await this.connector.addUpdateTask(
       newEntity,
@@ -89,7 +102,7 @@ class Entity {
     );
 
     result.filter(a => a.custom.data.deployedEntities.find(e => e.key === key) || a.custom.data.entities.find(e => e.key === key)).forEach(r => {
-      //2. update entities of each trial 
+     //2. update entities of each trial
       context.trial.addUpdateTrial({ ...r.custom.data, experimentId, entities: r.custom.data.entities.filter(e => e.key !== key), deployedEntities: r.custom.data.deployedEntities.filter(e => e.key !== key) }, context);
     });
   }

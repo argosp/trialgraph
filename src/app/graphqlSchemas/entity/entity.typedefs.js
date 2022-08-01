@@ -1,11 +1,12 @@
 const typeDef = `
 type Entity {
-  key: String!
+  key: String
   name: String
   entitiesTypeKey: String
   state: String
   containsEntities:[String]
   properties: [EntityProperty]
+  error: String
 }
 
 extend type Query {
@@ -37,12 +38,12 @@ extend type Mutation {
     name: String
   }
 
-input EntityPropertyInput { 
+input EntityPropertyInput {
     val: String
     key: String!
 }
 
-type EntityProperty { 
+type EntityProperty {
     val: String
     key: String!
 }
