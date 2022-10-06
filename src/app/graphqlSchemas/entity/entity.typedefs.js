@@ -45,7 +45,21 @@ input EntityPropertyInput {
 
 type EntityProperty {
     val: String
-    key: String!
+    key: String
+    type: String
+    label: String
+    description: String
+    prefix: String
+    suffix: String
+    required: Boolean
+    template: String
+    multipleValues: Boolean
+    trialField: Boolean
+    static: Boolean
+    inheritable: Boolean
+    value: String
+    defaultValue: String
+    defaultProperty: Boolean
 }
 
 extend type Subscription {

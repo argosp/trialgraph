@@ -11,6 +11,7 @@ type Trial {
   state: String
   properties: [TrialProperty]
   entities: [TrialEntity]
+  fullDetailedEntities: [FullDetailedEntity]
   deployedEntities: [TrialEntity]
   error: String
 }
@@ -32,6 +33,7 @@ input TrialInput {
 }
 
 extend type Query {
+    trial(experimentId: String, trialKey: String!): Trial
     trials(experimentId:String!, trialSetKey:String!): [Trial]
 }
 
@@ -54,7 +56,7 @@ extend type Mutation {
       changedEntities: [TrialEntityInput]
     ): Trial
   }
-  
+
 extend type Mutation {
   updateTrialContainsEntities(
     uid: String!
@@ -65,13 +67,13 @@ extend type Mutation {
     action: String!
     ): Trial
 }
-  
-input TrialPropertyInput { 
+
+input TrialPropertyInput {
   val: String
   key: String!
 }
 
-type TrialProperty { 
+type TrialProperty {
   val: String
   key: String!
 }
@@ -87,9 +89,17 @@ input TrialEntityInput {
   key: String
   type: String
 }
+type FullDetailedEntity {
+  key: String
+  name: String
+  entitiesTypeName: String
+  entitiesTypeKey: String
+  containsEntities:[String]
+  properties: [EntityProperty]
+}
 
 type TrialEntity {
-  key: String!
+  key: String
   name: String
   entitiesTypeKey: String
   containsEntities:[String]
