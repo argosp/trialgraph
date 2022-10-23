@@ -18,28 +18,25 @@ const typeResolver = {
     state: property('custom.data.state'),
     properties: property('custom.data.properties'),
     entities: property('custom.data.entities'),
-    fullDetailedEntities: async (parent, args, context) => {
-      const entities = await context.entity.getEntities({
-        experimentId: parent.project._id,
-        trialKey: parent.custom.data.key
-      }, context);
-      return entities.map(e => {
-        const entityType = parent.entityTypesArray.find(q => q.custom.data.key == e.custom.data.entitiesTypeKey)
-        return { ...e, entityType }
+    fullDetailedEntities: async (parent) => {
+      return parent.custom.data.entities.map(e => {
+        const entityType = parent.entityTypesArray.find(q => q.custom.data.key == e.entitiesTypeKey)
+        const entityName = parent.entitiesArray.find(q => q.custom.data.key == e.key)
+        return { ...e, entityType, entityName }
       })
     },
     deployedEntities: property('custom.data.deployedEntities'),
   },
   FullDetailedEntity: {
-    name: property('custom.data.name'),
-    key: property('custom.data.key'),
-    entitiesTypeKey: property('custom.data.entitiesTypeKey'),
+    name: property('entityName.custom.data.name'),
+    key: property('key'),
+    entitiesTypeKey: property('entitiesTypeKey'),
     entitiesTypeName: (parent) => {
       return parent.entityType.custom.data.name
     },
     properties: (parent) => {
       return parent.entityType.custom.data.properties.map(p => {
-        const props = parent.custom.data.properties.find(q => q.key === p.key);
+        const props = parent.properties.find(q => q.key === p.key);
         return { ...props, ...p }
       })
     },
@@ -50,19 +47,14 @@ const resolvers = {
     async trial(_, args, context) {
       return await Promise.all([
         context.trial.getTrial(args.experimentId, args.trialKey),
-        context.entitiesType.getEntitiesTypes(args)
-      ]).then(([trial, entityTypes]) => {
-        return { ...trial, entityTypesArray: entityTypes }
+        context.entitiesType.getEntitiesTypes(args),
+        context.entity.getEntities({experimentId: args.experimentId,trialKey: args.trialKey})
+      ]).then(([trial, entityTypes, entities]) => {
+        return { ...trial, entityTypesArray: entityTypes, entitiesArray: entities }
       });
     },
     async trials(_, args, context) {
       return context.trial.getTrials(args, context);
-      // return await Promise.all([
-      //   context.trial.getTrials(args, context),
-      //   context.entitiesType.getEntitiesTypes(args)
-      // ]).then(([trials, entityTypes]) => {
-      //   return trials.map(q => ({ ...q, entityTypesArray: entityTypes }))
-      // });
     },
   },
   Mutation: {
