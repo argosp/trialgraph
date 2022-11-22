@@ -9,6 +9,7 @@ class RootConnector {
 
   async register(name, username, email, password, confirmPassword) {
     try {
+      console.log('trying to register: ', name, email, password)
       const url = `${config.rootUri}/api/register`;
       const options = { method: 'POST', data: { name, username, email, password, confirmPassword } };
       const result = await request(url, options);
@@ -39,6 +40,7 @@ class RootConnector {
 
   async login(email, password) {
     try {
+      console.log('trying to login email: ', email,' password: ' password)
       let url; let options; let
         result;
       url = `${config.rootUri}/api/login`;
@@ -49,6 +51,7 @@ class RootConnector {
       try {
         if (typeof result.body === 'string') token = JSON.parse(result.body).token;
       } catch (err) {
+        console.log('error in login', err)
         return Promise.reject(new Error('registration failed'));
       }
 
@@ -198,6 +201,7 @@ class RootConnector {
   }
 
   async getUid(token) {
+    console.log('trying to get user with token: ', token)
     const url = `${config.rootUri}/api/users/me`;
     const options = {
       method: 'GET',
@@ -211,6 +215,7 @@ class RootConnector {
     try {
       uid = JSON.parse(result.body).uid;
     } catch (err) {
+      console.log('error get user', err)
       throw new Error('cannot get uid');
     }
 
