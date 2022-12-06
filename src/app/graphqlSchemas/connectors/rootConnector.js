@@ -40,7 +40,7 @@ class RootConnector {
 
   async login(email, password) {
     try {
-      console.log('trying to login email: ', email,' password: ' password)
+      console.log('trying to login email: ', email,' password: ', password)
       let url; let options; let
         result;
       url = `${config.rootUri}/api/login`;
