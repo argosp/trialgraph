@@ -61,5 +61,3 @@ You should be able to see the graphql playground running on your docker containe
 If you want to change the default Query, you can do it in the example.js file in ./graph/src/app/example.js 
 
 ## ci
-
-
