@@ -3,7 +3,7 @@ const uuid = require('uuid/v4');
 
 class Experiment {
   constructor({ connector }) {
-    this.connector = connector;
+     this.connector = connector;
   }
 
   async getAllExperiments() {
