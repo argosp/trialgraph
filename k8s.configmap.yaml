@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: trialgraph-configmap
+  namespace: argos-prod
+data:
+  PORT: '8888'
+  REACT_APP_FCC_URL: https://argos.new-aks-stage.linnovate.net
+  REACT_APP_FCC_WS: wss://argos.new-aks-stage.linnovate.net
+  ROOT_URI: https://root.new-aks-stage.linnovate.net
+binaryData: {}
