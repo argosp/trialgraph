@@ -51,7 +51,7 @@ class RootConnector {
       try {
         if (typeof result.body === 'string') token = JSON.parse(result.body).token;
       } catch (err) {
-        console.log('error in login', err)
+        console.log('error in login', err, '\nfor result:', result.body)
         return Promise.reject(new Error('registration failed'));
       }
 
