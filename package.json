@@ -16,13 +16,13 @@
     "dependencies": {
         "@google-cloud/storage": "^2.4.3",
         "apollo-engine": "^1.0.4",
-        "apollo-server-express": "^2.3.1",
+        "apollo-server-express": "^3.13.0",
         "async-request": "^1.2.0",
         "axios": "^0.19.0",
         "body-parser": "1.18.2",
         "cors": "^2.8.5",
         "dotenv": "^4.0.0",
-        "elasticsearch": "^15.4.1",
+        "elasticsearch": "^16.7.3",
         "express": "4.16.2",
         "graphql": "14.1.1",
         "graphql-server-express": "1.4.0",
@@ -33,7 +33,7 @@
         "lodash": "4.17.11",
         "mongodb": "^3.1.13",
         "nodemon": "1.18.10",
-        "request": "^2.88.0",
-        "subscriptions-transport-ws": "0.9.16"
+        "request": "^2.88.2",
+        "subscriptions-transport-ws": "0.11.0"
     }
 }
