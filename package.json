@@ -11,7 +11,7 @@
     "author": "",
     "license": "ISC",
     "devDependencies": {
-        "apollo": "2.6.2"
+        "apollo": "2.34.0"
     },
     "dependencies": {
         "@google-cloud/storage": "^2.4.3",
