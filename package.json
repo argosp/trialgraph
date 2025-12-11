@@ -14,7 +14,7 @@
         "apollo": "2.6.2"
     },
     "dependencies": {
-        "@google-cloud/storage": "^2.4.3",
+        "@google-cloud/storage": "^5.17.0",
         "apollo-engine": "^1.0.4",
         "apollo-server-express": "^2.3.1",
         "async-request": "^1.2.0",
